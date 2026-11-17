@@ -4,25 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#33a15a">
-<title>Candidature · Prix ZTF — Maquette 4</title>
+<title>Candidature Prix ZTF · Maquette 4</title>
 <style>
 /* Polices système uniquement : page légère pour les connexions mobiles lentes */
-:root{--green:#33a15a;--green-d:#1f7a40;--yellow:#f8da49;--navy:#030842;--ink:#101828;--muted:#667085;--line:#e4e7ec;--ztf-danger:#d92d20}
+:root{--green:#33a15a;--green-d:#1f7a40;--yellow:#f8da49;--navy:#030842;--ink:#101828;--muted:#667085;--line:#e4e7ec;--ztf-danger:#d92d20;--ztf-accent:#33a15a}
 *{box-sizing:border-box}
-html{background:#eaf5ee}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#eaf5ee;line-height:1.5}
+html,body{background:#eaf5ee}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.5}
 a{color:var(--green-d)}
-.app{max-width:520px;margin:0 auto;min-height:100vh;background:#f6f8f7;box-shadow:0 0 0 1px rgba(0,0,0,.04),0 10px 40px rgba(0,0,0,.06);padding-bottom:110px}
-.bar{position:sticky;top:0;z-index:20;background:var(--green);color:#fff;padding:14px 16px 12px}
+.app{max-width:520px;margin:0 auto;min-height:100vh;background:#f6f8f7;box-shadow:0 0 0 1px rgba(0,0,0,.04),0 10px 40px rgba(0,0,0,.06);padding-bottom:150px}
+.bar{position:sticky;top:0;z-index:20;background:var(--green);color:#fff;padding:12px 16px}
 .bar-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.bar h1{font-size:1.02rem;margin:0}.bar small{opacity:.85;font-size:.75rem;display:block}
-.bar .pct{font-weight:800;font-size:.9rem;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:999px}
+.bar h1{font-size:1rem;margin:0}.bar small{opacity:.85;font-size:.75rem;display:block}
+.bar .lang-switch{border-color:rgba(255,255,255,.45)}
+.bar .lang-switch button{color:#fff;padding:6px 9px}
+.bar .lang-switch button[aria-pressed=true]{background:#fff;color:var(--green-d)}
 .track{height:6px;border-radius:6px;background:rgba(255,255,255,.25);margin-top:10px;overflow:hidden}
 .track div{height:100%;width:0;background:var(--yellow);transition:width .35s}
-.hero{padding:20px 16px 6px}
+.hero{padding:18px 16px 6px}
 .hero .tile{background:var(--navy);color:#fff;border-radius:18px;padding:18px;position:relative;overflow:hidden}
-.hero .tile:after{content:"🏅";position:absolute;right:14px;top:10px;font-size:2.4rem;opacity:.9}
-.hero .tile b{display:block;font-size:1.1rem;margin-bottom:4px;padding-right:50px}
+.hero .tile:after{content:"🏅";position:absolute;right:14px;top:10px;font-size:2.4rem}
+.hero .tile b{display:block;font-size:1.08rem;margin-bottom:4px;padding-right:50px}
 .hero .tile p{margin:0;font-size:.85rem;opacity:.85}
 .pill{display:inline-block;margin-top:12px;background:var(--yellow);color:var(--navy);font-weight:700;font-size:.78rem;padding:5px 10px;border-radius:999px}
 .list{padding:10px 12px;display:grid;gap:12px}
@@ -30,12 +32,11 @@ details.sec{background:#fff;border-radius:18px;border:1px solid var(--line);over
 details.sec>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;font-weight:700}
 details.sec>summary::-webkit-details-marker{display:none}
 summary .ic{flex:none;width:38px;height:38px;border-radius:12px;background:#eef7f1;display:grid;place-items:center;font-size:1.1rem}
-summary .t{flex:1}summary .t small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
-summary .st{font-size:.72rem;font-weight:700;color:var(--muted);background:#f2f4f7;padding:4px 8px;border-radius:999px}
+summary .t{flex:1;min-width:0}summary .t small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
+summary .st{font-size:.72rem;font-weight:700;color:var(--muted);background:#f2f4f7;padding:4px 8px;border-radius:999px;white-space:nowrap}
 details.sec.is-complete summary .st{background:#dcfae6;color:var(--green-d)}
-details.sec.is-complete summary .st:before{content:"✓ "}
 summary .chev{transition:transform .2s;color:var(--muted)}details[open] summary .chev{transform:rotate(180deg)}
-.body{padding:0 16px 18px;border-top:1px solid var(--line);padding-top:16px}
+.body{padding:16px 16px 18px;border-top:1px solid var(--line)}
 .f-grid{display:grid;gap:16px;margin-bottom:16px}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;min-width:0}.f-grid .field{margin-bottom:0}
 .field>label{font-weight:600;font-size:.9rem}.field>label i{color:var(--ztf-danger);font-style:normal}
@@ -45,12 +46,16 @@ select{background-image:linear-gradient(45deg,transparent 50%,#667085 50%),linea
 textarea{min-height:110px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(51,161,90,.15)}
 input:disabled,select:disabled{background:#f2f4f7;color:#98a2b3}
-.phone{display:flex;gap:8px}
+.phone{gap:8px}
 .np{display:flex;gap:10px;align-items:center;font-size:.86rem;color:var(--muted);font-weight:400;min-height:36px}
-.np input{width:22px;height:22px;min-height:0;padding:0;accent-color:var(--green);-webkit-appearance:auto;appearance:auto}
+.np input,.choice-opt input{width:22px;height:22px;min-height:0;padding:0;accent-color:var(--green);-webkit-appearance:auto;appearance:auto}
+.choice{grid-template-columns:1fr 1fr}.choice-opt{padding:14px 12px;border-radius:14px;background:#fff}
+.choice-t small{font-size:.74rem}
 .notice{background:#fffaeb;border:1px solid #fedf89;border-radius:14px;padding:12px;font-size:.85rem;margin:0 0 16px}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:#eef7f1;border:0;color:var(--green-d);font:inherit;font-size:.86rem;font-weight:700;cursor:pointer;padding:10px 12px;border-radius:10px;margin-top:4px}.link-btn:disabled{opacity:.4}
+.guardian,.gce{background:#f3faf5;border:1px solid #cdeed7;border-radius:16px;padding:14px 12px 0;margin-bottom:16px}
+.guardian-h,.gce-h{display:grid;gap:2px;margin-bottom:12px;font-size:.88rem}.guardian-h span,.gce-h span{color:var(--muted);font-size:.8rem}
 .drop{padding:22px 14px;background:#fafbfc;border-radius:14px}
 .consent-card{margin:4px 12px 0;background:#fff;border-radius:18px;border:1px solid var(--line);padding:16px}
 .consent .np{color:var(--ink);align-items:flex-start}
@@ -60,40 +65,51 @@ input:disabled,select:disabled{background:#f2f4f7;color:#98a2b3}
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
 .dock-in{max-width:488px;margin:auto;display:flex;align-items:center;gap:12px}
 .dock .info{font-size:.78rem;color:var(--muted);line-height:1.25;flex:1}.dock .info b{display:block;color:var(--ink);font-size:.95rem}
-.dock button{flex:none;min-height:52px;padding:0 22px;border:0;border-radius:14px;background:var(--green);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.dock button{flex:none;min-height:52px;padding:0 18px;border:0;border-radius:14px;background:var(--green);color:#fff;font:inherit;font-weight:800;cursor:pointer;max-width:62%}
 .dock button:disabled{background:#c5cdd6;cursor:not-allowed}
 .success{padding:40px 20px;text-align:center}
 .success .ok{width:90px;height:90px;border-radius:28px;background:var(--green);color:#fff;font-size:2.6rem;display:grid;place-items:center;margin:0 auto 18px}
 .success button{min-height:52px;padding:0 22px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;margin-top:14px}
-.ztf-demo{bottom:96px!important}
+.ztf-demo{bottom:92px!important}
 </style>
+<script>
+window.ZTF_PAGE_I18N = {
+  "p.sub": ["Candidature · Cameroun", "Application · Cameroon"],
+  "p.tile": ["Faites reconnaître votre excellence", "Get your excellence recognised"],
+  "p.tile.d": ["Élèves et étudiants, francophones et anglophones : remplissez les 3 rubriques. Vos réponses sont conservées quand vous changez de rubrique.", "Pupils and students, francophone and anglophone: fill in the 3 sections. Your answers are kept when you switch sections."],
+  "p.until": ["⏰ Date limite :", "⏰ Deadline:"],
+  "p.todo": ["À remplir", "To do"], "p.done": ["✓ Complet", "✓ Done"],
+  "p.s2.s": ["Établissement, classe ou niveau, résultats", "Institution, class or level, results"],
+  "p.s3.s": ["Pièce d'identité, bulletins…", "ID, report cards…"]
+};
+</script>
 </head>
 <body>
 <div class="app">
   <header class="bar">
-    <div class="bar-row"><div><h1>Prix d'Excellence ZTF</h1><small>Candidature · Cameroun</small></div><span class="pct" data-ztf-progress-text>0 %</span></div>
+    <div class="bar-row"><div><h1 data-i18n="brand.name"></h1><small data-i18n="p.sub"></small></div><div data-ztf-slot="lang"></div></div>
     <div class="track"><div data-ztf-progress></div></div>
   </header>
 
   <div data-ztf-hide-on-success>
     <div class="hero"><div class="tile">
-      <b>Faites reconnaître votre excellence</b>
-      <p>Remplissez les 3 rubriques ci-dessous. Vos réponses restent affichées si vous changez de rubrique.</p>
-      <span class="pill">⏰ Jusqu'au <span data-ztf-deadline></span> inclus</span>
+      <b data-i18n="p.tile"></b>
+      <p data-i18n="p.tile.d"></p>
+      <span class="pill"><span data-i18n="p.until"></span> <span id="dl"></span></span>
     </div></div>
 
     <form data-ztf-form id="form">
       <div class="list">
         <details class="sec" id="s1" data-ztf-section open>
-          <summary><span class="ic">👤</span><span class="t">1. Informations générales du candidat<small>Identité et coordonnées</small></span><span class="st">À remplir</span><span class="chev">▾</span></summary>
+          <summary><span class="ic">👤</span><span class="t"><span data-i18n="sec.identity"></span><small data-i18n="sec.identity.s"></small></span><span class="st"></span><span class="chev">▾</span></summary>
           <div class="body" data-ztf-slot="identity"></div>
         </details>
         <details class="sec" id="s2" data-ztf-section>
-          <summary><span class="ic">🎓</span><span class="t">2. Parcours académique<small>Établissement et résultats</small></span><span class="st">À remplir</span><span class="chev">▾</span></summary>
-          <div class="body" data-ztf-slot="academic"></div>
+          <summary><span class="ic">🎓</span><span class="t"><span data-i18n="sec.academic"></span><small data-i18n="p.s2.s"></small></span><span class="st"></span><span class="chev">▾</span></summary>
+          <div class="body"><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></div>
         </details>
         <details class="sec" id="s3" data-ztf-section>
-          <summary><span class="ic">📎</span><span class="t">3. Pièces jointes (PJs)<small>Pièce d'identité, relevés…</small></span><span class="st">À remplir</span><span class="chev">▾</span></summary>
+          <summary><span class="ic">📎</span><span class="t"><span data-i18n="sec.attachments"></span><small data-i18n="p.s3.s"></small></span><span class="st"></span><span class="chev">▾</span></summary>
           <div class="body" data-ztf-slot="attachments"></div>
         </details>
       </div>
@@ -103,38 +119,35 @@ input:disabled,select:disabled{background:#f2f4f7;color:#98a2b3}
 
   <div class="success" data-ztf-success hidden>
     <div class="ok">✓</div>
-    <h2>Candidature envoyée !</h2>
-    <p>Merci. Nous vous recontacterons à l'adresse : <strong data-ztf-success-email></strong></p>
-    <button type="button" data-ztf-reset>Nouvelle candidature</button>
+    <h2 data-i18n="success.title"></h2>
+    <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+    <button type="button" data-ztf-reset data-i18n="btn.new"></button>
   </div>
 </div>
 
 <div class="dock" data-ztf-hide-on-success><div class="dock-in">
-  <div class="info"><b data-ztf-progress-text>0 %</b>du dossier complété</div>
-  <button type="submit" form="form" id="dockSubmit" disabled>Envoyer ma candidature</button>
+  <div class="info"><b data-ztf-progress-text>0 %</b><span data-i18n="progress.done"></span></div>
+  <button type="submit" form="form" disabled><span data-i18n="btn.submit"></span></button>
 </div></div>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>
 <script>
 (function () {
-  // Les rubriques s'ouvrent automatiquement sur l'erreur suivante lors de l'envoi.
-  function init() {
-    var form = document.getElementById("form"), dock = document.getElementById("dockSubmit");
-    function sync() { dock.disabled = !form.elements.cgu.checked; }
-    form.addEventListener("change", sync); sync();
-    document.addEventListener("ztf:demo", sync); document.addEventListener("ztf:reset", sync);
-    // Avant la validation : on ouvre les rubriques pour que le défilement vers la 1re erreur fonctionne,
-    // puis on referme celles qui sont complètes.
-    form.addEventListener("submit", function () {
-      [].forEach.call(document.querySelectorAll("details.sec"), function (d) { d.open = true; });
-      setTimeout(function () {
-        [].forEach.call(document.querySelectorAll("details.sec"), function (d) { if (!d.querySelector(".is-invalid")) d.open = false; });
-      }, 0);
-    }, true);
+  function badges() {
+    [].forEach.call(document.querySelectorAll("details.sec"), function (d) {
+      d.querySelector(".st").textContent = ZTF.tr(d.classList.contains("is-complete") ? "p.done" : "p.todo");
+    });
+    document.getElementById("dl").textContent = ZTF.lang() === "en" ? ZTF_DATA.deadline[1] : ZTF_DATA.deadline[0];
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  document.addEventListener("ztf:progress", badges);
+  document.addEventListener("ztf:lang", badges);
+  // Sur erreur : on ouvre la rubrique concernée pour que le défilement vers le champ fonctionne.
+  document.addEventListener("ztf:invalid", function (e) {
+    var d = e.detail.first.closest("details"); if (d) d.open = true;
+  });
 })();
 </script>
 </body>

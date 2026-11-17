@@ -3,11 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Candidature · Prix ZTF — Maquette 5</title>
+<title>Candidature Prix ZTF · Maquette 5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#d9b54a;--gold-l:#f8da49;--navy:#030842;--navy2:#0a1450;--green:#33a15a;--paper:#fffdf7;--ink:#14162b;--muted:#6b6f85;--line:#e9e3d2;--ztf-danger:#b42318;--ztf-accent:#b8912a}
+.topbar{position:absolute;top:16px;right:16px}
+.topbar .lang-switch{border-color:rgba(217,181,74,.5);color:#e2e5f3}
+.topbar .lang-switch button[aria-pressed=true]{background:var(--gold);color:var(--navy)}
+.head{position:relative}
 *{box-sizing:border-box}
 body{margin:0;font-family:Manrope,system-ui,sans-serif;color:var(--ink);line-height:1.55;background:var(--navy);
   background-image:radial-gradient(ellipse at 20% -10%,rgba(217,181,74,.18),transparent 50%),radial-gradient(ellipse at 100% 30%,rgba(51,161,90,.14),transparent 45%)}
@@ -55,6 +59,14 @@ input:disabled,select:disabled{background:#f6f3ea;color:#a8a28f}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:none;border:0;color:#8a6a14;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;padding:2px 0;text-decoration:underline;text-underline-offset:3px}.link-btn:disabled{opacity:.4}
 .drop{background:#fff;border-color:#d8cfb4}
+.guardian,.gce{border:1px solid var(--line);background:#fbf6e6;border-radius:14px;padding:18px 18px 2px;margin:0 0 20px}
+.guardian-h,.gce-h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-bottom:14px}
+.guardian-h strong,.gce-h strong{font-family:"Cormorant Garamond",serif;font-size:1.25rem;color:var(--navy)}
+.guardian-h span,.gce-h span{font-size:.82rem;color:var(--muted)}
+.choice-opt{background:#fff;border-color:#ddd5bf}.choice-opt b{font-family:"Cormorant Garamond",serif;font-size:1.2rem;color:var(--navy)}
+.choice-opt:has(input:checked){border-color:var(--gold);background:#fffaf0}
+.facts{display:grid;gap:10px;margin:0 0 20px;padding:0;list-style:none;font-size:.82rem;color:#c9cde4}
+.facts b{font-family:"Cormorant Garamond",serif;font-size:1.4rem;color:#fff;font-weight:600;margin-right:6px}
 .consent-wrap{border-top:1px solid var(--line);padding-top:26px}
 .consent .np{color:var(--ink);font-size:.9rem;align-items:flex-start}
 .captcha{margin:12px 0 18px}
@@ -66,6 +78,19 @@ input:disabled,select:disabled{background:#f6f3ea;color:#a8a28f}
 .success button{margin-top:16px;font:inherit;font-weight:700;padding:12px 22px;border-radius:12px;border:1px solid var(--gold);background:#fff;cursor:pointer}
 footer{text-align:center;color:#8c92b8;font-size:.8rem;padding:0 16px 30px}
 </style>
+<script>
+window.ZTF_PAGE_I18N = {
+  "p.k": ["Fondation Zacharias Tanee Fomum · Cameroun", "Zacharias Tanee Fomum Foundation · Cameroon"],
+  "p.lead": ["Dossier de candidature : l'excellence dans le faire et dans l'être.", "Application file: excellence in doing and in being."],
+  "p.toc": ["Sommaire", "Contents"],
+  "p.facts": ["Le Prix en bref", "The Award at a glance"],
+  "p.f1": ["éditions depuis 2021", "editions since 2021"],
+  "p.f2": ["participants en 2025", "participants in 2025"],
+  "p.f3": ["régions du Cameroun", "regions of Cameroon"],
+  "p.dl": ["Vous pouvez soumettre votre dossier jusqu'à cette date incluse.", "You can submit your application up to and including this date."],
+  "p.footer": ["Maquette 5 « Prestige »", "Mock-up 5 “Prestige”"]
+};
+</script>
 </head>
 <body>
 <header class="head">
@@ -74,9 +99,10 @@ footer{text-align:center;color:#8c92b8;font-size:.8rem;padding:0 16px 30px}
     <path d="M14 40c-4-1-6-4-6-8 4 0 6 3 6 8zM13 31c-4-2-5-5-4-9 4 1 5 4 4 9zM15 22c-3-3-3-6-1-9 3 2 3 5 1 9zM50 40c4-1 6-4 6-8-4 0-6 3-6 8zM51 31c4-2 5-5 4-9-4 1-5 4-4 9zM49 22c3-3 3-6 1-9-3 2-3 5-1 9z" fill="currentColor" fill-opacity=".25"/>
     <circle cx="32" cy="28" r="9"/><path d="M28 28l3 3 5-6"/>
   </svg>
-  <div class="k">Fondation Zacharias Tanee Fomum · Cameroun</div>
-  <h1>Prix d'Excellence ZTF</h1>
-  <p>Dossier de candidature — l'excellence dans le faire et dans l'être.</p>
+  <div class="topbar" data-ztf-slot="lang"></div>
+  <div class="k" data-i18n="p.k"></div>
+  <h1 data-i18n="brand.name"></h1>
+  <p data-i18n="p.lead"></p>
   <div class="rule"></div>
 </header>
 
@@ -84,40 +110,46 @@ footer{text-align:center;color:#8c92b8;font-size:.8rem;padding:0 16px 30px}
   <aside class="side" data-ztf-hide-on-success>
     <div class="ring">
       <svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="27"/><circle class="fg" id="ringfg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
-      <div><b data-ztf-progress-text>0 %</b><span>dossier complété</span></div>
+      <div><b data-ztf-progress-text>0 %</b><span data-i18n="progress.done"></span></div>
     </div>
-    <h3>Sommaire</h3>
+    <h3 data-i18n="p.toc"></h3>
     <ol>
-      <li><a href="#s1" data-ztf-nav="s1"><span class="d">I</span>Informations générales</a></li>
-      <li><a href="#s2" data-ztf-nav="s2"><span class="d">II</span>Parcours académique</a></li>
-      <li><a href="#s3" data-ztf-nav="s3"><span class="d">III</span>Pièces jointes</a></li>
+      <li><a href="#s1" data-ztf-nav="s1"><span class="d">I</span><span data-i18n="sec.identity.s"></span></a></li>
+      <li><a href="#s2" data-ztf-nav="s2"><span class="d">II</span><span data-i18n="sec.academic"></span></a></li>
+      <li><a href="#s3" data-ztf-nav="s3"><span class="d">III</span><span data-i18n="sec.attachments"></span></a></li>
     </ol>
-    <div class="dl">Date limite de candidature<strong data-ztf-deadline></strong>Vous pouvez soumettre votre dossier jusqu'à cette date incluse.</div>
+    <h3 data-i18n="p.facts"></h3>
+    <ul class="facts"><li><b>5</b><span data-i18n="p.f1"></span></li><li><b>6 300</b><span data-i18n="p.f2"></span></li><li><b>10</b><span data-i18n="p.f3"></span></li></ul>
+    <div class="dl"><span data-i18n="deadline.label"></span><strong id="dl"></strong><span data-i18n="p.dl"></span></div>
   </aside>
 
   <main class="paper">
     <div data-ztf-hide-on-success>
       <form data-ztf-form>
-        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="num">I</span><h2>Informations générales du candidat</h2></div><div data-ztf-slot="identity"></div></section>
-        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="num">II</span><h2>Parcours académique</h2></div><div data-ztf-slot="academic"></div></section>
-        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="num">III</span><h2>Pièces jointes (PJs)</h2></div><div data-ztf-slot="attachments"></div></section>
+        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="num">I</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="num">II</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="num">III</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
         <div class="consent-wrap" data-ztf-slot="consent"></div>
       </form>
     </div>
     <div class="success" data-ztf-success hidden>
       <svg class="laurel" style="color:#c79d2f" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="32" cy="32" r="22"/><path d="M23 32l6 6 12-13"/></svg>
-      <h2>Candidature envoyée !</h2>
-      <p>Merci. Nous vous recontacterons à l'adresse : <strong data-ztf-success-email></strong></p>
-      <button type="button" data-ztf-reset>Nouvelle candidature</button>
+      <h2 data-i18n="success.title"></h2>
+      <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <button type="button" data-ztf-reset data-i18n="btn.new"></button>
     </div>
   </main>
 </div>
-<footer>© Fondation Zacharias Tanee Fomum — Maquette 5 « Prestige »</footer>
+<footer>© <span data-i18n="brand.org"></span> · <span data-i18n="p.footer"></span></footer>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>
 <script>
+document.addEventListener("ztf:lang", function () {
+  document.getElementById("dl").textContent = ZTF.lang() === "en" ? ZTF_DATA.deadline[1] : ZTF_DATA.deadline[0];
+});
 document.addEventListener("ztf:progress", function (e) {
   var c = document.getElementById("ringfg"); if (c) c.style.strokeDashoffset = 169.6 * (1 - e.detail.percent / 100);
 });

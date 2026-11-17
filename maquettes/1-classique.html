@@ -3,30 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Candidature · Prix ZTF — Maquette 1</title>
+<title>Candidature Prix ZTF · Maquette 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--green:#33a15a;--green-d:#1f7a40;--yellow:#f8da49;--navy:#030842;--ink:#0f172a;--muted:#64748b;--line:#dbe3ea;--bg:#f4f7f5;--ztf-danger:#c0392b}
+:root{--green:#33a15a;--green-d:#1f7a40;--yellow:#f8da49;--navy:#030842;--ink:#0f172a;--muted:#64748b;--line:#dbe3ea;--bg:#f4f7f5;--ztf-danger:#c0392b;--ztf-accent:#33a15a}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
 a{color:var(--green-d)}
 .top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
 .top .in{max-width:1120px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none}
-.brand .mark{width:38px;height:38px;border-radius:10px;background:var(--navy);color:var(--yellow);display:grid;place-items:center;font-size:.8rem;letter-spacing:.04em}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none;min-width:0}
+.brand .mark{width:38px;height:38px;border-radius:10px;background:var(--navy);color:var(--yellow);display:grid;place-items:center;font-size:.8rem;letter-spacing:.04em;flex:none}
 .brand small{display:block;font-weight:500;color:var(--muted);font-size:.72rem}
+.right{display:flex;align-items:center;gap:22px}
 .nav{display:flex;gap:22px;font-size:.9rem}.nav a{color:var(--ink);text-decoration:none;opacity:.75}.nav a.on{opacity:1;font-weight:700;color:var(--green-d)}
-@media(max-width:760px){.nav{display:none}}
+@media(max-width:860px){.nav{display:none}}
 .hero{background:linear-gradient(135deg,var(--green-d),var(--green) 60%,#4db76e);color:#fff;padding:56px 16px 120px;text-align:center;position:relative;overflow:hidden}
 .hero:after{content:"";position:absolute;inset:auto -10% -60px -10%;height:120px;background:var(--bg);border-radius:50% 50% 0 0}
 .hero h1{font-size:clamp(1.8rem,4vw,2.8rem);margin:.4rem 0 .6rem;letter-spacing:-.02em}
-.hero p{max-width:640px;margin:0 auto;opacity:.92}
+.hero p{max-width:660px;margin:0 auto;opacity:.92}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px}
 .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:600}
 .chip.y{background:var(--yellow);color:var(--navy);border-color:var(--yellow)}
 .eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--yellow)}
-.wrap{max-width:900px;margin:-90px auto 0;padding:0 16px 64px;position:relative;z-index:2}
+.wrap{max-width:920px;margin:-90px auto 0;padding:0 16px 64px;position:relative;z-index:2}
 .card{background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(3,8,66,.08);padding:clamp(20px,4vw,40px)}
 .deadline{display:flex;gap:10px;align-items:flex-start;background:#f0faf3;border:1px solid #cbead5;color:var(--green-d);border-radius:12px;padding:12px 16px;font-size:.9rem;margin-bottom:32px}
 .sec{margin-bottom:40px}
@@ -42,59 +43,77 @@ a{color:var(--green-d)}
 input,select,textarea{font:inherit;font-size:.95rem;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-width:0}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(51,161,90,.18)}
 input:disabled,select:disabled{background:#f3f5f7;color:#94a3b8}
-input[type=file]{padding:10px;border-style:dashed;background:#fafcfb}
-.phone{display:flex}.phone select{width:auto;border-radius:10px 0 0 10px;border-right:0;background:#f7f9fa}.phone input{border-radius:0 10px 10px 0}
+.phone select{border-radius:10px 0 0 10px;border-right:0;background:#f7f9fa}.phone input{border-radius:0 10px 10px 0}
 .np{display:flex;gap:8px;align-items:center;font-size:.82rem;color:var(--muted);font-weight:400}.np input{width:auto}
 .notice{background:#fffbe6;border-left:4px solid var(--yellow);padding:10px 14px;border-radius:8px;font-size:.88rem;margin:0 0 18px}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:none;border:0;color:var(--green-d);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;padding:2px 0}.link-btn:disabled{opacity:.4;cursor:not-allowed}
-.consent{margin-top:8px}.consent .np{font-size:.9rem;color:var(--ink);align-items:flex-start}
+.guardian,.gce{border:1px solid #cbead5;background:#f6fbf8;border-radius:14px;padding:16px 16px 2px;margin:0 0 18px}
+.guardian-h,.gce-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:14px;font-size:.9rem}
+.guardian-h strong,.gce-h strong{color:var(--green-d)}.guardian-h span,.gce-h span{color:var(--muted);font-size:.82rem}
+.consent .np{font-size:.9rem;color:var(--ink);align-items:flex-start}.consent .np i{color:var(--green-d);font-style:normal}
 .captcha{margin:6px 0 18px}
 .submit{width:100%;padding:16px;border:0;border-radius:12px;background:var(--yellow);color:var(--navy);font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;box-shadow:0 6px 18px rgba(248,218,73,.45)}
 .submit:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
 .foot-note{text-align:center;font-size:.82rem;color:var(--muted);margin:10px 0 0}
 .success{text-align:center;padding:40px 10px}.success .ok{width:80px;height:80px;border-radius:50%;background:#e7f6ec;color:var(--green);display:grid;place-items:center;margin:0 auto 16px;font-size:2.4rem}
 .btn-out{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer}
-footer{background:var(--navy);color:#cbd5e1;text-align:center;padding:28px 16px;font-size:.85rem}
+footer{background:var(--navy);color:#cbd5e1;text-align:center;padding:28px 16px 80px;font-size:.85rem}
 footer strong{color:#fff}
 </style>
+<script>
+window.ZTF_PAGE_I18N = {
+  "p.nav.home": ["Accueil", "Home"], "p.nav.prize": ["Le Prix", "The Award"], "p.nav.winners": ["Lauréats", "Winners"],
+  "p.nav.apply": ["Candidature", "Apply"], "p.nav.contact": ["Contact", "Contact"],
+  "p.eyebrow": ["Édition 2026-2027 · Cameroun", "2026-2027 edition · Cameroon"],
+  "p.title": ["Candidature au Prix d'Excellence ZTF", "Apply for the ZTF Excellence Award"],
+  "p.lead": ["Un instrument d'incitation mentale pour stimuler les intellectuels à travailler dur dans l'intérêt de la nation et du monde. Élèves du secondaire et étudiants du supérieur : soumettez votre dossier au comité d'experts.", "A mental incentive that spurs young minds to work hard for the good of the nation and the world. Secondary pupils and higher-education students: submit your file to our panel of experts."],
+  "p.chip1": ["Réservé au Cameroun", "Cameroon only"], "p.chip2": ["Secondaire et supérieur", "Secondary and higher education"],
+  "p.chip3": ["Francophones et anglophones", "Francophone and anglophone"], "p.chip4": ["Bourse pour les lauréats", "Scholarship for winners"],
+  "p.footer": ["Prix d'Excellence ZTF · Maquette 1 « Institutionnelle classique »", "ZTF Excellence Award · Mock-up 1 “Classic institutional”"]
+};
+</script>
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="brand" href="#"><span class="mark">ZTF</span><span>Prix d'Excellence ZTF<small>Fondation Zacharias Tanee Fomum</small></span></a>
-  <nav class="nav"><a href="#">Accueil</a><a href="#">Le Prix</a><a href="#">Lauréats</a><a class="on" href="#">Candidature</a><a href="#">Contact</a></nav>
+  <a class="brand" href="#"><span class="mark">ZTF</span><span><span data-i18n="brand.name"></span><small data-i18n="brand.org"></small></span></a>
+  <div class="right">
+    <nav class="nav"><a href="#" data-i18n="p.nav.home"></a><a href="#" data-i18n="p.nav.prize"></a><a href="#" data-i18n="p.nav.winners"></a><a class="on" href="#" data-i18n="p.nav.apply"></a><a href="#" data-i18n="p.nav.contact"></a></nav>
+    <div data-ztf-slot="lang"></div>
+  </div>
 </div></header>
 
 <section class="hero">
-  <div class="eyebrow">Édition 2026-2027 · Cameroun</div>
-  <h1>Candidature au Prix d'Excellence ZTF</h1>
-  <p>Un instrument d'incitation mentale pour stimuler les intellectuels à travailler dur dans l'intérêt de la nation et du monde. Soumettez votre dossier académique pour être évalué par notre comité d'experts.</p>
-  <div class="chips"><span class="chip y">Réservé au Cameroun</span><span class="chip">Candidature gratuite</span><span class="chip">Bourse financière pour les lauréats</span></div>
+  <div class="eyebrow" data-i18n="p.eyebrow"></div>
+  <h1 data-i18n="p.title"></h1>
+  <p data-i18n="p.lead"></p>
+  <div class="chips"><span class="chip y" data-i18n="p.chip1"></span><span class="chip" data-i18n="p.chip2"></span><span class="chip" data-i18n="p.chip3"></span><span class="chip" data-i18n="p.chip4"></span></div>
 </section>
 
 <main class="wrap">
   <div class="card">
     <div data-ztf-hide-on-success>
-      <div class="deadline">📅 <p style="margin:0"><strong>Date limite de candidature</strong> — vous pouvez soumettre votre dossier jusqu'au <strong data-ztf-deadline></strong> inclus.</p></div>
+      <div class="deadline">📅 <p style="margin:0"><strong data-i18n="deadline.label"></strong> — <span data-i18n-html="deadline.text"></span></p></div>
       <form data-ztf-form>
-        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n">1</span><h2>Informations générales du candidat</h2></div><div data-ztf-slot="identity"></div></section>
-        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2>Parcours académique</h2></div><div data-ztf-slot="academic"></div></section>
-        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n">3</span><h2>Pièces jointes (PJs)</h2></div><div data-ztf-slot="attachments"></div></section>
+        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n">1</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n">3</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
         <div data-ztf-slot="consent"></div>
       </form>
     </div>
     <div class="success" data-ztf-success hidden>
       <div class="ok">✓</div>
-      <h2>Candidature envoyée !</h2>
-      <p>Merci. Nous vous recontacterons à l'adresse : <strong data-ztf-success-email></strong></p>
-      <button class="btn-out" type="button" data-ztf-reset>Nouvelle candidature</button>
+      <h2 data-i18n="success.title"></h2>
+      <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <button class="btn-out" type="button" data-ztf-reset data-i18n="btn.new"></button>
     </div>
   </div>
 </main>
 
-<footer><strong>Fondation Zacharias Tanee Fomum</strong> · Prix d'Excellence ZTF — Maquette 1 « Institutionnelle classique »</footer>
+<footer><strong data-i18n="brand.org"></strong> · <span data-i18n="p.footer"></span></footer>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>
 </body>

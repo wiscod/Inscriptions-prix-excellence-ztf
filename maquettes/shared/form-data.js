@@ -1,38 +1,167 @@
 /*
- * Données du formulaire de candidature — Prix d'Excellence ZTF
- * Listes reprises À L'IDENTIQUE du formulaire de référence
- * https://africaexcellenceawards.org/candidature
- * (seules les données de démonstration — villes, établissements — sont adaptées au Cameroun).
+ * Données du formulaire de candidature — Prix d'Excellence ZTF (Cameroun)
+ *
+ * Champs, ordre et libellés repris du formulaire de référence
+ * https://africaexcellenceawards.org/candidature, avec les adaptations validées :
+ *  - listes d'établissements adaptées au système éducatif camerounais ;
+ *  - ouvert au secondaire (6e → Terminale, Form 1 → Upper Sixth) ET au supérieur ;
+ *  - sous-système francophone / anglophone (résultats GCE pour les anglophones du secondaire) ;
+ *  - parent ou tuteur obligatoire pour les moins de 18 ans ;
+ *  - site bilingue français / anglais.
+ *
+ * Chaque élément de liste est une paire [français, anglais] ; la valeur enregistrée est le libellé français.
  */
 window.ZTF_DATA = {
   edition: "2026-2027",
   schoolYear: "2025-2026",
-  deadline: "[date à définir]",
+  deadline: ["[date à définir]", "[date to be set]"],
   contactEmail: "contact@excellenceawardsztf.com",
+  minAge: 9,       // un élève de 6e a 10-11 ans ; marge de sécurité
+  adultAge: 18,    // en dessous : parent ou tuteur obligatoire
 
-  civilities: ["M.", "Mme", "Mlle"],
+  civilities: [["M.", "Mr"], ["Mme", "Mrs"], ["Mlle", "Miss"]],
 
-  levels: ["BAC+1", "BAC+2", "BAC+3", "BAC+4", "BAC+5", "Post-BAC+5", "Autre"],
+  guardianRelations: [["Père", "Father"], ["Mère", "Mother"], ["Tuteur légal", "Legal guardian"], ["Autre membre de la famille", "Other relative"]],
 
-  institutionCategories: [
-    { category: "Grandes Écoles", sub: ["École de commerce / management (CGE)", "École d'ingénieurs (CTI)", "École normale supérieure (ENS)", "Institut d'études politiques (IEP / Sciences Po)", "École d'architecture (ENSA)", "École d'art et de design (Beaux-Arts, ENSAD, etc.)", "École vétérinaire (ENV)", "École militaire (Saint-Cyr, Polytechnique, Navale, etc.)", "École de journalisme reconnue (CFJ, ESJ, CUEJ, etc.)", "Autre grande école"] },
-    { category: "Universités (Facultés)", sub: ["Sciences et technologies (maths, informatique, physique, etc.)", "Lettres, langues et sciences humaines", "Psychologie", "Droit et science politique", "Économie et gestion", "Information et communication", "Arts et arts du spectacle", "STAPS", "Sciences de l'éducation", "Théologie", "IAE (Institut d'administration des entreprises)", "IPAG (Institut de préparation à l'administration générale)", "Autre filière universitaire"] },
-    { category: "Études de Santé", sub: ["Médecine", "Pharmacie", "Odontologie (dentaire)", "Maïeutique (sage-femme)", "Kinésithérapie", "Soins infirmiers (IFSI)", "Orthophonie", "Orthoptie", "Ergothérapie", "Psychomotricité", "Audioprothèse", "Manipulateur en électroradiologie", "Pédicurie-podologie", "Autre formation paramédicale"] },
-    { category: "Classes Préparatoires aux Grandes Écoles (CPGE)", sub: ["Scientifique — MPSI / MP", "Scientifique — PCSI / PC", "Scientifique — PTSI / PT", "Scientifique — BCPST", "Scientifique — TSI", "Scientifique — MP2I / MPI", "Économique et commerciale — ECG", "Littéraire — A/L (Ulm)", "Littéraire — B/L (Lyon / LSH)", "Littéraire — Chartes", "Littéraire — Saint-Cyr Lettres", "Autre CPGE"] },
-    { category: "BTS / BUT / Formations technologiques courtes", sub: ["BTS — Tertiaire (commerce, compta, gestion, etc.)", "BTS — Industriel (électrotechnique, mécanique, etc.)", "BTS — Agricole", "BTS — Hôtellerie-restauration / Tourisme", "BTS — Arts appliqués / DN MADE / DSAA", "Autre BTS", "BUT — Tertiaire (GEA, TC, Info-Com, etc.)", "BUT — Informatique / Statistique (STID)", "BUT — Industriel (GMP, GEII, MP, etc.)", "BUT — Biologie / Chimie", "BUT — Carrières sociales / juridiques", "Autre BUT"] },
-    { category: "Écoles privées d'enseignement supérieur", sub: ["Commerce / management (hors CGE)", "Informatique / numérique (42, etc.)", "Communication / marketing / publicité", "Mode / luxe", "Cinéma / audiovisuel / animation 3D / jeux vidéo", "Musique / spectacle vivant", "Design / graphisme", "Tourisme / hôtellerie", "Autre école privée"] },
-    { category: "Formations du secteur social", sub: ["Éducateur spécialisé (DEES)", "Assistant de service social (DEASS)", "Éducateur de jeunes enfants (DEEJE)", "Conseiller en économie sociale et familiale (DECESF)", "Moniteur-éducateur", "Autre formation sociale (IRTS, etc.)"] },
-    { category: "Écoles de la fonction publique", sub: ["INSP (ex-ENA)", "ENM (École nationale de la magistrature)", "INET / IRA / ENSP", "Autre école de la fonction publique"] },
-    { category: "CNAM / Formation continue", sub: ["CNAM (Conservatoire national des arts et métiers)", "CFA (Centre de formation d'apprentis)", "GRETA / autre organisme de formation continue"] },
-    { category: "Autres établissements ou formations", sub: ["À préciser"] }
+  categories: [
+    /* ---------- Enseignement secondaire ---------- */
+    { fr: "Enseignement secondaire général", en: "General secondary education", cycle: "secondary", sub: [
+      ["Lycée ou CES public", "Government high school / secondary school"],
+      ["Lycée bilingue public", "Government bilingual high school"],
+      ["Établissement privé catholique", "Catholic mission school"],
+      ["Établissement privé protestant (presbytérien, baptiste, EEC…)", "Protestant mission school (Presbyterian, Baptist, EEC…)"],
+      ["Établissement privé islamique", "Islamic private school"],
+      ["Établissement privé laïc", "Lay private school"]] },
+    { fr: "Enseignement secondaire technique et professionnel", en: "Technical and vocational secondary education", cycle: "secondary", sub: [
+      ["Lycée technique ou CETIC public (industriel)", "Government technical high school / college (industrial)"],
+      ["Lycée technique ou CETIC public (commercial)", "Government technical high school / college (commercial)"],
+      ["Lycée agricole", "Agricultural high school"],
+      ["Établissement technique privé confessionnel", "Mission technical school"],
+      ["Établissement technique privé laïc", "Lay private technical school"]] },
+
+    /* ---------- Enseignement supérieur ---------- */
+    { fr: "Universités d'État (facultés)", en: "State universities (faculties)", cycle: "higher", sub: [
+      ["Sciences", "Science"],
+      ["Arts, lettres et sciences humaines", "Arts, letters and social sciences"],
+      ["Sciences juridiques et politiques", "Law and political science"],
+      ["Sciences économiques et de gestion", "Economics and management"],
+      ["Médecine et sciences biomédicales", "Medicine and biomedical sciences"],
+      ["Agronomie et sciences agricoles", "Agronomy and agricultural sciences"],
+      ["Sciences de l'éducation", "Education"],
+      ["Ingénierie et technologie", "Engineering and technology"],
+      ["Autre faculté", "Other faculty"]] },
+    { fr: "Grandes écoles publiques", en: "Public grandes écoles", cycle: "higher", sub: [
+      ["École d'ingénieurs (ENSP, ENSPD, FGI, ENSAI, ENSTP…)", "Engineering school (ENSP, ENSPD, FGI, ENSAI, ENSTP…)"],
+      ["École normale supérieure (ENS, ENSET)", "Higher teacher training college (ENS, ENSET)"],
+      ["Administration, magistrature, diplomatie (ENAM, IRIC)", "Administration, magistracy, diplomacy (ENAM, IRIC)"],
+      ["Journalisme et communication (ESSTIC)", "Journalism and communication (ESSTIC)"],
+      ["Commerce et gestion (ESSEC)", "Business and management (ESSEC)"],
+      ["Statistique et économie appliquée (ISSEA, IFORD)", "Statistics and applied economics (ISSEA, IFORD)"],
+      ["Agronomie et médecine vétérinaire (FASA, ESMV)", "Agronomy and veterinary medicine (FASA, ESMV)"],
+      ["Autre grande école", "Other grande école"]] },
+    { fr: "Instituts universitaires de technologie (IUT)", en: "University institutes of technology (IUT)", cycle: "higher", sub: [
+      ["Génie industriel et maintenance", "Industrial engineering and maintenance"],
+      ["Génie informatique et télécommunications", "Computer engineering and telecommunications"],
+      ["Génie civil", "Civil engineering"],
+      ["Gestion, commerce, banque", "Management, business, banking"],
+      ["Génie biologique et agroalimentaire", "Biological and food engineering"],
+      ["Autre spécialité", "Other speciality"]] },
+    { fr: "Études de santé", en: "Health studies", cycle: "higher", sub: [
+      ["Médecine", "Medicine"], ["Pharmacie", "Pharmacy"], ["Odontologie (dentaire)", "Dentistry"],
+      ["Sciences infirmières", "Nursing"], ["Maïeutique (sage-femme)", "Midwifery"],
+      ["Techniques médico-sanitaires (laboratoire, imagerie…)", "Medical technology (laboratory, imaging…)"],
+      ["Autre formation paramédicale", "Other paramedical training"]] },
+    { fr: "Universités privées et confessionnelles", en: "Private and faith-based universities", cycle: "higher", sub: [
+      ["Sciences et technologies", "Science and technology"],
+      ["Lettres, langues et sciences humaines", "Arts, languages and social sciences"],
+      ["Droit et science politique", "Law and political science"],
+      ["Économie et gestion", "Economics and management"],
+      ["Santé", "Health"],
+      ["Théologie", "Theology"],
+      ["Autre filière", "Other programme"]] },
+    { fr: "Instituts privés d'enseignement supérieur (IPES)", en: "Private higher education institutes (IPES)", cycle: "higher", sub: [
+      ["BTS", "BTS"], ["HND", "HND"], ["Licence / Bachelor", "Licence / Bachelor's degree"],
+      ["Master", "Master's degree"], ["Cycle ingénieur", "Engineering degree"], ["Autre diplôme", "Other qualification"]] },
+    { fr: "Écoles professionnelles et de la fonction publique", en: "Professional and civil-service schools", cycle: "higher", sub: [
+      ["École normale d'instituteurs (ENIEG, ENIET)", "Primary teacher training college (ENIEG, ENIET)"],
+      ["Écoles militaires et de police (EMIA…)", "Military and police schools (EMIA…)"],
+      ["Douanes, impôts, trésor", "Customs, taxation, treasury"],
+      ["Travaux publics, postes et télécommunications", "Public works, posts and telecommunications"],
+      ["Autre école professionnelle", "Other professional school"]] },
+    { fr: "Autres établissements ou formations", en: "Other institutions or programmes", cycle: "higher", sub: [
+      ["À préciser", "To be specified"]] }
   ],
 
-  fieldsOfStudy: ["Non applicable", "Littérature", "Philosophie", "Histoire", "Langues étrangères", "Anthropologie", "Archéologie", "Arts (arts visuels, arts du spectacle)", "Linguistique", "Théologie", "Administration publique", "Psychologie", "Sociologie", "Science politique", "Économie", "Démographie", "Communication", "Gestion des ressources humaines", "Études urbaines", "Astronomie", "Biologie", "Géologie", "Géographie", "Science de l'environnement", "Météorologie", "Mathématiques", "Physique", "Chimie", "Statistiques", "Génie aérospatial", "Génie civil", "Génie mécanique", "Génie électrique", "Génie des matériaux", "Informatique et génie logiciel", "Réseaux & Télécom", "Intelligence Artificielle", "Ingénierie biomédicale", "Logistique et Transport", "Architecture", "Génie Chimique", "Génie de Procédés", "Génie Énergétique", "Génie Minéral", "Génie Minier", "Génie Contrôle et Instrumentation", "Génie Électromécanique", "Médecine", "Pharmacie", "Odontologie (dentaire)", "Maïeutique (sage-femme)", "Kinésithérapie", "Soins infirmiers", "Orthophonie", "Orthoptie", "Ergothérapie", "Psychomotricité", "Audioprothèse", "Manipulateur en électroradiologie", "Pédicurie-podologie", "Santé publique", "Sciences biomédicales", "Analyses médicales", "Enseignement", "Éducation spéciale", "Psychopédagogie", "Administration scolaire", "Comptabilité", "Finance", "Marketing", "Gestion", "Commerce international", "Entrepreneuriat", "Design graphique", "Arts plastiques", "Mode", "Cinéma et photographie", "Agronomie", "Écologie", "Foresterie", "Génie agricole", "Horticulture", "Sciences de l'eau", "Sciences alimentaires", "Droit civil", "Droit pénal", "Droit international", "Droit des affaires", "Droits de l'homme", "Études de sécurité", "Géopolitique", "Stratégie militaire", "Défense et sécurité nationale"]
-    .sort(function (a, b) { return a === "Non applicable" ? -1 : b === "Non applicable" ? 1 : a.localeCompare(b, "fr"); }),
+  levels: {
+    francophone: [["6e", "6e"], ["5e", "5e"], ["4e", "4e"], ["3e", "3e"], ["Seconde", "Seconde"], ["Première", "Première"], ["Terminale", "Terminale"]],
+    anglophone: [["Form 1", "Form 1"], ["Form 2", "Form 2"], ["Form 3", "Form 3"], ["Form 4", "Form 4"], ["Form 5", "Form 5"], ["Lower Sixth", "Lower Sixth"], ["Upper Sixth", "Upper Sixth"]],
+    higher: [["BAC+1", "BAC+1 (year 1)"], ["BAC+2", "BAC+2 (year 2)"], ["BAC+3", "BAC+3 (year 3)"], ["BAC+4", "BAC+4 (year 4)"], ["BAC+5", "BAC+5 (year 5)"], ["Post-BAC+5", "Post-BAC+5 (PhD…)"], ["Autre", "Other"]]
+  },
 
-  /* Données de démonstration (dans le site réel : recherche en base / géocodage) */
-  cities: ["Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua", "Ngaoundéré", "Bertoua", "Ebolowa", "Buea", "Limbe", "Kumba", "Kribi", "Dschang", "Nkongsamba", "Edéa", "Foumban", "Mbalmayo", "Sangmélima", "Kousséri", "Mokolo", "Bafang", "Mbouda", "Tiko", "Batouri", "Meiganga", "Guider", "Yagoua", "Bafia", "Obala", "Soa", "Mbanga", "Loum", "Wum", "Kumbo"],
-  schools: ["Université de Yaoundé I", "Université de Yaoundé II", "Université de Douala", "Université de Dschang", "Université de Buea", "Université de Ngaoundéré", "Université de Maroua", "Université de Bamenda", "Université de Bertoua", "Université d'Ebolowa", "Université de Garoua", "École Nationale Supérieure Polytechnique de Yaoundé", "École Normale Supérieure de Yaoundé", "ESSEC Douala", "IRIC", "ENAM", "Faculté de Médecine et des Sciences Biomédicales", "Université Catholique d'Afrique Centrale"],
+  /* Série (francophone) ou filière (anglophone) — remplace « Domaine d'études » au secondaire */
+  series: {
+    francophone: [
+      ["Non applicable (premier cycle)", "Not applicable (first cycle)"],
+      ["A (Lettres – Langues – Philosophie)", "A (Letters – Languages – Philosophy)"],
+      ["C (Mathématiques – Sciences physiques)", "C (Mathematics – Physical sciences)"],
+      ["D (Mathématiques – Sciences de la vie et de la Terre)", "D (Mathematics – Life and Earth sciences)"],
+      ["E (Mathématiques – Techniques)", "E (Mathematics – Technology)"],
+      ["TI (Technologies de l'information)", "TI (Information technology)"],
+      ["Technique industrielle (F, MEM, ELEQ…)", "Industrial technology (F, MEM, ELEQ…)"],
+      ["Technique commerciale (ACA, ACC, CG, SES…)", "Commercial studies (ACA, ACC, CG, SES…)"],
+      ["Agricole", "Agricultural"],
+      ["Autre série", "Other series"]],
+    anglophone: [
+      ["Non applicable (Form 1 à Form 3)", "Not applicable (Form 1 to Form 3)"],
+      ["Arts", "Arts"],
+      ["Sciences", "Science"],
+      ["Commerce", "Commercial"],
+      ["Technique", "Technical"],
+      ["Autre filière", "Other stream"]]
+  },
+
+  gceExams: [["Aucun pour l'instant", "None yet"], ["GCE O Level", "GCE O Level"], ["GCE A Level", "GCE A Level"]],
+
+  /* Domaines d'études (supérieur) — liste de la référence, traduite */
+  fieldsOfStudy: [
+    ["Non applicable", "Not applicable"], ["Littérature", "Literature"], ["Philosophie", "Philosophy"], ["Histoire", "History"],
+    ["Langues étrangères", "Foreign languages"], ["Anthropologie", "Anthropology"], ["Archéologie", "Archaeology"],
+    ["Arts (arts visuels, arts du spectacle)", "Arts (visual and performing arts)"], ["Linguistique", "Linguistics"], ["Théologie", "Theology"],
+    ["Administration publique", "Public administration"], ["Psychologie", "Psychology"], ["Sociologie", "Sociology"],
+    ["Science politique", "Political science"], ["Économie", "Economics"], ["Démographie", "Demography"], ["Communication", "Communication"],
+    ["Gestion des ressources humaines", "Human resource management"], ["Études urbaines", "Urban studies"], ["Astronomie", "Astronomy"],
+    ["Biologie", "Biology"], ["Géologie", "Geology"], ["Géographie", "Geography"], ["Science de l'environnement", "Environmental science"],
+    ["Météorologie", "Meteorology"], ["Mathématiques", "Mathematics"], ["Physique", "Physics"], ["Chimie", "Chemistry"],
+    ["Statistiques", "Statistics"], ["Génie aérospatial", "Aerospace engineering"], ["Génie civil", "Civil engineering"],
+    ["Génie mécanique", "Mechanical engineering"], ["Génie électrique", "Electrical engineering"], ["Génie des matériaux", "Materials engineering"],
+    ["Informatique et génie logiciel", "Computer science and software engineering"], ["Réseaux & Télécom", "Networks & telecommunications"],
+    ["Intelligence Artificielle", "Artificial intelligence"], ["Ingénierie biomédicale", "Biomedical engineering"],
+    ["Logistique et Transport", "Logistics and transport"], ["Architecture", "Architecture"], ["Génie Chimique", "Chemical engineering"],
+    ["Génie de Procédés", "Process engineering"], ["Génie Énergétique", "Energy engineering"], ["Génie Minéral", "Mineral engineering"],
+    ["Génie Minier", "Mining engineering"], ["Génie Contrôle et Instrumentation", "Control and instrumentation engineering"],
+    ["Génie Électromécanique", "Electromechanical engineering"], ["Médecine", "Medicine"], ["Pharmacie", "Pharmacy"],
+    ["Odontologie (dentaire)", "Dentistry"], ["Maïeutique (sage-femme)", "Midwifery"], ["Kinésithérapie", "Physiotherapy"],
+    ["Soins infirmiers", "Nursing"], ["Orthophonie", "Speech therapy"], ["Orthoptie", "Orthoptics"], ["Ergothérapie", "Occupational therapy"],
+    ["Psychomotricité", "Psychomotor therapy"], ["Audioprothèse", "Hearing-aid audiology"],
+    ["Manipulateur en électroradiologie", "Medical imaging technology"], ["Pédicurie-podologie", "Podiatry"], ["Santé publique", "Public health"],
+    ["Sciences biomédicales", "Biomedical sciences"], ["Analyses médicales", "Medical laboratory science"], ["Enseignement", "Teaching"],
+    ["Éducation spéciale", "Special education"], ["Psychopédagogie", "Educational psychology"], ["Administration scolaire", "School administration"],
+    ["Comptabilité", "Accounting"], ["Finance", "Finance"], ["Marketing", "Marketing"], ["Gestion", "Management"],
+    ["Commerce international", "International trade"], ["Entrepreneuriat", "Entrepreneurship"], ["Design graphique", "Graphic design"],
+    ["Arts plastiques", "Fine arts"], ["Mode", "Fashion"], ["Cinéma et photographie", "Film and photography"], ["Agronomie", "Agronomy"],
+    ["Écologie", "Ecology"], ["Foresterie", "Forestry"], ["Génie agricole", "Agricultural engineering"], ["Horticulture", "Horticulture"],
+    ["Sciences de l'eau", "Water sciences"], ["Sciences alimentaires", "Food science"], ["Droit civil", "Civil law"], ["Droit pénal", "Criminal law"],
+    ["Droit international", "International law"], ["Droit des affaires", "Business law"], ["Droits de l'homme", "Human rights"],
+    ["Études de sécurité", "Security studies"], ["Géopolitique", "Geopolitics"], ["Stratégie militaire", "Military strategy"],
+    ["Défense et sécurité nationale", "National defence and security"]
+  ],
+
+  /* Données de démonstration (dans le site réel : recherche en base) */
+  cities: ["Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua", "Ngaoundéré", "Bertoua", "Ebolowa", "Buea", "Limbe", "Kumba", "Kribi", "Dschang", "Nkongsamba", "Edéa", "Foumban", "Mbalmayo", "Sangmélima", "Kousséri", "Mokolo", "Bafang", "Mbouda", "Tiko", "Batouri", "Meiganga", "Guider", "Yagoua", "Bafia", "Obala", "Soa", "Mbanga", "Loum", "Wum", "Kumbo", "Ndop", "Mamfe", "Nkambe"],
+  schools: {
+    secondary: ["Lycée Général Leclerc (Yaoundé)", "Lycée Bilingue d'Etoug-Ebé (Yaoundé)", "Collège Vogt (Yaoundé)", "Collège de la Retraite (Yaoundé)", "Lycée Joss (Douala)", "Lycée Bilingue de Bonabéri (Douala)", "Collège Libermann (Douala)", "Lycée Technique de Douala-Koumassi", "Lycée Classique et Moderne de Bafoussam", "Lycée Classique de Ngaoundéré", "Lycée de Garoua", "Lycée de Maroua", "GBHS Molyko (Buea)", "Bishop Rogan College (Buea)", "Saker Baptist College (Limbe)", "Sacred Heart College Mankon (Bamenda)", "Presbyterian Secondary School Mankon (Bamenda)", "Our Lady of Lourdes College Mankon (Bamenda)", "GTHS Kumba"],
+    higher: ["Université de Yaoundé I", "Université de Yaoundé II", "Université de Douala", "Université de Dschang", "University of Buea", "Université de Ngaoundéré", "Université de Maroua", "University of Bamenda", "Université de Bertoua", "Université d'Ebolowa", "Université de Garoua", "École Nationale Supérieure Polytechnique de Yaoundé", "École Normale Supérieure de Yaoundé", "ENSET de Douala", "ESSEC Douala", "ESSTIC", "IRIC", "ENAM", "ISSEA", "IUT de Douala", "IUT Fotso Victor de Bandjoun", "IUT de Ngaoundéré", "Faculté de Médecine et des Sciences Biomédicales", "Université Catholique d'Afrique Centrale", "Catholic University Institute of Buea", "Université Protestante d'Afrique Centrale"]
+  },
 
   phoneCodes: [
     { code: "+237", label: "🇨🇲 +237" }, { code: "+33", label: "🇫🇷 +33" }, { code: "+241", label: "🇬🇦 +241" },

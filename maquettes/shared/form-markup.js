@@ -1,71 +1,115 @@
 /*
- * Balisage des champs (identique dans les 5 maquettes).
- * Libellés, ordre, champs obligatoires, aides et formats repris du formulaire de référence
- * https://africaexcellenceawards.org/candidature — chaque maquette ne change que la mise en page (CSS).
- * Insère le HTML dans les éléments [data-ztf-slot="identity|academic|attachments|consent"].
+ * Balisage des champs, commun aux 5 maquettes : chaque maquette ne change que la mise en page (CSS).
+ * Les textes sont posés par le moteur via data-i18n (texte), data-i18n-html (HTML), data-i18n-ph (placeholder).
+ * Emplacements : [data-ztf-slot="lang|cycle|subsystem|identity|academic|attachments|consent"].
+ * Le champ « cycle » (secondaire / supérieur) est facultatif : quand une maquette l'affiche,
+ * il sert seulement à filtrer les catégories d'établissement.
  */
 (function () {
   "use strict";
   var S = {};
 
+  function T(key, tag, cls) { tag = tag || "span"; return "<" + tag + (cls ? ' class="' + cls + '"' : "") + ' data-i18n="' + key + '"></' + tag + ">"; }
+  function label(name, key, req, extra) {
+    return '<label for="f-' + name + '"><span data-ztf-lbl data-i18n="' + key + '"></span>' +
+      (extra ? ' <span class="muted" data-i18n="' + extra + '"></span>' : "") + (req ? " <i>*</i>" : "") + "</label>";
+  }
+  function input(name, attrs) { return '<input id="f-' + name + '" name="' + name + '"' + (attrs || "") + ">"; }
+  function select(name) { return '<select id="f-' + name + '" name="' + name + '"></select>'; }
+  function field(name, inner, cls) { return '<div class="field' + (cls ? " " + cls : "") + '" data-field="' + name + '">' + inner + "</div>"; }
+  function hint(key, attrs) { return '<p class="hint"' + (attrs || "") + ' data-i18n="' + key + '"></p>'; }
+  function np(name, key) { return '<label class="np"><input type="checkbox" name="' + name + '"> ' + T(key) + "</label>"; }
+  function phone(code, name, ph) {
+    return '<div class="phone"><select name="' + code + '" data-i18n-aria="lbl.phone"></select>' +
+      input(name, ' type="tel" inputmode="tel" autocomplete="tel-national" data-i18n-ph="' + ph + '"') + "</div>";
+  }
+  function choice(name, opts) {
+    return '<div class="choice" role="radiogroup">' + opts.map(function (o) {
+      return '<label class="choice-opt"><input type="radio" name="' + name + '" value="' + o + '"><span class="choice-t">' +
+        T((name === "cycle" ? "cycle." : "sub.") + o, "b") + T((name === "cycle" ? "cycle." : "sub.") + o + ".d", "small") + "</span></label>";
+    }).join("") + "</div>";
+  }
+  function drop(name, multiple, accept, req) {
+    return '<div class="drop"><input id="f-' + name + '" name="' + name + '" type="file" accept="' + accept + '"' + (multiple ? " multiple" : "") + (req ? " required" : "") + ">" +
+      '<span class="drop-ic" aria-hidden="true">⬆</span>' + T(multiple ? "drop.many" : "drop.one", "span", "drop-t") + T("drop.or", "span", "drop-s") + "</div>";
+  }
+
+  S.lang = '<div class="lang-switch" role="group" data-i18n-aria="lang.group"><button type="button" data-ztf-lang="fr" lang="fr">FR</button><button type="button" data-ztf-lang="en" lang="en">EN</button></div>';
+
+  S.cycle = '<div class="field" data-field="cycle"><label>' + T("lbl.cycle") + " <i>*</i></label>" + choice("cycle", ["secondary", "higher"]) + "</div>";
+  S.subsystem = '<div class="field" data-field="subsystem"><label>' + T("lbl.subsystem") + " <i>*</i></label>" + choice("subsystem", ["francophone", "anglophone"]) + "</div>";
+
   S.identity =
     '<div class="f-grid cols-3">' +
-      '<div class="field" data-field="civility"><label for="f-civility">Civilité <i>*</i></label><select id="f-civility" name="civility" required></select></div>' +
-      '<div class="field" data-field="last_name"><label for="f-last_name">Nom <i>*</i></label><input id="f-last_name" name="last_name" placeholder="Ex : Mbarga" autocomplete="family-name" required></div>' +
-      '<div class="field" data-field="first_name"><label for="f-first_name">Prénom <i>*</i></label><input id="f-first_name" name="first_name" placeholder="Ex : Jean" autocomplete="given-name" required></div>' +
-    '</div>' +
+      field("civility", label("civility", "lbl.civility", 1) + select("civility")) +
+      field("last_name", label("last_name", "lbl.last_name", 1) + input("last_name", ' autocomplete="family-name" data-i18n-ph="ph.last_name"')) +
+      field("first_name", label("first_name", "lbl.first_name", 1) + input("first_name", ' autocomplete="given-name" data-i18n-ph="ph.first_name"')) +
+    "</div>" +
     '<div class="f-grid cols-3">' +
-      '<div class="field" data-field="nationality"><label for="f-nationality">Nationalité <i>*</i></label><select id="f-nationality" name="nationality" required></select></div>' +
-      '<div class="field" data-field="birth_date"><label for="f-birth_date">Date de naissance <i>*</i></label><input id="f-birth_date" name="birth_date" type="date" required></div>' +
-      '<div class="field" data-field="city"><label for="f-city">Ville de résidence <i>*</i></label><input id="f-city" name="city" placeholder="Rechercher une ville..." required></div>' +
-    '</div>' +
+      field("nationality", label("nationality", "lbl.nationality", 1) + select("nationality")) +
+      field("birth_date", label("birth_date", "lbl.birth_date", 1) + input("birth_date", ' type="date"') + hint("hint.birth")) +
+      field("city", label("city", "lbl.city", 1) + input("city", ' data-i18n-ph="ph.city"')) +
+    "</div>" +
     '<div class="f-grid cols-2">' +
-      '<div class="field" data-field="phone"><label for="f-phone">Téléphone <i>*</i></label><div class="phone"><select name="phone_code" aria-label="Indicatif"></select><input id="f-phone" name="phone" type="tel" inputmode="numeric" placeholder="Ex : 6 70 00 00 00" autocomplete="tel-national" required></div></div>' +
-      '<div class="field" data-field="email"><label for="f-email">Adresse électronique <i>*</i></label><input id="f-email" name="email" type="email" placeholder="votre.email@exemple.com" autocomplete="email" required></div>' +
-    '</div>';
+      field("phone", label("phone", "lbl.phone", 1) + phone("phone_code", "phone", "ph.phone")) +
+      field("email", label("email", "lbl.email", 1) + input("email", ' type="email" autocomplete="email" data-i18n-ph="ph.email"') + hint("hint.email")) +
+    "</div>" +
+    '<div class="guardian" data-ztf-guardian hidden>' +
+      '<div class="guardian-h">' + T("guardian.title", "strong") + T("guardian.note", "span") + "</div>" +
+      '<div class="f-grid cols-2">' +
+        field("guardian_relation", label("guardian_relation", "lbl.guardian_relation", 1) + select("guardian_relation")) +
+        field("guardian_name", label("guardian_name", "lbl.guardian_name", 1) + input("guardian_name", ' data-i18n-ph="ph.guardian_name"')) +
+      "</div>" +
+      '<div class="f-grid cols-2">' +
+        field("guardian_phone", label("guardian_phone", "lbl.guardian_phone", 1) + phone("guardian_phone_code", "guardian_phone", "ph.phone")) +
+        field("guardian_email", label("guardian_email", "lbl.guardian_email", 0, "optional") + input("guardian_email", ' type="email" data-i18n-ph="ph.email"')) +
+      "</div>" +
+      field("guardian_consent", '<label class="np"><input type="checkbox" name="guardian_consent"> ' + T("lbl.guardian_consent") + "</label>", "consent") +
+    "</div>";
 
   S.academic =
-    '<p class="notice">Les résultats demandés sont ceux de l\'année scolaire <strong data-ztf-year></strong>. Seuls les relevés de notes issus d\'établissements du <strong>système éducatif camerounais</strong> sont acceptés.</p>' +
+    '<p class="notice" data-i18n-html="notice.academic"></p>' +
     '<div class="f-grid cols-2">' +
-      '<div class="field" data-field="institution_category"><label for="f-icat">Établissement (catégorie) <i>*</i></label><select id="f-icat" name="institution_category" required></select></div>' +
-      '<div class="field" data-field="institution_subcategory"><label for="f-isub">Établissement (sous-catégorie) <i>*</i></label><select id="f-isub" name="institution_subcategory" required></select></div>' +
-    '</div>' +
-    '<div class="field" data-field="institution_name"><label for="f-iname">Établissement (nom) <i>*</i></label><input id="f-iname" name="institution_name" placeholder="Choisissez d\'abord une catégorie" required>' +
-      '<button type="button" class="link-btn" data-ztf-add-school>+ Mon établissement n\'est pas dans la liste</button></div>' +
+      field("institution_category", label("institution_category", "lbl.institution_category", 1) + select("institution_category")) +
+      field("institution_subcategory", label("institution_subcategory", "lbl.institution_subcategory", 1) + select("institution_subcategory")) +
+    "</div>" +
+    field("institution_name", label("institution_name", "lbl.institution_name", 1) + input("institution_name") +
+      '<button type="button" class="link-btn" data-ztf-add-school data-i18n="btn.addSchool"></button>') +
     '<div class="f-grid cols-3">' +
-      '<div class="field" data-field="field_of_study"><label for="f-fos">Domaine d\'études <i>*</i></label><select id="f-fos" name="field_of_study" required></select></div>' +
-      '<div class="field" data-field="level"><label for="f-level">Niveau <i>*</i></label><select id="f-level" name="level" required></select></div>' +
-      '<div class="field" data-field="average"><label for="f-average">Moyenne <i data-ztf-avg-star>*</i></label><input id="f-average" name="average" placeholder="Ex : 16.2 / 20" required>' +
-        '<label class="np" data-ztf-average-np hidden><input type="checkbox" name="average_not_provided"> Je n\'ai pas de notes / moyenne</label></div>' +
-    '</div>' +
+      field("field_of_study", label("field_of_study", "lbl.fos", 1) + select("field_of_study")) +
+      field("level", label("level", "lbl.level", 1) + select("level")) +
+      field("average", '<label for="f-average"><span data-i18n="lbl.average"></span> <i data-ztf-avg-star>*</i></label>' +
+        input("average", ' data-i18n-ph="ph.average"') + '<p class="hint" data-ztf-avg-hint data-i18n="hint.avg.higher"></p>' +
+        '<span data-ztf-average-np hidden>' + np("average_not_provided", "np.average") + "</span>") +
+    "</div>" +
     '<div class="f-grid cols-2">' +
-      '<div class="field" data-field="ranking"><label for="f-ranking">Classement dans la promotion <span class="muted">(ou cochez « Non communiqué »)</span></label><input id="f-ranking" name="ranking" placeholder="Ex : 3 / 120">' +
-        '<label class="np"><input type="checkbox" name="ranking_not_provided"> Non communiqué sur le relevé de notes</label></div>' +
-      '<div class="field" data-field="cohort_size"><label for="f-cohort">Taille de la promotion <span class="muted">(ou cochez « Non communiqué »)</span></label><input id="f-cohort" name="cohort_size" inputmode="numeric" placeholder="Ex : 120">' +
-        '<label class="np"><input type="checkbox" name="cohort_size_not_provided"> Non communiqué</label></div>' +
-    '</div>';
+      field("ranking", label("ranking", "lbl.rank.promo", 0, "np.hint") + input("ranking", ' data-i18n-ph="ph.ranking"') + np("ranking_not_provided", "np.ranking")) +
+      field("cohort_size", label("cohort_size", "lbl.cohort.promo", 0, "np.hint") + input("cohort_size", ' inputmode="numeric" data-i18n-ph="ph.cohort"') + np("cohort_size_not_provided", "np.cohort")) +
+    "</div>" +
+    '<div class="gce" data-ztf-gce hidden>' +
+      '<div class="gce-h">' + T("gce.title", "strong") + T("gce.note", "span") + "</div>" +
+      '<div class="f-grid cols-2">' +
+        field("gce_exam", label("gce_exam", "lbl.gce_exam", 1) + select("gce_exam")) +
+        field("gce_results", label("gce_results", "lbl.gce_results", 1) + input("gce_results", ' data-i18n-ph="ph.gce_results"') + hint("hint.gce")) +
+      "</div>" +
+    "</div>";
 
   S.attachments =
-    '<div class="field file-field" data-field="idfile"><label for="f-idfile">Pièce d\'identité (Passeport ou CNI) <i>*</i></label>' +
-      '<div class="drop"><input id="f-idfile" name="idfile" type="file" accept=".pdf,.png,.jpg,.jpeg" required><span class="drop-ic" aria-hidden="true">⬆</span><span class="drop-t">Choisir un fichier</span><span class="drop-s">ou glissez-déposez ici</span></div>' +
-      '<p class="hint">Formats acceptés : PDF, PNG, JPG.</p><div data-ztf-filelist="idfile"></div></div>' +
-    '<div class="field file-field" data-field="transcripts"><label for="f-transcripts">Diplômes et relevés de notes (<span data-ztf-year></span>) <i>*</i> <span class="muted">(avec classement si possible)</span></label>' +
-      '<p class="hint">Seuls les bulletins / relevés de notes du système éducatif camerounais sont acceptés.</p>' +
-      '<div class="drop"><input id="f-transcripts" name="transcripts" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple required><span class="drop-ic" aria-hidden="true">⬆</span><span class="drop-t">Choisir un ou plusieurs fichiers</span><span class="drop-s">ou glissez-déposez ici</span></div>' +
-      '<div data-ztf-filelist="transcripts"></div></div>' +
-    '<div class="field file-field" data-field="otherfiles"><label for="f-otherfiles">Tout document utile complémentaire <span class="muted">(optionnel : CV, Lettre de motivation, etc.)</span></label>' +
-      '<div class="drop"><input id="f-otherfiles" name="otherfiles" type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" multiple><span class="drop-ic" aria-hidden="true">⬆</span><span class="drop-t">Choisir un ou plusieurs fichiers</span><span class="drop-s">ou glissez-déposez ici</span></div>' +
-      '<div data-ztf-filelist="otherfiles"></div></div>' +
-    '<div class="field" data-field="additional_notes"><label for="f-notes">Informations complémentaires (optionnel)</label>' +
-      '<textarea id="f-notes" name="additional_notes" rows="4" placeholder="Ajoutez ici toute précision utile."></textarea></div>';
+    field("idfile", label("idfile", "lbl.idfile", 1) + drop("idfile", false, ".pdf,.png,.jpg,.jpeg", true) + hint("hint.idfile") + '<div data-ztf-filelist="idfile"></div>', "file-field") +
+    field("transcripts", label("transcripts", "lbl.transcripts", 1, "lbl.transcripts.m") + hint("hint.transcripts") +
+      drop("transcripts", true, ".pdf,.png,.jpg,.jpeg", true) + '<div data-ztf-filelist="transcripts"></div>', "file-field") +
+    field("otherfiles", label("otherfiles", "lbl.otherfiles", 0, "lbl.otherfiles.m") +
+      drop("otherfiles", true, ".pdf,.png,.jpg,.jpeg,.doc,.docx") + '<div data-ztf-filelist="otherfiles"></div>', "file-field") +
+    field("additional_notes", label("additional_notes", "lbl.additional_notes") +
+      '<textarea id="f-additional_notes" name="additional_notes" rows="4" data-i18n-ph="ph.additional_notes"></textarea>');
 
   S.consent =
-    '<div class="field consent" data-field="cgu"><label class="np"><input type="checkbox" name="cgu"> <span>J\'accepte les <a href="#cgu">Conditions Générales d’Utilisation</a> et la <a href="#confidentialite">Politique de Confidentialité</a>.</span></label></div>' +
+    '<div class="field consent" data-field="cgu"><label class="np"><input type="checkbox" name="cgu"> <span data-i18n-html="cgu"></span></label></div>' +
     '<div class="captcha" data-ztf-captcha></div>' +
-    '<button type="submit" class="submit" disabled>Envoyer ma candidature</button>' +
-    '<p class="foot-note">* Champs obligatoires. Les pièces jointes sont requises selon le formulaire du Prix ZTF.</p>' +
-    '<p class="foot-note">En cas de problème avec le formulaire, vous pouvez envoyer votre dossier complet à <a data-ztf-contact></a>.</p>' +
-    '<p class="foot-note">Les fichiers sont transmis de manière sécurisée via notre serveur.</p>';
+    '<button type="submit" class="submit" disabled><span data-i18n="btn.submit"></span></button>' +
+    '<p class="foot-note" data-i18n="foot.required"></p>' +
+    '<p class="foot-note" data-i18n-html="foot.problem"></p>' +
+    '<p class="foot-note" data-i18n="foot.secure"></p>';
 
   function mount() {
     Array.prototype.forEach.call(document.querySelectorAll("[data-ztf-slot]"), function (n) {
