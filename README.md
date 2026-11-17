@@ -2,7 +2,9 @@
 
 Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**.
 
-Cette étape propose **5 maquettes** du formulaire : ouvrir [`maquettes/index.html`](maquettes/index.html) dans un navigateur.
+Cette étape propose **5 maquettes** du formulaire, en ligne sur https://prix-ztf-candidature.netlify.app (ou ouvrir [`maquettes/index.html`](maquettes/index.html) dans un navigateur).
+
+Déploiement : projet Netlify `prix-ztf-candidature`, dossier publié `maquettes/` (voir `netlify.toml`).
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
