@@ -10,7 +10,7 @@ const SHORT = ["civility", "last_name", "first_name", "nationality", "nationalit
   "subsystem", "cycle", "institution_category", "institution_subcategory", "institution_name", "field_of_study", "level",
   "average", "ranking", "cohort_size", "guardian_relation", "guardian_name", "guardian_phone_code", "guardian_phone", "guardian_email", "gce_exam", "lang"];
 const LONG: Record<string, number> = { additional_notes: 3000, gce_results: 500 };
-const FLAGS = ["average_not_provided", "ranking_not_provided", "cohort_size_not_provided", "guardian_consent", "cgu"];
+const FLAGS = ["average_not_provided", "ranking_not_provided", "cohort_size_not_provided", "guardian_consent"];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -77,6 +77,5 @@ export function validateFields(input: Record<string, unknown>) {
     else f.gce_results = "";
   } else { f.gce_exam = ""; f.gce_results = ""; }
 
-  if (!f.cgu) errors.push("cgu: obligatoire");
   return { fields: f, errors };
 }

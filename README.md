@@ -27,7 +27,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 
 ## Champs du formulaire
 
-Les champs 1-8, 13-20, 23 et 26-28 suivent la référence [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) ; les autres viennent des décisions ci-dessus. La référence n'a qu'un champ « Diplômes et relevés de notes » : il est ici coupé en deux (24 et 25).
+Les champs 1-8, 13-20, 23, 26 et 27 suivent la référence [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) ; les autres viennent des décisions ci-dessus. La référence n'a qu'un champ « Diplômes et relevés de notes » : il est ici coupé en deux (24 et 25). La case d'acceptation des CGU de la référence est retirée pour l'instant, en attendant les textes.
 
 | # | Section | Champ | Obligatoire |
 |---|---|---|---|
@@ -51,14 +51,13 @@ Les champs 1-8, 13-20, 23 et 26-28 suivent la référence [africaexcellenceaward
 | 25 | | Diplômes et relevés d'examens officiels (CEP, BEPC, Probatoire, Bac, GCE, BTS, Licence…) | non |
 | 26 | | Tout document utile complémentaire | non |
 | 27 | | Informations complémentaires | non |
-| 28 | Validation | Acceptation des CGU et de la Politique de Confidentialité | oui |
 
 Les listes complètes (en français et en anglais) sont dans [`maquettes/shared/form-data.js`](maquettes/shared/form-data.js).
 
 ## Fonctionnement de l'envoi
 
 1. Le navigateur envoie la fiche et la liste des fichiers à `POST /api/dossiers`. Le serveur refait tous les contrôles du formulaire, enregistre la fiche (état « en cours ») et renvoie le numéro de dossier et un jeton d'envoi.
-2. Chaque fichier part en morceaux de 3 Mo (`PUT /api/dossiers/:id/files/...`) : une fonction Netlify n'accepte qu'environ 4,5 Mo par requête, et un fichier peut faire jusqu'à 10 Mo. En cas de coupure, chaque morceau est réessayé trois fois.
+2. Chaque fichier (4 Mo au plus) part en morceaux de 3 Mo (`PUT /api/dossiers/:id/files/...`), car une fonction Netlify n'accepte qu'environ 4,5 Mo par requête. Des morceaux plus petits passent aussi mieux sur une connexion mobile ; en cas de coupure, chaque morceau est réessayé trois fois.
 3. `POST /api/dossiers/:id/finalize` vérifie que tous les morceaux sont arrivés, passe le dossier à l'état « envoyé » et envoie l'accusé de réception au candidat.
 4. Chaque nuit à 03 h 17 UTC, une tâche planifiée supprime les envois restés inachevés plus de 48 heures.
 
@@ -81,7 +80,7 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 site/
   index.html                  formulaire réel (maquette 1 + envoi au serveur)
   js/submit.js                envoi du dossier : fiche, fichiers en morceaux, validation finale
-  admin/index.html            liste des dossiers, fiche détaillée, pièces jointes, export CSV
+  admin/index.html            liste des dossiers, fiche détaillée, pièces jointes, export CSV, suppression
 netlify/
   functions/                  API : dossier-create, dossier-upload, dossier-finalize,
                               admin-dossiers, admin-file, cleanup-abandoned (tâche planifiée)
@@ -89,7 +88,7 @@ netlify/
 maquettes/
   index.html                  galerie des 5 propositions
   1-classique.html … 5-prestige.html
-  shared/form-data.js         listes et paramètres (date limite, contact, âges, 10 Mo par fichier)
+  shared/form-data.js         listes et paramètres (date limite, contact, âges, 4 Mo par fichier)
   shared/form-i18n.js         textes de l'interface en français et en anglais
   shared/form-markup.js       champs du formulaire
   shared/form-engine.js       langue, champs dépendants, validation, pièces jointes

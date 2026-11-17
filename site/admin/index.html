@@ -43,6 +43,9 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
 .files{display:grid;gap:6px}
 .files button{display:flex;justify-content:space-between;gap:10px;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fafcfb;cursor:pointer}
 .files button span{color:var(--muted);white-space:nowrap}
+.danger-zone{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.danger-zone p{margin:0;color:var(--muted);font-size:.85rem}
+.btn.danger{background:#fff;border-color:var(--danger);color:var(--danger)}.btn.danger:hover{background:#fdecea}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -99,8 +102,8 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
   function fmt(iso) { return iso ? new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : ""; }
   function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko"; }
 
-  async function api(path, asBlob) {
-    var res = await fetch(path, { headers: { authorization: "Bearer " + pw } });
+  async function api(path, asBlob, method) {
+    var res = await fetch(path, { method: method || "GET", headers: { authorization: "Bearer " + pw } });
     if (res.status === 401) { logout("Mot de passe incorrect."); throw new Error("401"); }
     if (!res.ok) { var d = {}; try { d = await res.json(); } catch (e) {} throw new Error(d.error || res.status); }
     return asBlob ? res.blob() : res.json();
@@ -192,6 +195,22 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
       box.appendChild(b);
     });
     body.appendChild(box);
+
+    var zone = document.createElement("div"); zone.className = "danger-zone";
+    var note = document.createElement("p"); note.textContent = "La suppression efface la fiche et toutes ses pièces jointes. Elle est définitive.";
+    var del = document.createElement("button"); del.type = "button"; del.className = "btn danger"; del.textContent = "Supprimer ce dossier";
+    del.addEventListener("click", async function () {
+      var typed = prompt("Pour supprimer définitivement le dossier de " + d.fields.first_name + " " + d.fields.last_name + ", tapez son numéro :\n" + d.id);
+      if (typed == null) return;
+      if (typed.trim().toUpperCase() !== d.id) { alert("Le numéro ne correspond pas : rien n'a été supprimé."); return; }
+      del.disabled = true; del.textContent = "Suppression…";
+      try {
+        await api("/api/admin/dossiers/" + d.id, false, "DELETE");
+        items = items.filter(function (x) { return x.id !== d.id; }); total = Math.max(0, total - 1); offset = Math.max(0, offset - 1);
+        $("dlg").close(); render();
+      } catch (e) { del.disabled = false; del.textContent = "Supprimer ce dossier"; alert("Suppression impossible : " + e.message); }
+    });
+    zone.appendChild(note); zone.appendChild(del); body.appendChild(zone);
     $("dlg").showModal();
   }
   function add(dl, k, v) { var dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v || "—"; dl.appendChild(dt); dl.appendChild(dd); }

@@ -105,7 +105,7 @@ window.ZTF_I18N = {
 
   /* Pièces jointes */
   "lbl.idfile": ["Pièce d'identité (Passeport ou CNI)", "Identity document (passport or national ID card)"],
-  "hint.idfile": ["Mineur sans CNI : acte de naissance. Formats acceptés : PDF, PNG, JPG ; 10 Mo maximum par fichier.", "Minor without an ID card: birth certificate. Accepted formats: PDF, PNG, JPG; 10 MB maximum per file."],
+  "hint.idfile": ["Mineur sans CNI : acte de naissance. Formats acceptés : PDF, PNG, JPG ; 4 Mo maximum par fichier.", "Minor without an ID card: birth certificate. Accepted formats: PDF, PNG, JPG; 4 MB maximum per file."],
   "lbl.transcripts": ["Relevés de notes et bulletins ({year})", "Transcripts and report cards ({year})"],
   "lbl.transcripts.m": ["(avec classement si possible)", "(with ranking if possible)"],
   "hint.transcripts": ["Tous les bulletins ou relevés de l'année : trimestres pour un élève, semestres pour un étudiant. Seuls les documents du système éducatif camerounais sont acceptés.", "Every report card or transcript for the year: terms for a pupil, semesters for a student. Only documents from the Cameroonian education system are accepted."],
@@ -124,7 +124,6 @@ window.ZTF_I18N = {
   "files.remove": ["Retirer", "Remove"],
 
   /* Validation et envoi */
-  "cgu": ["J'accepte les <a href=\"#cgu\">Conditions Générales d'Utilisation</a> et la <a href=\"#confidentialite\">Politique de Confidentialité</a>.", "I accept the <a href=\"#cgu\">Terms of Use</a> and the <a href=\"#confidentialite\">Privacy Policy</a>."],
   "captcha": ["Vérification anti-robot réussie", "Bot check passed"],
   "btn.submit": ["Envoyer ma candidature", "Submit my application"],
   "btn.sending": ["Envoi en cours...", "Sending..."],
@@ -140,7 +139,6 @@ window.ZTF_I18N = {
   "err.phoneIntl": ["Veuillez saisir un numéro de téléphone valide.", "Please enter a valid phone number."],
   "err.age": ["Le candidat doit avoir au moins {min} ans.", "The applicant must be at least {min} years old."],
   "err.guardian_consent": ["L'autorisation du parent ou tuteur est obligatoire.", "Parent or guardian authorisation is required."],
-  "err.cgu": ["Veuillez accepter les Conditions Générales d'Utilisation.", "Please accept the Terms of Use."],
 
   "toast.incomplete": ["Formulaire incomplet", "Form incomplete"],
   "toast.incomplete.d": ["Merci de compléter les champs signalés en rouge.", "Please complete the fields marked in red."],

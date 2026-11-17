@@ -106,9 +106,8 @@
       '<textarea id="f-additional_notes" name="additional_notes" rows="4" data-i18n-ph="ph.additional_notes"></textarea>');
 
   S.consent =
-    '<div class="field consent" data-field="cgu"><label class="np"><input type="checkbox" name="cgu"> <span data-i18n-html="cgu"></span></label></div>' +
     '<div class="captcha" data-ztf-captcha></div>' +
-    '<button type="submit" class="submit" disabled><span data-i18n="btn.submit"></span></button>' +
+    '<button type="submit" class="submit"><span data-i18n="btn.submit"></span></button>' +
     '<p class="foot-note" data-i18n="foot.required"></p>' +
     '<p class="foot-note" data-i18n-html="foot.problem"></p>' +
     '<p class="foot-note" data-i18n="foot.secure"></p>';

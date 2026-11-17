@@ -9,11 +9,11 @@ export default async (req: Request, context: Context) => {
   const denied = checkAdmin(req); if (denied) return denied;
   const { id, field } = context.params;
   const index = Number(context.params.index);
-  if (!ID_RE.test(id)) return fail("Numéro de dossier invalide.", 404);
+  if (!ID_RE.test(id)) return fail("Numéro de dossier invalide.", 400);
 
   const d = (await records().get(id, { type: "json" })) as Dossier | null;
   const entry = d?.files.find((f) => f.field === field && f.index === index);
-  if (!d || !entry) return fail("Fichier introuvable.", 404);
+  if (!d || !entry) return fail("Fichier introuvable.", 410);
 
   const store = fileStore();
   let c = 0;

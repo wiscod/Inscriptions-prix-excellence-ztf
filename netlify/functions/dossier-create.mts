@@ -30,7 +30,7 @@ export default async (req: Request) => {
     const ext = (name.split(".").pop() || "").toLowerCase();
     if (!rule) { errors.push(`${field}: champ de fichier inconnu`); continue; }
     if (!Number.isInteger(index) || index < 0 || index >= rule.max) { errors.push(`${field}: rang de fichier invalide`); continue; }
-    if (!Number.isInteger(size) || size <= 0 || size > MAX_FILE_BYTES) { errors.push(`${field}: « ${name} » dépasse 10 Mo ou est vide`); continue; }
+    if (!Number.isInteger(size) || size <= 0 || size > MAX_FILE_BYTES) { errors.push(`${field}: « ${name} » dépasse 4 Mo ou est vide`); continue; }
     if (!rule.ext.includes(ext)) { errors.push(`${field}: format de « ${name} » non accepté`); continue; }
     if (files.some((f) => f.field === field && f.index === index)) { errors.push(`${field}: fichier en double`); continue; }
     counts[field] = (counts[field] || 0) + 1;

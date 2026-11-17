@@ -310,19 +310,17 @@
     setKey(p, key);
   }
   function clearError(name) { var c = container(name); if (!c) return; c.classList.remove("is-invalid"); var p = c.querySelector(".ztf-error"); if (p) p.remove(); }
-  function allNames() { return required().concat(["guardian_relation", "guardian_name", "guardian_phone", "guardian_email", "guardian_consent", "gce_exam", "gce_results", "cgu"]); }
+  function allNames() { return required().concat(["guardian_relation", "guardian_name", "guardian_phone", "guardian_email", "guardian_consent", "gce_exam", "gce_results"]); }
 
   /** Valide les champs obligatoires contenus dans `scope` (tout le formulaire par défaut). */
   function validate(scope) {
     var bad = [], req = required();
-    allNames().forEach(function (n) { if (req.indexOf(n) < 0 && n !== "cgu") clearError(n); });
+    allNames().forEach(function (n) { if (req.indexOf(n) < 0) clearError(n); });
     req.forEach(function (n) {
       var c = container(n); if (!c || (scope && !scope.contains(c))) return;
       var k = check(n);
       if (k) { showError(n, k); bad.push(c); } else clearError(n);
     });
-    var cgu = el("cgu");
-    if (cgu && (!scope || scope.contains(cgu)) && !cgu.checked) { showError("cgu", "err.cgu"); bad.push(container("cgu")); }
     if (bad.length) {
       bad.sort(function (a, b) { return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1; });
       var first = bad[0];
@@ -349,7 +347,6 @@
       s.classList.toggle("is-complete", complete);
       $$('[data-ztf-nav="' + s.id + '"]').forEach(function (a) { a.classList.toggle("is-complete", complete); });
     });
-    var cgu = el("cgu"); if (cgu) $$('button[type="submit"]').forEach(function (b) { if (!b.dataset.busy) b.disabled = !cgu.checked; });
     document.dispatchEvent(new CustomEvent("ztf:progress", { detail: { percent: pct } }));
   }
 
@@ -413,7 +410,6 @@
     if (minor) ["guardian_relation", "guardian_name", "guardian_phone_code", "guardian_phone", "guardian_email"].forEach(function (n) { p[n] = fieldValue(n); });
     p.is_minor = minor; p.guardian_consent = minor ? el("guardian_consent").checked : false;
     if (gv) { p.gce_exam = fieldValue("gce_exam"); if (gceTaken()) p.gce_results = fieldValue("gce_results"); }
-    p.cgu = el("cgu").checked;
     return p;
   }
   function busy(on, pct) {
@@ -421,7 +417,7 @@
       if (on) {
         if (!b.dataset.busy) { b.dataset.busy = "1"; b.dataset.label = b.innerHTML; }
         b.disabled = true; b.innerHTML = '<span class="ztf-spin"></span>' + esc(tr("btn.sending")) + (pct != null ? " " + pct + " %" : "");
-      } else if (b.dataset.busy) { b.innerHTML = b.dataset.label; delete b.dataset.busy; b.disabled = !el("cgu").checked; }
+      } else if (b.dataset.busy) { b.innerHTML = b.dataset.label; delete b.dataset.busy; b.disabled = false; }
     });
   }
   function success(id) {
@@ -491,7 +487,6 @@
     if (pupil) { el("gce_exam").value = "GCE O Level"; updateDependent(); el("gce_results").value = "11 papers — 9 A (Maths, Add. Maths, Physics, Chemistry…), 2 B"; }
     ["idfile", "transcripts", "diplomas", "otherfiles"].forEach(function (n, i) { fileStore[n] = p.files[i].map(fakeFile); syncInput(n); renderFiles(n); });
     el("additional_notes").value = p.notes;
-    el("cgu").checked = true;
     allNames().concat(["cycle", "subsystem"]).forEach(clearError);
     refresh(); document.dispatchEvent(new CustomEvent("ztf:demo", { detail: { kind: pupil ? "pupil" : "student" } }));
   }

@@ -11,7 +11,7 @@
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 
-export const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 Mo par fichier
+export const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4 Mo par fichier
 export const CHUNK_BYTES = 3 * 1024 * 1024;     // 3 Mo par morceau (limite des fonctions : ~4,5 Mo)
 export const MAX_FILES_PER_FIELD = 10;
 

@@ -8,10 +8,10 @@ import { sendConfirmation } from "../lib/email.mts";
 
 export default async (req: Request, context: Context) => {
   const { id } = context.params;
-  if (!ID_RE.test(id)) return fail("Numéro de dossier invalide.", 404);
+  if (!ID_RE.test(id)) return fail("Numéro de dossier invalide.", 400);
   const store = records();
   const dossier = (await store.get(id, { type: "json" })) as Dossier | null;
-  if (!dossier) return fail("Dossier introuvable.", 404);
+  if (!dossier) return fail("Dossier introuvable.", 410);
   if (dossier.status === "soumis") return json({ id });
   const token = req.headers.get("x-upload-token") || "";
   if (sha256(token).toString("hex") !== dossier.uploadTokenHash) return fail("Jeton d'envoi invalide.", 403);

@@ -18,7 +18,7 @@ window.ZTF_DATA = {
   contactEmail: "contact@excellenceawardsztf.com",
   minAge: 9,       // un élève de 6e a 10-11 ans ; marge de sécurité
   adultAge: 18,    // en dessous : parent ou tuteur obligatoire
-  maxFileMB: 10,         // taille maximale par fichier
+  maxFileMB: 4,          // taille maximale par fichier
   maxFilesPerField: 10,  // nombre maximal de fichiers par champ de dépôt
 
   civilities: [["M.", "Mr"], ["Mme", "Mrs"], ["Mlle", "Miss"]],
