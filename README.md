@@ -21,10 +21,11 @@ Cette étape propose **5 maquettes** du formulaire : ouvrir [`maquettes/index.ht
 | Langue | Français + anglais |
 | Mineurs | Âge minimum 9 ans ; sous 18 ans, parent ou tuteur obligatoire |
 | Résultats | Francophone : moyenne /20, rang, effectif. Anglophone : moyenne et rang du bulletin, plus grades GCE si examen passé |
+| Relevés de notes | Champ de dépôt séparé et obligatoire ; diplômes dans un champ facultatif |
 
 ## Champs du formulaire
 
-Les champs 1-8, 13-20 et 23-27 suivent la référence [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) ; les autres viennent des décisions ci-dessus.
+Les champs 1-8, 13-20, 23 et 26-28 suivent la référence [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) ; les autres viennent des décisions ci-dessus. La référence n'a qu'un champ « Diplômes et relevés de notes » : il est ici coupé en deux (24 et 25).
 
 | # | Section | Champ | Obligatoire |
 |---|---|---|---|
@@ -44,10 +45,11 @@ Les champs 1-8, 13-20 et 23-27 suivent la référence [africaexcellenceawards.or
 | 21 | ↳ si secondaire anglophone | Dernier examen GCE passé (aucun / O Level / A Level) | oui |
 | 22 | ↳ si examen GCE passé | Matières et grades obtenus | oui |
 | 23 | Pièces jointes | Pièce d'identité (Passeport ou CNI ; acte de naissance pour un mineur) : PDF, PNG, JPG | oui |
-| 24 | | Diplômes, bulletins et relevés de notes (2025-2026) | oui |
-| 25 | | Tout document utile complémentaire | non |
-| 26 | | Informations complémentaires | non |
-| 27 | — | Acceptation des CGU et de la Politique de Confidentialité | oui |
+| 24 | | Relevés de notes et bulletins (2025-2026), plusieurs fichiers | oui |
+| 25 | | Diplômes et relevés d'examens officiels (CEP, BEPC, Probatoire, Bac, GCE, BTS, Licence…) | non |
+| 26 | | Tout document utile complémentaire | non |
+| 27 | | Informations complémentaires | non |
+| 28 | Validation | Acceptation des CGU et de la Politique de Confidentialité | oui |
 
 Les listes complètes (en français et en anglais) sont dans [`maquettes/shared/form-data.js`](maquettes/shared/form-data.js).
 

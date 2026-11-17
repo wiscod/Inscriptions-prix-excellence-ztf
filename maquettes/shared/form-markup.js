@@ -97,7 +97,9 @@
   S.attachments =
     field("idfile", label("idfile", "lbl.idfile", 1) + drop("idfile", false, ".pdf,.png,.jpg,.jpeg", true) + hint("hint.idfile") + '<div data-ztf-filelist="idfile"></div>', "file-field") +
     field("transcripts", label("transcripts", "lbl.transcripts", 1, "lbl.transcripts.m") + hint("hint.transcripts") +
-      drop("transcripts", true, ".pdf,.png,.jpg,.jpeg", true) + '<div data-ztf-filelist="transcripts"></div>', "file-field") +
+      drop("transcripts", true, ".pdf,.png,.jpg,.jpeg", true) + '<div data-ztf-filelist="transcripts"></div>', "file-field is-key") +
+    field("diplomas", label("diplomas", "lbl.diplomas", 0, "lbl.diplomas.m") + hint("hint.diplomas") +
+      drop("diplomas", true, ".pdf,.png,.jpg,.jpeg") + '<div data-ztf-filelist="diplomas"></div>', "file-field") +
     field("otherfiles", label("otherfiles", "lbl.otherfiles", 0, "lbl.otherfiles.m") +
       drop("otherfiles", true, ".pdf,.png,.jpg,.jpeg,.doc,.docx") + '<div data-ztf-filelist="otherfiles"></div>', "file-field") +
     field("additional_notes", label("additional_notes", "lbl.additional_notes") +

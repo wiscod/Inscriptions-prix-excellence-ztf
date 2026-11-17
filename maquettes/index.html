@@ -31,7 +31,7 @@ main{padding:30px 16px 60px}
 </head>
 <body>
 <header><div class="in">
-  <div class="k">Fondation Zacharias Tanee Fomum · version 2</div>
+  <div class="k">Fondation Zacharias Tanee Fomum · version 3</div>
   <h1>Formulaire de candidature au Prix ZTF : 5 maquettes</h1>
   <p>Mêmes champs et même ordre que le formulaire de référence <em>africaexcellenceawards.org/candidature</em>, adaptés au Cameroun selon vos réponses. Les 5 maquettes demandent exactement les mêmes informations ; seules la mise en page et l'expérience changent.</p>
 </div></header>
@@ -43,6 +43,7 @@ main{padding:30px 16px 60px}
       <li><strong>Secondaire et supérieur</strong> : pour un élève, « Niveau » devient « Classe » (6e → Terminale ou Form 1 → Upper Sixth), « Domaine d'études » devient « Série / filière », et le classement porte sur la classe.</li>
       <li><strong>Sous-système francophone / anglophone</strong> : un élève anglophone indique en plus son dernier examen GCE et ses grades.</li>
       <li><strong>Mineurs</strong> : âge minimum abaissé à 9 ans ; sous 18 ans, un bloc « Parent ou tuteur légal » apparaît (lien, nom, téléphone, e-mail facultatif, autorisation).</li>
+      <li><strong>Relevés de notes</strong> : un champ de dépôt à part, obligatoire, pour les relevés et bulletins de l'année. Les diplômes et relevés d'examens officiels (BEPC, Bac, GCE…) ont leur propre champ, facultatif.</li>
       <li><strong>Bilingue</strong> : bouton FR / EN sur toutes les maquettes ; la maquette 3 affiche les deux langues en même temps.</li>
     </ul>
   </div>
@@ -54,7 +55,7 @@ main{padding:30px 16px 60px}
     <a class="card" href="2-parcours-guide.html"><img src="apercus/2-parcours-guide.jpg" alt="Aperçu maquette 2"><div class="b">
       <h2><span>2.</span> Parcours guidé</h2>
       <p>On commence par le profil (élève ou étudiant, francophone ou anglophone) : le formulaire filtre ensuite les établissements et annonce les pièces à préparer. 5 étapes, récapitulatif avec « Modifier » avant l'envoi.</p>
-      <div class="tags"><span>Profil d'abord</span><span>Moins d'erreurs</span><span>Rassurant pour les jeunes</span></div></div></a>
+      <div class="tags"><span>Profil d'abord</span><span>5 étapes</span><span>Récapitulatif avant envoi</span></div></div></a>
     <a class="card" href="3-bilingue-officiel.html"><img src="apercus/3-bilingue-officiel.jpg" alt="Aperçu maquette 3"><div class="b">
       <h2><span>3.</span> Bilingue officiel</h2>
       <p>Une fiche de candidature au format administratif, avec chaque libellé en français et en anglais côte à côte, comme les documents officiels camerounais. Pas de bouton de langue : tout le monde lit la même fiche.</p>
@@ -65,14 +66,14 @@ main{padding:30px 16px 60px}
       <div class="tags"><span>Smartphone</span><span>Connexions lentes</span><span>Type application</span></div></div></a>
     <a class="card" href="5-prestige.html"><img src="apercus/5-prestige.jpg" alt="Aperçu maquette 5"><div class="b">
       <h2><span>5.</span> Prestige « cérémonie »</h2>
-      <p>Bleu nuit et or, typographie à empattements, sommaire latéral en chiffres romains, chiffres clés du prix et anneau de progression : l'esprit de la cérémonie de remise des prix.</p>
-      <div class="tags"><span>Haut de gamme</span><span>Valorise le prix</span><span>Grand écran</span></div></div></a>
+      <p>Bleu nuit et or, typographie à empattements, sommaire latéral en chiffres romains, chiffres clés du prix et anneau de progression.</p>
+      <div class="tags"><span>Bleu nuit et or</span><span>Chiffres clés du prix</span><span>Grand écran</span></div></div></a>
   </div>
 
   <div class="note">
     <h3>À savoir pour tester</h3>
     <ul>
-      <li>En bas à gauche, <strong>« Maquette · pré-remplir »</strong> propose deux dossiers fictifs : un <em>élève anglophone mineur</em> (fait apparaître le bloc tuteur et les résultats GCE) et une <em>étudiante francophone</em>.</li>
+      <li>En bas à gauche, <strong>« Maquette · pré-remplir »</strong> propose deux dossiers fictifs : un <em>élève anglophone mineur</em> (bloc tuteur, résultats GCE, trois bulletins trimestriels) et une <em>étudiante francophone</em>.</li>
       <li>Essayez une date de naissance de moins de 18 ans, puis une catégorie du secondaire avec le sous-système anglophone : les blocs correspondants apparaissent.</li>
       <li>L'envoi est simulé : aucune donnée ne quitte le navigateur. Le captcha (Cloudflare Turnstile dans la référence) est représenté par un emplacement.</li>
       <li>La date limite est affichée « [date à définir] » : elle se règle à un seul endroit (<code>shared/form-data.js</code>).</li>

@@ -18,7 +18,7 @@
   var both = document.documentElement.getAttribute("data-ztf-mode") === "both";
   var lang = both ? "both" : initialLang();
   var NP = { average: "average_not_provided", ranking: "ranking_not_provided", cohort_size: "cohort_size_not_provided" };
-  var form, fileStore = { idfile: [], transcripts: [], otherfiles: [] };
+  var form, fileStore = { idfile: [], transcripts: [], diplomas: [], otherfiles: [] };
 
   function initialLang() {
     var q = (location.search.match(/[?&]lang=(fr|en)\b/) || [])[1]; if (q) return q;
@@ -372,7 +372,7 @@
       { group: "1. " + tr("sec.identity"), items: g1 },
       { group: "2. " + tr("sec.academic"), items: g2 },
       { group: "3. " + tr("sec.attachments"), items: [[tr("lbl.idfile"), files("idfile")], [tr("lbl.transcripts"), files("transcripts")],
-        [tr("lbl.otherfiles"), files("otherfiles")], [tr("lbl.additional_notes"), v("additional_notes")]] }
+        [tr("lbl.diplomas"), files("diplomas")], [tr("lbl.otherfiles"), files("otherfiles")], [tr("lbl.additional_notes"), v("additional_notes")]] }
     ];
   }
   function renderRecap(target) {
@@ -426,13 +426,13 @@
       civility: "M.", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", city: "Bamenda", phone: "6 75 22 11 00", email: "grace.nfor@exemple.com",
       cycle: "secondary", sub: "anglophone", cat: "Enseignement secondaire général", subcat: "Établissement privé protestant (presbytérien, baptiste, EEC…)",
       school: "Presbyterian Secondary School Mankon (Bamenda)", fos: "Sciences", level: "Upper Sixth", avg: "17.1 / 20", rank: "1 / 64", cohort: "64",
-      files: [["CNI_Nfor_Divine.pdf"], ["Report_card_Lower_Sixth_2025-2026.pdf", "GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
+      files: [["Acte_naissance_Nfor_Divine.pdf"], ["Report_card_term1_2025-2026.pdf", "Report_card_term2_2025-2026.pdf", "Report_card_term3_2025-2026.pdf"], ["GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
       notes: "Lauréat des Olympiades nationales de mathématiques 2025 (catégorie lycée)."
     } : {
       civility: "Mlle", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", city: "Yaoundé", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
       cycle: "higher", sub: "francophone", cat: "Universités d'État (facultés)", subcat: "Sciences", school: "Université de Yaoundé I",
       fos: "Mathématiques", level: "BAC+2", avg: "17.4 / 20", rank: "2 / 214", cohort: "214",
-      files: [["CNI_Ngo_Bayiha.pdf"], ["Releve_L1_2025-2026.pdf", "Releve_L2_S1.pdf"], ["CV_Esther.pdf"]],
+      files: [["CNI_Ngo_Bayiha.pdf"], ["Releve_L2_S1_2025-2026.pdf", "Releve_L2_S2_2025-2026.pdf"], ["Baccalaureat_C_2024.pdf", "Releve_L1_2024-2025.pdf"], ["CV_Esther.pdf"]],
       notes: "Major de promotion en L1, lauréate des Olympiades nationales de mathématiques 2024."
     };
     el("civility").value = p.civility; el("last_name").value = p.last_name; el("first_name").value = p.first_name;
@@ -449,7 +449,7 @@
     el("level").value = p.level; el("field_of_study").value = p.fos; onLevel();
     el("average").value = p.avg; el("ranking").value = p.rank; el("cohort_size").value = p.cohort;
     if (pupil) { el("gce_exam").value = "GCE O Level"; updateDependent(); el("gce_results").value = "11 papers — 9 A (Maths, Add. Maths, Physics, Chemistry…), 2 B"; }
-    ["idfile", "transcripts", "otherfiles"].forEach(function (n, i) { fileStore[n] = p.files[i].map(fakeFile); syncInput(n); renderFiles(n); });
+    ["idfile", "transcripts", "diplomas", "otherfiles"].forEach(function (n, i) { fileStore[n] = p.files[i].map(fakeFile); syncInput(n); renderFiles(n); });
     el("additional_notes").value = p.notes;
     el("cgu").checked = true;
     allNames().concat(["cycle", "subsystem"]).forEach(clearError);

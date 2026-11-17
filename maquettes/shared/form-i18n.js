@@ -92,7 +92,7 @@ window.ZTF_I18N = {
   "lbl.gce_exam": ["Dernier examen GCE passé", "Latest GCE examination taken"],
   "lbl.gce_results": ["Matières et grades obtenus", "Subjects and grades obtained"],
   "ph.gce_results": ["Ex : 9 papers — Maths A, English B, Physics A…", "e.g. 9 papers — Maths A, English B, Physics A…"],
-  "hint.gce": ["Recopiez les grades de votre relevé GCE (A à E, U) et joignez le relevé dans les pièces jointes.", "Copy the grades from your GCE result slip (A to E, U) and attach the slip below."],
+  "hint.gce": ["Recopiez les grades de votre relevé GCE (A à E, U) ; le relevé lui-même se joint dans « Diplômes et relevés d'examens officiels ».", "Copy the grades from your GCE result slip (A to E, U); attach the slip itself under “Certificates and official exam results”."],
 
   /* Listes */
   "ph.select": ["Sélectionnez", "Select"],
@@ -106,9 +106,12 @@ window.ZTF_I18N = {
   /* Pièces jointes */
   "lbl.idfile": ["Pièce d'identité (Passeport ou CNI)", "Identity document (passport or national ID card)"],
   "hint.idfile": ["Mineur sans CNI : acte de naissance. Formats acceptés : PDF, PNG, JPG.", "Minor without an ID card: birth certificate. Accepted formats: PDF, PNG, JPG."],
-  "lbl.transcripts": ["Diplômes, bulletins et relevés de notes ({year})", "Certificates, report cards and transcripts ({year})"],
+  "lbl.transcripts": ["Relevés de notes et bulletins ({year})", "Transcripts and report cards ({year})"],
   "lbl.transcripts.m": ["(avec classement si possible)", "(with ranking if possible)"],
-  "hint.transcripts": ["Seuls les documents du système éducatif camerounais sont acceptés. Anglophones : joignez aussi votre relevé GCE si vous avez passé l'examen.", "Only documents from the Cameroonian education system are accepted. Anglophone applicants: also attach your GCE result slip if you sat the exam."],
+  "hint.transcripts": ["Tous les bulletins ou relevés de l'année : trimestres pour un élève, semestres pour un étudiant. Seuls les documents du système éducatif camerounais sont acceptés.", "Every report card or transcript for the year: terms for a pupil, semesters for a student. Only documents from the Cameroonian education system are accepted."],
+  "lbl.diplomas": ["Diplômes et relevés d'examens officiels", "Certificates and official exam results"],
+  "lbl.diplomas.m": ["(si vous en avez : CEP, BEPC, Probatoire, Bac, GCE O/A Level, BTS, Licence…)", "(if you have any: CEP, BEPC, Probatoire, Bac, GCE O/A Level, BTS, Licence…)"],
+  "hint.diplomas": ["Les élèves anglophones qui ont passé le GCE joignent ici leur relevé GCE.", "Anglophone pupils who sat the GCE attach their GCE result slip here."],
   "lbl.otherfiles": ["Tout document utile complémentaire", "Any other useful document"],
   "lbl.otherfiles.m": ["(optionnel : CV, lettre de motivation, attestations, etc.)", "(optional: CV, cover letter, certificates, etc.)"],
   "lbl.additional_notes": ["Informations complémentaires (optionnel)", "Additional information (optional)"],
