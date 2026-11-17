@@ -1,6 +1,11 @@
+# Ancien hébergement : l'adresse prix-ztf-candidature.netlify.app redirige tout vers Vercel.
+# (Le site est désormais hébergé sur Vercel, voir vercel.json.)
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command = ""
+  publish = "maquettes"
 
-[functions]
-  directory = "netlify/functions"
+[[redirects]]
+  from = "/*"
+  to = "https://prix-ztf-candidature.vercel.app/:splat"
+  status = 301
+  force = true
