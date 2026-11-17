@@ -61,10 +61,6 @@ input:disabled,select:disabled{background:var(--soft);color:#98a2b3}
 .link-btn .i18n-en{display:inline}.link-btn .i18n-en:before{content:" / "}
 .choice-opt{border-radius:3px;padding:12px 14px}.choice-opt b{text-transform:uppercase;font-size:.85rem;letter-spacing:.04em}
 .choice-t small .i18n-en{display:inline}.choice-t small .i18n-en:before{content:" · "}
-.guardian,.gce{border:1px dashed var(--navy);padding:14px 14px 0;margin:0 0 16px;background:#fbfcfe}
-.guardian-h,.gce-h{margin-bottom:12px;font-size:.84rem}
-.guardian-h strong,.gce-h strong{display:block;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)}
-.guardian-h span,.gce-h span{color:var(--muted)}
 .drop{border-radius:3px;padding:14px}
 .drop-t .i18n-en,.drop-s .i18n-en{display:inline}.drop-t .i18n-en:before,.drop-s .i18n-en:before{content:" / "}
 .sign{margin-top:30px;border:1px solid var(--navy);padding:16px}
@@ -110,21 +106,21 @@ window.ZTF_PAGE_I18N = {
     <div lang="fr"><h2>Instructions</h2><ol>
       <li>Remplissez la fiche dans la langue de votre choix.</li>
       <li>Les champs marqués * sont obligatoires.</li>
-      <li>Moins de 18 ans : un parent ou tuteur doit compléter et autoriser.</li>
-      <li>Joignez votre pièce d'identité et vos bulletins / relevés 2025-2026.</li>
+      <li>Gardez l'identifiant affiché à la fin : il permet de retélécharger votre fiche.</li>
+      <li>Joignez vos relevés de notes et bulletins 2025/2026 (4 Mo maximum par fichier).</li>
     </ol></div>
     <div lang="en"><h2>Instructions</h2><ol>
       <li>Fill in the form in the language of your choice.</li>
       <li>Fields marked * are required.</li>
-      <li>Under 18: a parent or guardian must complete and authorise.</li>
-      <li>Attach your ID and your 2025-2026 report cards / transcripts.</li>
+      <li>Keep the identifier shown at the end: it lets you download your form again.</li>
+      <li>Attach your 2025/2026 transcripts and report cards (4 MB maximum per file).</li>
     </ol></div>
   </section>
 
   <div class="body" data-ztf-hide-on-success>
     <form data-ztf-form>
       <section class="sec" id="s1" data-ztf-section><div class="bar"><span class="n">1</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
-      <section class="sec" id="s2" data-ztf-section><div class="bar"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></section>
+      <section class="sec" id="s2" data-ztf-section><div class="bar"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
       <section class="sec" id="s3" data-ztf-section><div class="bar"><span class="n">3</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
       <div class="sign" data-ztf-slot="consent"></div>
     </form>
@@ -132,7 +128,7 @@ window.ZTF_PAGE_I18N = {
 
   <div class="success" data-ztf-success hidden>
     <h2 data-i18n="success.title"></h2>
-    <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <div data-ztf-slot="receipt"></div>
     <button class="btn-out" type="button" data-ztf-reset data-i18n="btn.new"></button>
   </div>
 
@@ -140,6 +136,7 @@ window.ZTF_PAGE_I18N = {
 </div>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/ztf-lists.js"></script>
 <script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>

@@ -65,15 +65,15 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
 
 <main id="app" hidden>
   <div class="bar">
-    <input id="q" type="search" placeholder="Rechercher : nom, numéro, établissement, ville, e-mail…">
+    <input id="q" type="search" placeholder="Rechercher : nom, numéro, école, ville, téléphone…">
     <select id="fStatus"><option value="soumis">Dossiers envoyés</option><option value="en_cours">Envois inachevés</option><option value="">Tous les états</option></select>
     <select id="fCycle"><option value="">Secondaire et supérieur</option><option value="secondary">Secondaire</option><option value="higher">Supérieur</option></select>
-    <select id="fSub"><option value="">Francophones et anglophones</option><option value="francophone">Francophones</option><option value="anglophone">Anglophones</option></select>
+    <select id="fNew"><option value="">Toutes les écoles</option><option value="new">Écoles à vérifier (hors liste)</option></select>
     <button class="btn" id="csv">Exporter en CSV</button>
     <span class="count" id="count"></span>
   </div>
   <div class="tablewrap"><table>
-    <thead><tr><th>Reçu le</th><th>N° de dossier</th><th>Nom</th><th>Prénom</th><th>Cycle</th><th>Classe / niveau</th><th>Établissement</th><th>Moyenne</th><th>Rang</th><th>Fichiers</th><th>État</th></tr></thead>
+    <thead><tr><th>Reçu le</th><th>N° de dossier</th><th>Nom</th><th>Prénom</th><th>Téléphone</th><th>Cycle</th><th>Classe / niveau</th><th>Série / domaine</th><th>École</th><th>Moyenne</th><th>Fichiers</th><th>État</th></tr></thead>
     <tbody id="rows"></tbody>
   </table></div>
   <div class="more"><button class="btn" id="more" hidden>Charger les dossiers suivants</button></div>
@@ -81,6 +81,7 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
 
 <dialog id="dlg"><div class="dlg-h"><h2 id="dlgTitle"></h2><button class="btn" id="dlgClose">Fermer</button></div><div class="dlg-b" id="dlgBody"></div></dialog>
 
+<script src="../shared/ztf-lists.js"></script>
 <script>
 (function () {
   "use strict";
@@ -89,13 +90,15 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
   var $ = function (id) { return document.getElementById(id); };
 
   var LABELS = [
-    ["Identité", [["civility", "Civilité"], ["last_name", "Nom"], ["first_name", "Prénom"], ["nationality_name", "Nationalité"], ["birth_date", "Date de naissance"], ["city", "Ville de résidence"], ["phone", "Téléphone"], ["email", "Adresse électronique"], ["lang", "Langue du formulaire"]]],
-    ["Parent ou tuteur", [["guardian_relation", "Lien avec le candidat"], ["guardian_name", "Nom et prénom"], ["guardian_phone", "Téléphone"], ["guardian_email", "E-mail"], ["guardian_consent", "Autorisation donnée"]]],
-    ["Parcours", [["cycle", "Cycle"], ["subsystem", "Sous-système"], ["institution_category", "Établissement (catégorie)"], ["institution_subcategory", "Établissement (sous-catégorie)"], ["institution_name", "Établissement (nom)"], ["field_of_study", "Domaine d'études / série"], ["level", "Niveau / classe"], ["average", "Moyenne"], ["ranking", "Classement / rang"], ["cohort_size", "Taille promotion / effectif"], ["gce_exam", "Examen GCE"], ["gce_results", "Résultats GCE"]]],
-    ["Informations complémentaires", [["additional_notes", "Texte libre"]]]
+    ["Informations personnelles", [["gender", "Genre"], ["last_name", "Nom"], ["first_name", "Prénom"], ["nationality_name", "Nationalité"], ["birth_date", "Date de naissance"], ["city", "Ville / Village"], ["phone", "Téléphone"], ["email", "Adresse électronique"], ["lang", "Langue du formulaire"]]],
+    ["Informations académiques", [["cycle", "Cycle"], ["institution_category", "Catégorie d'établissement"], ["institution_name", "École"], ["school_is_new", "École hors liste (à vérifier)"], ["level", "Niveau / classe"], ["field_of_study", "Série / domaine d'études"], ["average", "Moyenne"]]],
+    ["Motivation", [["motivation", "Texte du candidat"]]]
   ];
-  var FILE_LABELS = { idfile: "Pièce d'identité", transcripts: "Relevés de notes et bulletins", diplomas: "Diplômes et relevés d'examens", otherfiles: "Documents complémentaires" };
+  var FILE_LABELS = { transcripts: "Relevés de notes et bulletins", diplomas: "Diplômes et relevés d'examens", otherfiles: "Documents complémentaires" };
   var CYCLE = { secondary: "Secondaire", higher: "Supérieur" };
+  var GENDER = { male: "Homme", female: "Femme" };
+  var ZL = window.ZTF_LISTS;
+  function listLabel(list, key) { for (var i = 0; i < list.length; i++) if (list[i][0] === key) return list[i][1]; return key || ""; }
 
   function store(v) { try { if (v == null) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, v); } catch (e) { /* stockage indisponible */ } }
   function stored() { try { return sessionStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
@@ -112,24 +115,25 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
   function value(d, k) {
     var f = d.fields, v = f[k];
     if (k === "phone") return f.phone ? f.phone_code + " " + f.phone : "";
-    if (k === "guardian_phone") return f.guardian_phone ? f.guardian_phone_code + " " + f.guardian_phone : "";
     if (k === "cycle") return CYCLE[v] || v;
+    if (k === "gender") return GENDER[v] || v;
+    if (k === "level") return listLabel(ZL.levels, v);
+    if (k === "institution_category") return listLabel(ZL.categories, v);
+    if (k === "field_of_study") return v === "NA" ? "Non applicable" : listLabel(ZL.series.concat(ZL.fields), v);
     if (k === "average" && f.average_not_provided) return "Non communiquée";
-    if (k === "ranking" && f.ranking_not_provided) return "Non communiqué";
-    if (k === "cohort_size" && f.cohort_size_not_provided) return "Non communiqué";
     if (v === true) return "Oui"; if (v === false) return "";
     return v == null ? "" : String(v);
   }
 
   function filtered() {
-    var q = $("q").value.trim().toLowerCase(), st = $("fStatus").value, cy = $("fCycle").value, sb = $("fSub").value;
+    var q = $("q").value.trim().toLowerCase(), st = $("fStatus").value, cy = $("fCycle").value, nw = $("fNew").value;
     return items.filter(function (d) {
       if (st && d.status !== st) return false;
       if (cy && d.fields.cycle !== cy) return false;
-      if (sb && d.fields.subsystem !== sb) return false;
+      if (nw && !d.fields.school_is_new) return false;
       if (!q) return true;
       var f = d.fields;
-      return [d.id, f.last_name, f.first_name, f.institution_name, f.city, f.email, f.level].join(" ").toLowerCase().indexOf(q) >= 0;
+      return [d.id, f.last_name, f.first_name, f.institution_name, f.city, f.email, f.phone, value(d, "level")].join(" ").toLowerCase().indexOf(q) >= 0;
     });
   }
 
@@ -138,7 +142,7 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
     tb.innerHTML = "";
     list.forEach(function (d) {
       var tr = document.createElement("tr"), f = d.fields;
-      [fmt(d.submittedAt || d.createdAt), d.id, f.last_name, f.first_name, CYCLE[f.cycle] || "", f.level, f.institution_name, value(d, "average"), value(d, "ranking"), String(d.files.length)]
+      [fmt(d.submittedAt || d.createdAt), d.id, f.last_name, f.first_name, value(d, "phone"), CYCLE[f.cycle] || "", value(d, "level"), value(d, "field_of_study"), f.institution_name + (f.school_is_new ? " (à vérifier)" : ""), value(d, "average"), String(d.files.length)]
         .forEach(function (v) { var td = document.createElement("td"); td.textContent = v || ""; tr.appendChild(td); });
       var td = document.createElement("td"), s = document.createElement("span");
       s.className = "tag " + (d.status === "soumis" ? "ok" : "wait"); s.textContent = d.status === "soumis" ? "Envoyé" : "Inachevé";
@@ -165,11 +169,10 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
     var body = $("dlgBody"); body.innerHTML = "";
     var meta = document.createElement("dl");
     [["État", d.status === "soumis" ? "Envoyé" : "Envoi inachevé"], ["Commencé le", fmt(d.createdAt)], ["Envoyé le", fmt(d.submittedAt)],
-      ["Accusé de réception", d.email ? ({ envoye: "envoyé", echec: "échec : " + (d.email.detail || ""), non_configure: "non envoyé (service d'e-mail non configuré)" })[d.email.status] : ""]]
+      ["Accusé de réception", d.email ? ({ envoye: "envoyé", echec: "échec : " + (d.email.detail || ""), non_configure: "non envoyé (service d'e-mail non configuré)", sans_email: "non envoyé (pas d'e-mail)" })[d.email.status] : ""]]
       .forEach(function (p) { add(meta, p[0], p[1]); });
     body.appendChild(meta);
     LABELS.forEach(function (g) {
-      if (g[0] === "Parent ou tuteur" && !d.fields.is_minor) return;
       var h = document.createElement("h3"); h.textContent = g[0]; body.appendChild(h);
       var dl = document.createElement("dl");
       g[1].forEach(function (p) { var v = value(d, p[0]); if (v) add(dl, p[1], v); });
@@ -250,7 +253,7 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
   $("logout").addEventListener("click", function () { logout(); });
   $("more").addEventListener("click", function () { load(false); });
   $("csv").addEventListener("click", exportCsv);
-  ["q", "fStatus", "fCycle", "fSub"].forEach(function (id) { $(id).addEventListener("input", render); });
+  ["q", "fStatus", "fCycle", "fNew"].forEach(function (id) { $(id).addEventListener("input", render); });
   $("dlgClose").addEventListener("click", function () { $("dlg").close(); });
   if (stored()) login(stored());
 })();

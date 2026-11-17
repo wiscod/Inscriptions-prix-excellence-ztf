@@ -1,8 +1,9 @@
 /*
  * Envoi réel du dossier (chargé avant shared/form-engine.js).
  * 1. POST /api/dossiers : la fiche et la liste des fichiers → numéro de dossier + jeton ;
- * 2. PUT  /api/dossiers/:id/files/... : chaque fichier en morceaux de 3 Mo (limite des fonctions Netlify) ;
- * 3. POST /api/dossiers/:id/finalize : le serveur vérifie que tout est arrivé et envoie l'accusé de réception.
+ * 2. PUT  /api/dossiers/:id/files/... : chaque fichier en morceaux de 3 Mo (limite des fonctions Vercel : 4,5 Mo par requête) ;
+ * 3. POST /api/dossiers/:id/finalize : le serveur vérifie que tout est arrivé et renvoie l'identifiant du candidat.
+ * « Déjà inscrit ? » : POST /api/lookup avec l'identifiant renvoie la fiche, pour la retélécharger.
  */
 (function () {
   "use strict";
@@ -56,8 +57,16 @@
         onProgress(Math.min(99, Math.round(sent / total * 100)));
       }
     }
-    await send("/api/dossiers/" + id + "/finalize", { method: "POST", headers: { "x-upload-token": token } });
+    var done = await send("/api/dossiers/" + id + "/finalize", { method: "POST", headers: { "x-upload-token": token } });
     onProgress(100);
-    return { id: id };
+    return { id: id, code: done.code };
+  };
+
+  /** « Déjà inscrit ? » : la fiche correspondant à l'identifiant, ou null s'il est inconnu. */
+  window.ZTF_LOOKUP = async function (code) {
+    var res = await fetch("/api/lookup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ code: code }) });
+    if (res.status === 404) return null;
+    if (!res.ok) throw await readError(res);
+    return res.json();
   };
 })();

@@ -57,9 +57,6 @@ input:disabled,select:disabled{opacity:.55}
 .need{margin-top:6px;border-radius:16px;background:#fbfaf6;border:1px dashed #d6d3c4;padding:16px 18px}
 .need h3{margin:0 0 8px;font-size:.9rem;color:var(--navy)}
 .need ul{margin:0;padding-left:20px;font-size:.88rem;color:#374151;display:grid;gap:4px}
-.guardian,.gce{border-radius:16px;background:#fff8dc;border:1px solid #f3e3a3;padding:16px 16px 2px;margin-bottom:18px}
-.guardian-h,.gce-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:14px}
-.guardian-h strong,.gce-h strong{color:var(--navy)}.guardian-h span,.gce-h span{font-size:.82rem;color:#7a6417}
 .actions{display:flex;justify-content:space-between;gap:12px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
 .btn{font:inherit;font-weight:700;padding:13px 22px;border-radius:12px;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
 .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;margin-left:auto}
@@ -91,11 +88,9 @@ window.ZTF_PAGE_I18N = {
   "p.s4.t": ["Vérifiez votre dossier", "Review your application"],
   "p.s4.d": ["Relisez vos informations avant l'envoi définitif.", "Check your information before final submission."],
   "p.need": ["Ce qu'il vous faudra", "What you will need"],
-  "p.need.id": ["Votre pièce d'identité (CNI, passeport ou acte de naissance)", "Your ID (ID card, passport or birth certificate)"],
-  "p.need.rc": ["Vos bulletins de l'année {year} (moyenne, rang, effectif)", "Your {year} report cards (average, position, class size)"],
-  "p.need.tr": ["Vos relevés de notes {year} (moyenne, classement)", "Your {year} transcripts (average, ranking)"],
-  "p.need.gce": ["Votre relevé GCE, si vous avez passé l'examen", "Your GCE result slip, if you sat the exam"],
-  "p.need.par": ["Si vous avez moins de 18 ans : les coordonnées d'un parent ou tuteur", "If you are under 18: a parent or guardian's contact details"],
+  "p.need.phone": ["Un numéro de téléphone valide : il sert à vous contacter", "A valid phone number: it is used to contact you"],
+  "p.need.rc": ["Vos bulletins de l'année {year} (photos nettes ou PDF, 4 Mo maximum chacun)", "Your {year} report cards (clear photos or PDFs, 4 MB maximum each)"],
+  "p.need.tr": ["Vos relevés de notes {year} (photos nettes ou PDF, 4 Mo maximum chacun)", "Your {year} transcripts (clear photos or PDFs, 4 MB maximum each)"],
   "p.prev": ["← Précédent", "← Back"], "p.next": ["Continuer →", "Continue →"]
 };
 </script>
@@ -126,12 +121,10 @@ window.ZTF_PAGE_I18N = {
       <section class="step profile" data-step>
         <div class="step-h"><div><h2 data-i18n="sec.profile"></h2><p data-i18n="sec.profile.s"></p></div><span class="k">1 / 5</span></div>
         <div data-ztf-slot="cycle"></div>
-        <div data-ztf-slot="subsystem"></div>
+        
         <div class="need"><h3 data-i18n="p.need"></h3><ul>
-          <li data-i18n="p.need.id"></li>
           <li id="need-res" data-i18n="p.need.rc"></li>
-          <li id="need-gce" data-i18n="p.need.gce" hidden></li>
-          <li id="need-par" data-i18n="p.need.par"></li>
+          <li data-i18n="p.need.phone"></li>
         </ul></div>
       </section>
       <section class="step" data-step hidden>
@@ -163,12 +156,13 @@ window.ZTF_PAGE_I18N = {
   <div class="card success">
     <div class="ok">✓</div>
     <h2 data-i18n="success.title"></h2>
-    <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <div data-ztf-slot="receipt"></div>
     <button class="btn" type="button" data-ztf-reset data-i18n="btn.new"></button>
   </div>
 </main>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/ztf-lists.js"></script>
 <script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>
@@ -197,8 +191,6 @@ window.ZTF_PAGE_I18N = {
     var f = document.querySelector("[data-ztf-form]").elements, sec = f.cycle.value === "secondary";
     var res = document.getElementById("need-res"); res.setAttribute("data-i18n", sec ? "p.need.rc" : "p.need.tr");
     res.textContent = ZTF.tr(sec ? "p.need.rc" : "p.need.tr");
-    document.getElementById("need-gce").hidden = !(sec && f.subsystem.value === "anglophone");
-    document.getElementById("need-par").hidden = f.cycle.value === "higher";
   }
   function init() {
     steps = [].slice.call(document.querySelectorAll("[data-step]")); last = steps.length - 1;

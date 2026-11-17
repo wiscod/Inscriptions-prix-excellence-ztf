@@ -1,24 +1,24 @@
 /*
- * Moteur commun aux 5 maquettes du formulaire de candidature — Prix d'Excellence ZTF.
- * Les maquettes ne font que la mise en page : champs, listes, langue, règles de validation
- * et comportements dépendants sont ici, pour que les informations demandées soient identiques partout.
+ * Moteur commun du formulaire de candidature — Prix d'Excellence ZTF.
+ * Les pages ne font que la mise en page : champs, listes, langue, règles de validation,
+ * comportements dépendants, fiche PDF et « Déjà inscrit ? » sont ici.
  *
- * Comportements :
- *  - langue FR / EN (boutons [data-ztf-lang]) ou affichage bilingue simultané (<html data-ztf-mode="both">) ;
- *  - catégorie d'établissement → secondaire ou supérieur → listes « Classe » / « Niveau », « Série » / « Domaine d'études » ;
- *  - sous-système anglophone + secondaire → bloc « Résultats GCE » ;
- *  - moins de 18 ans → bloc « Parent ou tuteur légal » obligatoire.
- * Événements émis sur document : ztf:progress, ztf:lang, ztf:invalid, ztf:reset, ztf:demo.
+ * Listes officielles : window.ZTF_LISTS (shared/ztf-lists.js, reprises de apply.excellenceawardsztf.com).
+ *  - la catégorie d'établissement indique le cycle (secondaire / supérieur) et filtre la liste des écoles ;
+ *  - le niveau indique la liste suivante : « Non applicable » (6ème-3ème, Form 1-4), série (second cycle)
+ *    ou domaine d'études (supérieur).
+ * Envoi : si la page définit window.ZTF_SUBMIT (site réel), le dossier part au serveur ; sinon il est simulé.
+ * Événements émis sur document : ztf:progress, ztf:lang, ztf:invalid, ztf:reset, ztf:demo, ztf:success.
  */
 (function () {
   "use strict";
-  var D = window.ZTF_DATA, I = {};
+  var D = window.ZTF_DATA, L = window.ZTF_LISTS, I = {};
   [window.ZTF_I18N, window.ZTF_PAGE_I18N].forEach(function (src) { if (src) Object.keys(src).forEach(function (k) { I[k] = src[k]; }); });
 
   var both = document.documentElement.getAttribute("data-ztf-mode") === "both";
   var lang = both ? "both" : initialLang();
-  var NP = { average: "average_not_provided", ranking: "ranking_not_provided", cohort_size: "cohort_size_not_provided" };
-  var form, fileStore = { idfile: [], transcripts: [], diplomas: [], otherfiles: [] };
+  var form, fileStore = { transcripts: [], diplomas: [], otherfiles: [] }, lastRecord = null;
+  var JSPDF_URL = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
   function initialLang() {
     var q = (location.search.match(/[?&]lang=(fr|en)\b/) || [])[1]; if (q) return q;
@@ -32,8 +32,11 @@
       if (vars && vars[k] != null) return vars[k];
       if (k === "year") return D.schoolYear;
       if (k === "contact") return D.contactEmail;
+      if (k === "whatsapp") return D.whatsapp;
       if (k === "deadline") return l === "en" ? D.deadline[1] : D.deadline[0];
       if (k === "min") return D.minAge;
+      if (k === "max") return D.maxFileMB;
+      if (k === "mmax") return D.motivationMax;
       return m;
     });
   }
@@ -56,11 +59,13 @@
     node.setAttribute(attr, key);
     if (attr === "data-i18n-ph") node.placeholder = tr(key); else paint(node, key, attr === "data-i18n-html");
   }
-  function items(arr) { return arr.map(function (a) { return Array.isArray(a) ? { v: a[0], fr: a[0], en: a[1] } : a; }); }
+  /** Éléments de liste : [clé, libellé] (listes officielles, libellé unique) ou [valeur, français, anglais]. */
+  function items(arr) { return arr.map(function (a) { return a.length === 3 ? { v: a[0], fr: a[1], en: a[2] } : { v: a[0], fr: a[1], en: a[1] }; }); }
   function itemText(it) {
     if (lang === "both") return it.both || (it.fr === it.en ? it.fr : it.fr + " / " + it.en);
     return lang === "en" ? it.en : it.fr;
   }
+  function labelOf(list, key) { for (var i = 0; i < list.length; i++) if (list[i][0] === key) return list[i][1]; return key || ""; }
 
   /* ---------- Utilitaires DOM ---------- */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -83,8 +88,9 @@
   function setDatalist(id, values, input) {
     if (!input) return;
     var dl = document.getElementById(id) || document.createElement("datalist");
-    if (dl.getAttribute("data-set") !== values.join("|")) {
-      dl.id = id; dl.innerHTML = ""; dl.setAttribute("data-set", values.join("|"));
+    var sig = values.length + ":" + (values[0] || "");
+    if (dl.getAttribute("data-set") !== sig) {
+      dl.id = id; dl.innerHTML = ""; dl.setAttribute("data-set", sig);
       values.forEach(function (v) { dl.appendChild(opt(v, v)); });
       document.body.appendChild(dl);
     }
@@ -94,29 +100,21 @@
 
   /* ---------- État dérivé ---------- */
   function radioVal(n) { var e = el(n); return e && e.value ? e.value : ""; }
-  function category() { var v = el("institution_category").value; return D.categories.filter(function (c) { return c.fr === v; })[0] || null; }
-  function cycle() { var c = category(); return c ? c.cycle : radioVal("cycle") || null; }
-  function subsystem() { return radioVal("subsystem"); }
+  function cycleOfCategory(cat) { return !cat ? null : L.secondaryCategories.indexOf(cat) >= 0 ? "secondary" : "higher"; }
+  function cycle() { return cycleOfCategory(el("institution_category").value) || radioVal("cycle") || null; }
   function age() {
     var v = el("birth_date").value; if (!v) return null;
     var b = new Date(v + "T00:00:00"), n = new Date(), a = n.getFullYear() - b.getFullYear(), m = n.getMonth() - b.getMonth();
     if (m < 0 || (m === 0 && n.getDate() < b.getDate())) a--;
     return a;
   }
-  function isMinor() { var a = age(); return a !== null && a >= 0 && a < D.adultAge; }
-  function gceVisible() { return cycle() === "secondary" && subsystem() === "anglophone"; }
-  function gceTaken() { var v = el("gce_exam") ? el("gce_exam").value : ""; return gceVisible() && !!v && v !== D.gceExams[0][0]; }
+  function schoolsFor(cat) { return L.schools.filter(function (s) { return s[2] === cat; }); }
 
   function required() {
-    var r = ["civility", "last_name", "first_name", "nationality", "birth_date", "city", "phone", "email"];
-    if (isMinor()) {
-      r.push("guardian_relation", "guardian_name", "guardian_phone", "guardian_consent");
-      if (el("guardian_email").value.trim()) r.push("guardian_email");
-    }
+    var r = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone"];
+    if (el("email").value.trim()) r.push("email");
     if (el("cycle")) r.push("cycle");
-    r.push("subsystem", "institution_category", "institution_subcategory", "institution_name", "field_of_study", "level", "average", "ranking", "cohort_size");
-    if (gceVisible()) { r.push("gce_exam"); if (gceTaken()) r.push("gce_results"); }
-    r.push("idfile", "transcripts");
+    r.push("institution_category", "institution_name", "level", "field_of_study", "average", "transcripts");
     return r;
   }
 
@@ -132,70 +130,72 @@
     list.sort(function (a, b) { return a[key].slice(5).localeCompare(b[key].slice(5), key); });
     return list.filter(function (c) { return c.v === "CM"; }).concat(list.filter(function (c) { return c.v !== "CM"; }));
   }
-  function fields() {
-    var key = lang === "en" ? "en" : "fr", list = items(D.fieldsOfStudy), first = list.shift();
-    list.sort(function (a, b) { return a[key].localeCompare(b[key], key); });
-    return [first].concat(list);
-  }
   function populateStatic() {
-    fillSelect(el("civility"), items(D.civilities), "ph.select");
+    fillSelect(el("gender"), items(D.genders), "ph.gender");
     fillSelect(el("nationality"), countries(), "ph.country");
-    fillSelect(el("guardian_relation"), items(D.guardianRelations), "ph.select");
-    fillSelect(el("gce_exam"), items(D.gceExams), "ph.select");
-    ["phone_code", "guardian_phone_code"].forEach(function (n) {
-      var s = el(n); if (!s || s.options.length) return;
-      D.phoneCodes.forEach(function (p) { s.appendChild(opt(p.code, p.label)); });
-    });
+    var pc = el("phone_code");
+    if (pc && !pc.options.length) D.phoneCodes.forEach(function (p) { pc.appendChild(opt(p.code, p.label)); });
     setDatalist("ztf-cities", D.cities, el("city"));
   }
   function updateCategories() {
     var cyc = el("cycle") ? radioVal("cycle") : "";
     var groups = ["secondary", "higher"].filter(function (g) { return !cyc || cyc === g; }).map(function (g) {
-      return { groupKey: "grp." + g, items: D.categories.filter(function (c) { return c.cycle === g; }).map(function (c) { return { v: c.fr, fr: c.fr, en: c.en }; }) };
+      return { groupKey: "grp." + g, items: items(L.categories.filter(function (c) { return cycleOfCategory(c[0]) === g; })) };
     });
     fillSelect(el("institution_category"), groups.length === 1 ? groups[0].items : groups, "ph.category");
+  }
+  function levelOptions(cyc) {
+    var byKey = {}; L.levels.forEach(function (l) { byKey[l[0]] = l; });
+    var pick = function (keys) { return items(keys.map(function (k) { return byKey[k]; })); };
+    if (cyc === "secondary") return [{ groupKey: "grp.secondary_fr", items: pick(L.levelGroups.secondary_fr) }, { groupKey: "grp.secondary_en", items: pick(L.levelGroups.secondary_en) }];
+    if (cyc === "higher") return pick(L.levelGroups.higher);
+    return [];
+  }
+  function fieldOptions(level) {
+    if (!level) return null;
+    if (L.noFieldLevels.indexOf(level) >= 0) return items([L.notApplicable]);
+    if (L.levelGroups.higher.indexOf(level) >= 0) return items(L.fields);
+    return items(L.series);
   }
   function setLabel(name, key) { var c = container(name); if (c) setKey(c.querySelector("[data-ztf-lbl]"), key); }
 
   function updateDependent() {
-    var c = category(), cyc = cycle(), sub = subsystem(), sec = cyc === "secondary";
+    var cat = el("institution_category").value, cyc = cycle(), sec = cyc === "secondary";
+    var n = el("institution_name");
+    n.disabled = !cat; setKey(n, cat ? "ph.school" : "ph.needCategory", "data-i18n-ph");
+    setDatalist("ztf-schools-" + (cat || "none"), cat ? schoolsFor(cat).map(function (s) { return s[1]; }) : [], n);
+    $$("[data-ztf-add-school]").forEach(function (b) { b.disabled = !cat; });
 
-    var s = el("institution_subcategory");
-    fillSelect(s, c ? items(c.sub) : [], c ? "ph.subcategory" : "ph.needCategory"); s.disabled = !c;
-    var n = el("institution_name"); n.disabled = !c; setKey(n, c ? "ph.school" : "ph.needCategory", "data-i18n-ph");
-    setDatalist("ztf-schools-" + (sec ? "s" : "h"), sec ? D.schools.secondary : D.schools.higher, n);
-    $$("[data-ztf-add-school]").forEach(function (b) { b.disabled = !c; });
+    var lv = levelOptions(cyc);
+    fillSelect(el("level"), lv, lv.length ? "ph.select" : "ph.needCategory"); el("level").disabled = !lv.length;
+    var fo = fieldOptions(el("level").value);
+    fillSelect(el("field_of_study"), fo || [], fo ? "ph.select" : "ph.needLevel"); el("field_of_study").disabled = !fo;
+    if (fo && fo.length === 1) el("field_of_study").value = fo[0].v;
 
-    var lv = [], fos = [], ph = "ph.needCategory";
-    if (cyc === "higher") { lv = items(D.levels.higher); fos = fields(); }
-    else if (sec && sub) { lv = items(D.levels[sub]); fos = items(D.series[sub]); }
-    else if (sec) ph = "ph.needSubsystem";
-    fillSelect(el("level"), lv, lv.length ? "ph.select" : ph); el("level").disabled = !lv.length;
-    fillSelect(el("field_of_study"), fos, fos.length ? "ph.select" : ph); el("field_of_study").disabled = !fos.length;
-
-    setLabel("field_of_study", sec ? "lbl.series" : "lbl.fos");
     setLabel("level", sec ? "lbl.class" : "lbl.level");
-    setLabel("ranking", sec ? "lbl.rank.class" : "lbl.rank.promo");
-    setLabel("cohort_size", sec ? "lbl.cohort.class" : "lbl.cohort.promo");
-    $$("[data-ztf-avg-hint]").forEach(function (h) { setKey(h, sec ? "hint.avg." + (sub || "francophone") : "hint.avg.higher"); });
-
+    setLabel("field_of_study", sec ? "lbl.series" : "lbl.fos");
     onLevel();
-    var gv = gceVisible(), gt = gceTaken();
-    $$("[data-ztf-gce]").forEach(function (b) { b.hidden = !gv; });
-    container("gce_results").hidden = !gt; el("gce_results").disabled = !gt;
   }
-  function updateGuardian() { $$("[data-ztf-guardian]").forEach(function (b) { b.hidden = !isMinor(); }); }
-  function onCategory() { el("institution_name").value = ""; updateDependent(); }
+  function onCategory() { el("institution_name").value = ""; el("school_id").value = ""; updateDependent(); }
+  function onSchoolInput() {
+    var v = el("institution_name").value.trim().toLowerCase(), cat = el("institution_category").value;
+    var hit = schoolsFor(cat).filter(function (s) { return s[1].toLowerCase() === v; })[0];
+    el("school_id").value = hit ? hit[0] : "";
+  }
   function onLevel() {
-    var post = el("level").value === "Post-BAC+5";
-    $$("[data-ztf-average-np]").forEach(function (n) { n.hidden = !post; });
-    if (!post && el("average_not_provided").checked) { el("average_not_provided").checked = false; onNP("average"); }
+    var phd = el("level").value === "PhD", cb = el("average_not_provided");
+    $$("[data-ztf-average-np]").forEach(function (x) { x.hidden = !phd; });
+    if (!phd && cb.checked) { cb.checked = false; onNP(); }
   }
-  function onNP(f) {
-    var cb = el(NP[f]), input = el(f);
-    if (cb.checked) { input.value = ""; clearError(f); }
+  function onNP() {
+    var cb = el("average_not_provided"), input = el("average");
+    if (cb.checked) { input.value = ""; clearError("average"); }
     input.disabled = cb.checked;
-    if (f === "average") $$("[data-ztf-avg-star]").forEach(function (s) { s.hidden = cb.checked; });
+    $$("[data-ztf-avg-star]").forEach(function (s) { s.hidden = cb.checked; });
+  }
+  function updateCounter() {
+    var t = el("motivation"); if (!t) return;
+    $$("[data-ztf-counter]").forEach(function (c) { c.textContent = tr("count.chars", { n: t.value.length, max: D.motivationMax }); });
   }
 
   /* ---------- Langue ---------- */
@@ -207,8 +207,7 @@
     $$("[data-i18n-ph]").forEach(function (n) { n.placeholder = tr(n.getAttribute("data-i18n-ph")); });
     $$("[data-i18n-aria]").forEach(function (n) { n.setAttribute("aria-label", tr(n.getAttribute("data-i18n-aria"))); });
     $$("[data-ztf-lang]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-ztf-lang") === lang)); });
-    $$("[data-ztf-success-email]").forEach(function (n) { n.textContent = el("email").value; });
-    populateStatic(); updateCategories(); updateDependent();
+    populateStatic(); updateCategories(); updateDependent(); updateCounter();
     Object.keys(fileStore).forEach(renderFiles);
     refresh();
     document.dispatchEvent(new CustomEvent("ztf:lang", { detail: { lang: lang } }));
@@ -221,26 +220,19 @@
   function fileOk(f, input) {
     var ext = (f.name.split(".").pop() || "").toLowerCase(), allowed = (input.getAttribute("accept") || "").replace(/\./g, "").split(",");
     if (allowed[0] && allowed.indexOf(ext) < 0) { toast(tr("toast.file"), tr("err.fileType", { name: f.name }), true); return false; }
-    if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name, max: D.maxFileMB }), true); return false; }
+    if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name }), true); return false; }
     if (!f.size) { toast(tr("toast.file"), tr("err.fileEmpty", { name: f.name }), true); return false; }
     return true;
   }
   function onFiles(name) {
     var input = el(name), picked = Array.prototype.slice.call(input.files || []).filter(function (f) { return fileOk(f, input); });
-    if (!input.multiple && !picked.length) { syncInput(name); return; }
-    if (input.multiple) picked.forEach(function (f) { if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f); });
-    else fileStore[name] = picked.slice(0, 1);
+    picked.forEach(function (f) { if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f); });
     syncInput(name); renderFiles(name);
   }
   function renderFiles(name) {
     $$('[data-ztf-filelist="' + name + '"]').forEach(function (box) {
       box.innerHTML = "";
       var files = fileStore[name]; if (!files.length) return;
-      if (name === "idfile") {
-        var p = document.createElement("p"); p.className = "ztf-file-single";
-        p.textContent = tr("files.single") + " "; var b0 = document.createElement("strong"); b0.textContent = files[0].name; p.appendChild(b0);
-        box.appendChild(p); return;
-      }
       var count = document.createElement("p"); count.className = "ztf-file-count"; count.textContent = tr("files.count", { n: files.length }); box.appendChild(count);
       var ul = document.createElement("ul"); ul.className = "ztf-file-list";
       files.forEach(function (f, i) {
@@ -265,7 +257,10 @@
       document.body.appendChild(dlg);
       dlg.addEventListener("close", function () {
         var v = dlg.querySelector("[name=school]").value.trim();
-        if (dlg.returnValue === "ok" && v) { el("institution_name").value = v; clearError("institution_name"); toast(tr("toast.school"), tr("toast.school.d", { name: v })); refresh(); }
+        if (dlg.returnValue === "ok" && v) {
+          el("institution_name").value = v; el("school_id").value = ""; clearError("institution_name");
+          toast(tr("toast.school"), tr("toast.school.d", { name: v })); refresh();
+        }
       });
     }
     $$("[data-i18n]", dlg).forEach(function (n) { paint(n, n.getAttribute("data-i18n")); });
@@ -283,23 +278,17 @@
     if (e.type === "checkbox") return e.checked ? "1" : "";
     return (e.value || "").trim();
   }
-  function phoneError(codeName, v) {
-    var d = v.replace(/\D/g, ""), code = el(codeName) ? el(codeName).value : "+237";
+  function phoneError(v) {
+    var d = v.replace(/\D/g, ""), code = el("phone_code") ? el("phone_code").value : "+237";
     if (code === "+237") return /^[62]\d{8}$/.test(d) ? null : "err.phone";
     return /^\d{6,14}$/.test(d) ? null : "err.phoneIntl";
   }
   function check(name) {
-    if (NP[name] && el(NP[name]).checked) return null;
+    if (name === "average" && el("average_not_provided").checked) return null;
     var v = fieldValue(name);
-    if (!v) {
-      if (name === "cycle" || name === "subsystem") return "err.choice";
-      if (name === "guardian_consent") return "err.guardian_consent";
-      if (NP[name] && name !== "average") return "err.np";
-      return "err.required";
-    }
-    if ((name === "email" || name === "guardian_email") && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "err.email";
-    if (name === "phone") return phoneError("phone_code", v);
-    if (name === "guardian_phone") return phoneError("guardian_phone_code", v);
+    if (!v) return name === "cycle" ? "err.choice" : "err.required";
+    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "err.email";
+    if (name === "phone") return phoneError(v);
     if (name === "birth_date") { var a = age(); if (a !== null && a < D.minAge) return "err.age"; }
     return null;
   }
@@ -310,12 +299,13 @@
     setKey(p, key);
   }
   function clearError(name) { var c = container(name); if (!c) return; c.classList.remove("is-invalid"); var p = c.querySelector(".ztf-error"); if (p) p.remove(); }
-  function allNames() { return required().concat(["guardian_relation", "guardian_name", "guardian_phone", "guardian_email", "guardian_consent", "gce_exam", "gce_results"]); }
+  var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone", "email", "cycle",
+    "institution_category", "institution_name", "level", "field_of_study", "average", "transcripts"];
 
   /** Valide les champs obligatoires contenus dans `scope` (tout le formulaire par défaut). */
   function validate(scope) {
     var bad = [], req = required();
-    allNames().forEach(function (n) { if (req.indexOf(n) < 0) clearError(n); });
+    ALL.forEach(function (n) { if (req.indexOf(n) < 0) clearError(n); });
     req.forEach(function (n) {
       var c = container(n); if (!c || (scope && !scope.contains(c))) return;
       var k = check(n);
@@ -350,35 +340,44 @@
     document.dispatchEvent(new CustomEvent("ztf:progress", { detail: { percent: pct } }));
   }
 
-  /* ---------- Récapitulatif ---------- */
-  function fmtDate(iso) { if (!iso) return ""; return new Date(iso + "T00:00:00").toLocaleDateString(lang === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "long", year: "numeric" }); }
-  function selText(name) { var s = el(name); return s && s.value && s.selectedIndex >= 0 ? s.options[s.selectedIndex].textContent : ""; }
-  function lblOf(name) { var c = container(name), n = c && c.querySelector("[data-ztf-lbl]"); return n ? tr(n.getAttribute("data-i18n")) : ""; }
-  function summary() {
-    function v(n) { return fieldValue(n); }
-    function np(n) { return el(NP[n]).checked ? tr("recap.np") : v(n); }
-    function files(n) { return fileStore[n].map(function (f) { return f.name; }).join(", "); }
-    function tel(code, n) { return v(n) ? el(code).value + " " + v(n) : ""; }
-    var radio = function (n, prefix) { var r = radioVal(n); return r ? tr(prefix + r) : ""; };
-    var g1 = [[tr("lbl.civility"), selText("civility")], [tr("lbl.last_name"), v("last_name")], [tr("lbl.first_name"), v("first_name")],
-      [tr("lbl.nationality"), selText("nationality")], [tr("lbl.birth_date"), fmtDate(v("birth_date"))], [tr("lbl.city"), v("city")],
-      [tr("lbl.phone"), tel("phone_code", "phone")], [tr("lbl.email"), v("email")]];
-    if (isMinor()) g1.push([tr("lbl.guardian_relation"), selText("guardian_relation")], [tr("lbl.guardian_name"), v("guardian_name")],
-      [tr("lbl.guardian_phone"), tel("guardian_phone_code", "guardian_phone")], [tr("lbl.guardian_email"), v("guardian_email")],
-      [tr("guardian.title"), el("guardian_consent").checked ? tr("recap.yes") : ""]);
-    var g2 = [];
-    if (el("cycle")) g2.push([tr("lbl.cycle"), radio("cycle", "cycle.")]);
-    g2.push([tr("lbl.subsystem"), radio("subsystem", "sub.")], [tr("lbl.institution_category"), selText("institution_category")],
-      [tr("lbl.institution_subcategory"), selText("institution_subcategory")], [tr("lbl.institution_name"), v("institution_name")],
-      [lblOf("field_of_study"), selText("field_of_study")], [lblOf("level"), selText("level")], [tr("lbl.average"), np("average")],
-      [lblOf("ranking"), np("ranking")], [lblOf("cohort_size"), np("cohort_size")]);
-    if (gceVisible()) { g2.push([tr("lbl.gce_exam"), selText("gce_exam")]); if (gceTaken()) g2.push([tr("lbl.gce_results"), v("gce_results")]); }
+  /* ---------- Valeurs envoyées et libellés ---------- */
+  function payload() {
+    var p = { lang: lang === "en" ? "en" : "fr" };
+    ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone_code", "phone", "email",
+      "institution_category", "institution_name", "school_id", "level", "field_of_study", "average", "motivation"].forEach(function (n) { p[n] = fieldValue(n); });
+    p.cycle = cycle() || "";
+    p.average_not_provided = el("average_not_provided").checked;
+    var names; try { names = new Intl.DisplayNames(["fr"], { type: "region" }); } catch (e) { names = null; }
+    p.nationality_name = names && p.nationality ? names.of(p.nationality) : p.nationality;
+    return p;
+  }
+  /** Lignes lisibles d'une fiche (pour le récapitulatif et la fiche PDF), à partir des valeurs enregistrées. */
+  function describe(f) {
+    var sec = cycleOfCategory(f.institution_category) === "secondary";
+    var g = D.genders.filter(function (x) { return x[0] === f.gender; })[0];
+    var fos = f.field_of_study === "NA" ? L.notApplicable[1] : labelOf(L.series.concat(L.fields), f.field_of_study);
     return [
-      { group: "1. " + tr("sec.identity"), items: g1 },
-      { group: "2. " + tr("sec.academic"), items: g2 },
-      { group: "3. " + tr("sec.attachments"), items: [[tr("lbl.idfile"), files("idfile")], [tr("lbl.transcripts"), files("transcripts")],
-        [tr("lbl.diplomas"), files("diplomas")], [tr("lbl.otherfiles"), files("otherfiles")], [tr("lbl.additional_notes"), v("additional_notes")]] }
+      { group: tr("sec.identity"), items: [
+        [tr("lbl.gender"), g ? (lang === "en" ? g[2] : g[1]) : ""], [tr("lbl.last_name"), f.last_name], [tr("lbl.first_name"), f.first_name],
+        [tr("lbl.nationality"), countryName(f.nationality) || f.nationality_name || ""], [tr("lbl.birth_date"), fmtDate(f.birth_date)], [tr("lbl.city"), f.city],
+        [tr("lbl.phone"), f.phone ? f.phone_code + " " + f.phone : ""], [tr("lbl.email"), f.email]] },
+      { group: tr("sec.academic"), items: [
+        [tr("lbl.institution_category"), labelOf(L.categories, f.institution_category)], [tr("lbl.institution_name"), f.institution_name],
+        [tr(sec ? "lbl.class" : "lbl.level"), labelOf(L.levels, f.level)], [tr(sec ? "lbl.series" : "lbl.fos"), fos],
+        [tr("lbl.average"), f.average_not_provided ? tr("np.average") : f.average]] }
     ];
+  }
+  function countryName(cc) {
+    if (!cc) return "";
+    try { return new Intl.DisplayNames([lang === "en" ? "en" : "fr"], { type: "region" }).of(cc); } catch (e) { return cc; }
+  }
+  function fmtDate(iso) { if (!iso) return ""; return new Date(iso.length === 10 ? iso + "T00:00:00" : iso).toLocaleDateString(lang === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "long", year: "numeric" }); }
+  function summary() {
+    var groups = describe(payload());
+    var files = function (n) { return fileStore[n].map(function (f) { return f.name; }).join(", "); };
+    groups.push({ group: tr("sec.attachments"), items: [[tr("lbl.transcripts"), files("transcripts")], [tr("lbl.diplomas"), files("diplomas")],
+      [tr("lbl.otherfiles"), files("otherfiles")], [tr("lbl.motivation"), fieldValue("motivation")]] });
+    return groups.map(function (g, i) { return { group: (i + 1) + ". " + g.group, items: g.items }; });
   }
   function renderRecap(target) {
     target = target || $("[data-ztf-recap]"); if (!target) return;
@@ -396,22 +395,82 @@
     });
   }
 
-  /* ---------- Envoi (simulé dans la maquette) ---------- */
-  /** Valeurs à transmettre : la valeur enregistrée de chaque champ visible (libellés français pour les listes). */
-  function payload() {
-    var p = { lang: lang === "en" ? "en" : "fr" }, minor = isMinor(), gv = gceVisible();
-    ["civility", "last_name", "first_name", "nationality", "birth_date", "city", "phone_code", "phone", "email",
-      "subsystem", "institution_category", "institution_subcategory", "institution_name", "field_of_study", "level",
-      "average", "ranking", "cohort_size", "additional_notes"].forEach(function (n) { p[n] = fieldValue(n); });
-    p.cycle = (el("cycle") ? fieldValue("cycle") : "") || cycle() || "";
-    var names; try { names = new Intl.DisplayNames(["fr"], { type: "region" }); } catch (e) { names = null; }
-    p.nationality_name = names && p.nationality ? names.of(p.nationality) : p.nationality;
-    Object.keys(NP).forEach(function (f) { p[NP[f]] = el(NP[f]).checked; });
-    if (minor) ["guardian_relation", "guardian_name", "guardian_phone_code", "guardian_phone", "guardian_email"].forEach(function (n) { p[n] = fieldValue(n); });
-    p.is_minor = minor; p.guardian_consent = minor ? el("guardian_consent").checked : false;
-    if (gv) { p.gce_exam = fieldValue("gce_exam"); if (gceTaken()) p.gce_results = fieldValue("gce_results"); }
-    return p;
+  /* ---------- Fiche PDF à imprimer pour l'audition ---------- */
+  function loadJsPDF() {
+    if (window.jspdf) return Promise.resolve(window.jspdf.jsPDF);
+    return new Promise(function (ok, ko) {
+      var s = document.createElement("script"); s.src = JSPDF_URL;
+      s.onload = function () { window.jspdf ? ok(window.jspdf.jsPDF) : ko(new Error("jsPDF")); };
+      s.onerror = function () { ko(new Error("jsPDF")); };
+      document.head.appendChild(s);
+    });
   }
+  // Les polices standard du PDF ne couvrent que l'alphabet latin courant : on remplace les autres caractères.
+  function pdfText(s) { return String(s == null ? "" : s).replace(/[’‘]/g, "'").replace(/[“”«»]/g, '"').replace(/[–—]/g, "-").replace(/…/g, "...").replace(/[^\x20-\xFF\n]/g, "?"); }
+  function makePdf(rec) {
+    var keep = lang; if (lang === "both") lang = "fr";
+    return loadJsPDF().then(function (JsPDF) {
+      var doc = new JsPDF({ unit: "mm", format: "a4" }), W = 210, M = 16, y = 0;
+      doc.setFillColor(3, 8, 66); doc.rect(0, 0, W, 30, "F");
+      doc.setTextColor(248, 218, 73); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+      doc.text(pdfText(tr("brand.org").toUpperCase()), M, 11);
+      doc.setTextColor(255, 255, 255); doc.setFontSize(17); doc.text(pdfText(tr("brand.name") + " · " + tr("pdf.title")), M, 21);
+      y = 40;
+      doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
+      doc.text(pdfText(tr("success.id") + " " + rec.id), M, y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+      if (rec.submittedAt) doc.text(pdfText(tr("pdf.date") + " " + fmtDate(rec.submittedAt)), W - M, y, { align: "right" });
+      y += 8;
+      doc.setFillColor(253, 236, 234); doc.setDrawColor(192, 57, 43);
+      var warn = doc.splitTextToSize(pdfText(tr("pdf.warning")), W - 2 * M - 8);
+      doc.rect(M, y, W - 2 * M, warn.length * 5 + 6, "FD");
+      doc.setTextColor(150, 30, 20); doc.setFont("helvetica", "bold"); doc.text(warn, M + 4, y + 6.5);
+      y += warn.length * 5 + 12;
+      var groups = describe(rec.fields);
+      var byField = function (k) { return (rec.files || []).filter(function (f) { return f.field === k; }).map(function (f) { return f.name; }).join(", "); };
+      groups.push({ group: tr("pdf.files"), items: [[tr("lbl.transcripts"), byField("transcripts") || "—"]]
+        .concat(["diplomas", "otherfiles"].filter(byField).map(function (k) { return [tr("lbl." + k), byField(k)]; })) });
+      if (rec.fields.motivation) groups.push({ group: tr("lbl.motivation"), items: [["", rec.fields.motivation]] });
+      groups.forEach(function (g) {
+        if (y > 265) { doc.addPage(); y = 20; }
+        doc.setTextColor(31, 122, 64); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+        doc.text(pdfText(g.group.toUpperCase()), M, y); y += 2;
+        doc.setDrawColor(219, 227, 234); doc.line(M, y, W - M, y); y += 6;
+        doc.setFontSize(10);
+        g.items.forEach(function (it) {
+          var lw = it[0] ? 58 : 0;
+          var val = doc.splitTextToSize(pdfText(it[1] || "—"), W - 2 * M - lw);
+          var lab = it[0] ? doc.splitTextToSize(pdfText(it[0]), lw - 4) : [];
+          var lines = Math.max(val.length, lab.length, 1);
+          if (y + lines * 5 > 282) { doc.addPage(); y = 20; }
+          if (lab.length) { doc.setTextColor(100, 116, 139); doc.setFont("helvetica", "normal"); doc.text(lab, M, y); }
+          doc.setTextColor(15, 23, 42); doc.setFont("helvetica", it[0] ? "bold" : "normal"); doc.text(val, M + lw, y);
+          y += lines * 5 + 2;
+        });
+        y += 4;
+      });
+      doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.setFont("helvetica", "normal");
+      doc.text(pdfText(tr("brand.org") + " · " + D.contactEmail + " · WhatsApp +" + D.whatsapp), M, 290);
+      doc.save("fiche-candidature-" + rec.id + ".pdf");
+    }).catch(function () { toast(tr("toast.failed"), tr("pdf.error"), true); })
+      .then(function () { lang = keep; });
+  }
+
+  /* ---------- « Déjà inscrit ? » ---------- */
+  function lookup() {
+    var code = ($("#ztf-lookup-code") || {}).value || "", msg = $("[data-ztf-lookup-msg]");
+    code = code.trim().toUpperCase();
+    var say = function (k) { if (msg) msg.textContent = k ? tr(k) : ""; };
+    if (!code) return;
+    if (typeof window.ZTF_LOOKUP !== "function") { say("lookup.mock"); return; }
+    say(""); var btn = $("[data-ztf-lookup-btn]"); if (btn) btn.disabled = true;
+    window.ZTF_LOOKUP(code)
+      .then(function (rec) { if (!rec) { say("lookup.notFound"); return; } return makePdf(rec); })
+      .catch(function () { say("toast.failed.d"); })
+      .then(function () { if (btn) btn.disabled = false; });
+  }
+
+  /* ---------- Envoi ---------- */
   function busy(on, pct) {
     $$('button[type="submit"]').forEach(function (b) {
       if (on) {
@@ -420,32 +479,36 @@
       } else if (b.dataset.busy) { b.innerHTML = b.dataset.label; delete b.dataset.busy; b.disabled = false; }
     });
   }
-  function success(id) {
-    $$("[data-ztf-success-email]").forEach(function (n) { n.textContent = fieldValue("email"); });
-    $$("[data-ztf-success-id]").forEach(function (n) { n.textContent = id || ""; });
+  function success(res, fields) {
+    lastRecord = { id: res.id || "", code: res.code || "", submittedAt: new Date().toISOString(), fields: fields,
+      files: Object.keys(fileStore).reduce(function (a, k) { return a.concat(fileStore[k].map(function (f) { return { field: k, name: f.name }; })); }, []) };
+    $$("[data-ztf-success-id]").forEach(function (n) { n.textContent = lastRecord.id || "—"; });
+    $$("[data-ztf-success-code]").forEach(function (n) { n.textContent = lastRecord.code; });
+    $$("[data-ztf-code-box]").forEach(function (n) { n.hidden = !lastRecord.code; });
     $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = true; });
     $$("[data-ztf-success]").forEach(function (n) { n.hidden = false; n.scrollIntoView({ behavior: "smooth", block: "start" }); });
     toast(tr("toast.sent"), tr("toast.sent.d"));
+    document.dispatchEvent(new CustomEvent("ztf:success", { detail: lastRecord }));
   }
   function onSubmit(e) {
     e.preventDefault();
     if (!validate()) return;
     busy(true);
+    var fields = payload();
     if (typeof window.ZTF_SUBMIT === "function") {
-      // Site réel : envoi au serveur (voir site/js/submit.js)
       var files = {}; Object.keys(fileStore).forEach(function (k) { files[k] = fileStore[k].slice(); });
-      window.ZTF_SUBMIT(payload(), files, function (pct) { busy(true, pct); })
-        .then(function (res) { busy(false); success(res && res.id); })
+      window.ZTF_SUBMIT(fields, files, function (pct) { busy(true, pct); })
+        .then(function (res) { busy(false); success(res || {}, fields); })
         .catch(function (err) { busy(false); toast(tr("toast.failed"), (err && err.message) || tr("toast.failed.d"), true); });
       return;
     }
-    setTimeout(function () { busy(false); success(""); }, 1100); // maquette : envoi simulé
+    setTimeout(function () { busy(false); success({ id: "ZTF-MAQUETTE-0000" }, fields); }, 1100); // maquette : envoi simulé
   }
   function reset() {
     form.reset(); Object.keys(fileStore).forEach(function (k) { fileStore[k] = []; renderFiles(k); });
-    Object.keys(NP).forEach(onNP);
-    updateCategories(); updateDependent(); updateGuardian();
-    allNames().concat(["cycle", "subsystem"]).forEach(clearError);
+    onNP(); updateCategories(); updateDependent(); updateCounter();
+    ALL.forEach(clearError);
+    lastRecord = null;
     $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = false; });
     $$("[data-ztf-success]").forEach(function (n) { n.hidden = true; });
     refresh(); document.dispatchEvent(new CustomEvent("ztf:reset"));
@@ -454,40 +517,35 @@
 
   /* ---------- Démo : deux dossiers fictifs ---------- */
   function fakeFile(name) { try { return new File(["maquette"], name, { type: "application/pdf" }); } catch (e) { return { name: name, size: 8 }; } }
-  function setRadio(n, v) { var e = el(n); if (e) e.value = v; }
+  function firstSchool(cat, hint) {
+    var list = schoolsFor(cat), re = hint ? new RegExp(hint, "i") : null;
+    return (re && list.filter(function (s) { return re.test(s[1]); })[0]) || list[0];
+  }
   function fillDemo(kind) {
-    form.reset(); Object.keys(NP).forEach(onNP);
+    form.reset(); onNP();
     var pupil = kind !== "student";
     var p = pupil ? {
-      civility: "M.", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", city: "Bamenda", phone: "6 75 22 11 00", email: "grace.nfor@exemple.com",
-      cycle: "secondary", sub: "anglophone", cat: "Enseignement secondaire général", subcat: "Établissement privé protestant (presbytérien, baptiste, EEC…)",
-      school: "Presbyterian Secondary School Mankon (Bamenda)", fos: "Sciences", level: "Upper Sixth", avg: "17.1 / 20", rank: "1 / 64", cohort: "64",
-      files: [["Acte_naissance_Nfor_Divine.pdf"], ["Report_card_term1_2025-2026.pdf", "Report_card_term2_2025-2026.pdf", "Report_card_term3_2025-2026.pdf"], ["GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
-      notes: "Lauréat des Olympiades nationales de mathématiques 2025 (catégorie lycée)."
+      gender: "male", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", city: "Bamenda", phone: "6 75 22 11 00", email: "",
+      cycle: "secondary", cat: "GeneralHighSchool", schoolHint: "Bamenda|Mankon", level: "UpperSixth", fos: "C", avg: "17.1 / 20",
+      files: [["Report_card_term1_2025-2026.pdf", "Report_card_term2_2025-2026.pdf", "Report_card_term3_2025-2026.pdf"], ["GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
+      motivation: "Je veux devenir ingénieur en énergies renouvelables. Major de ma classe depuis la Form 3, lauréat des Olympiades nationales de mathématiques 2025."
     } : {
-      civility: "Mlle", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", city: "Yaoundé", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
-      cycle: "higher", sub: "francophone", cat: "Universités d'État (facultés)", subcat: "Sciences", school: "Université de Yaoundé I",
-      fos: "Mathématiques", level: "BAC+2", avg: "17.4 / 20", rank: "2 / 214", cohort: "214",
-      files: [["CNI_Ngo_Bayiha.pdf"], ["Releve_L2_S1_2025-2026.pdf", "Releve_L2_S2_2025-2026.pdf"], ["Baccalaureat_C_2024.pdf", "Releve_L1_2024-2025.pdf"], ["CV_Esther.pdf"]],
-      notes: "Major de promotion en L1, lauréate des Olympiades nationales de mathématiques 2024."
+      gender: "female", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", city: "Yaoundé", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
+      cycle: "higher", cat: "University", schoolHint: "Yaound", level: "BAC2", fos: "Mathematics", avg: "17.4 / 20",
+      files: [["Releve_L2_S1_2025-2026.pdf", "Releve_L2_S2_2025-2026.pdf"], ["Baccalaureat_C_2024.pdf"], []],
+      motivation: "Major de promotion en L1, je souhaite poursuivre en recherche en mathématiques appliquées."
     };
-    el("civility").value = p.civility; el("last_name").value = p.last_name; el("first_name").value = p.first_name;
+    el("gender").value = p.gender; el("last_name").value = p.last_name; el("first_name").value = p.first_name;
     el("nationality").value = "CM"; el("birth_date").value = p.birth; el("city").value = p.city;
     el("phone").value = p.phone; el("email").value = p.email;
-    updateGuardian();
-    if (pupil) {
-      el("guardian_relation").value = "Mère"; el("guardian_name").value = "Nfor Grace Lum";
-      el("guardian_phone").value = "6 75 22 11 00"; el("guardian_email").value = "grace.nfor@exemple.com"; el("guardian_consent").checked = true;
-    }
-    setRadio("cycle", p.cycle); setRadio("subsystem", p.sub); updateCategories();
-    el("institution_category").value = p.cat; updateDependent();
-    el("institution_subcategory").value = p.subcat; el("institution_name").value = p.school;
-    el("level").value = p.level; el("field_of_study").value = p.fos; onLevel();
-    el("average").value = p.avg; el("ranking").value = p.rank; el("cohort_size").value = p.cohort;
-    if (pupil) { el("gce_exam").value = "GCE O Level"; updateDependent(); el("gce_results").value = "11 papers — 9 A (Maths, Add. Maths, Physics, Chemistry…), 2 B"; }
-    ["idfile", "transcripts", "diplomas", "otherfiles"].forEach(function (n, i) { fileStore[n] = p.files[i].map(fakeFile); syncInput(n); renderFiles(n); });
-    el("additional_notes").value = p.notes;
-    allNames().concat(["cycle", "subsystem"]).forEach(clearError);
+    if (el("cycle")) el("cycle").value = p.cycle;
+    updateCategories(); el("institution_category").value = p.cat; updateDependent();
+    var sc = firstSchool(p.cat, p.schoolHint);
+    el("institution_name").value = sc ? sc[1] : ""; el("school_id").value = sc ? sc[0] : "";
+    el("level").value = p.level; updateDependent(); el("field_of_study").value = p.fos;
+    el("average").value = p.avg; el("motivation").value = p.motivation; updateCounter();
+    ["transcripts", "diplomas", "otherfiles"].forEach(function (n, i) { fileStore[n] = p.files[i].map(fakeFile); syncInput(n); renderFiles(n); });
+    ALL.forEach(clearError);
     refresh(); document.dispatchEvent(new CustomEvent("ztf:demo", { detail: { kind: pupil ? "pupil" : "student" } }));
   }
 
@@ -511,13 +569,13 @@
   function injectBaseStyles() {
     var css = "" +
       ".ztf-error{color:var(--ztf-danger,#c0392b);font-size:.8rem;margin:.35rem 0 0}" +
-      ".is-invalid input:not([type=checkbox]):not([type=radio]),.is-invalid select{border-color:var(--ztf-danger,#c0392b)!important}" +
+      ".is-invalid input:not([type=checkbox]):not([type=radio]),.is-invalid select,.is-invalid textarea{border-color:var(--ztf-danger,#c0392b)!important}" +
       ".is-invalid .choice-opt{border-color:var(--ztf-danger,#c0392b)!important}" +
       ".ztf-file-list{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.35rem}" +
       ".ztf-file-list li{display:flex;justify-content:space-between;gap:.75rem;align-items:center;padding:.4rem .65rem;border-radius:8px;background:rgba(127,127,127,.09);font-size:.85rem}" +
       ".ztf-file-list li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       ".ztf-file-list button{background:none;border:0;color:inherit;opacity:.7;cursor:pointer;font:inherit;text-decoration:underline}" +
-      ".ztf-file-count,.ztf-file-single{font-size:.8rem;opacity:.8;margin:.4rem 0 0}" +
+      ".ztf-file-count{font-size:.8rem;opacity:.8;margin:.4rem 0 0}" +
       "#ztf-toasts{position:fixed;right:16px;bottom:16px;z-index:9999;display:grid;gap:8px;max-width:min(380px,calc(100vw - 32px))}" +
       ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity .3s,transform .3s}" +
       ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px)}.ztf-toast span{opacity:.75}" +
@@ -540,6 +598,18 @@
       ".choice-opt input{width:18px!important;height:18px;min-height:0!important;margin:2px 0 0;flex:none;accent-color:var(--ztf-accent,#33a15a)}" +
       ".choice-opt:has(input:checked){border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.07)}" +
       ".choice-t{display:grid;gap:2px}.choice-t small{opacity:.7;font-size:.8rem}" +
+      ".counter{text-align:right}" +
+      ".lookup{border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:10px 14px;margin:0 0 18px;background:rgba(127,127,127,.04)}" +
+      ".lookup summary{cursor:pointer;font-weight:600;font-size:.9rem}.lookup-row{display:flex;gap:8px;margin-top:10px}" +
+      ".lookup-row input{flex:1;min-width:0;font:inherit;padding:9px 12px;border:1px solid rgba(127,127,127,.4);border-radius:10px;text-transform:uppercase;letter-spacing:.06em}" +
+      ".lookup-row button{font:inherit;font-weight:600;padding:9px 14px;border-radius:10px;border:0;background:var(--ztf-accent,#33a15a);color:#fff;cursor:pointer}" +
+      ".lookup-msg{margin:6px 0 0;font-size:.82rem;color:var(--ztf-danger,#c0392b);min-height:0}" +
+      ".sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}" +
+      ".receipt{display:grid;gap:10px;justify-items:center;margin:14px auto 0;max-width:520px}" +
+      ".receipt p{margin:0}.receipt-code{border:1.5px dashed var(--ztf-accent,#33a15a);border-radius:12px;padding:12px 16px;display:grid;gap:4px;width:100%}" +
+      ".receipt .code{font:700 1.5rem/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em}" +
+      ".receipt-warn{background:#fdecea;color:#8a1c12;border-radius:10px;padding:10px 14px;font-weight:600;font-size:.9rem}" +
+      ".receipt-pdf{font:inherit;font-weight:700;padding:13px 20px;border-radius:12px;border:0;background:var(--ztf-accent,#33a15a);color:#fff;cursor:pointer}" +
       ".lang-switch{display:inline-flex;border:1px solid rgba(127,127,127,.35);border-radius:999px;padding:3px;gap:2px}" +
       ".lang-switch button{font:600 .78rem/1 system-ui,sans-serif;letter-spacing:.04em;padding:7px 11px;border:0;border-radius:999px;background:transparent;color:inherit;cursor:pointer;opacity:.7}" +
       ".lang-switch button[aria-pressed=true]{background:var(--ztf-accent,#33a15a);color:#fff;opacity:1}" +
@@ -558,34 +628,42 @@
 
     var bd = el("birth_date"), max = new Date();
     max.setFullYear(max.getFullYear() - D.minAge); bd.max = max.toISOString().slice(0, 10); bd.min = "1960-01-01";
+    el("motivation").setAttribute("maxlength", D.motivationMax);
 
     form.addEventListener("change", function (e) {
       var n = e.target.name; if (!n) return;
       if (n === "institution_category") onCategory();
       else if (n === "cycle") { updateCategories(); onCategory(); }
-      else if (n === "subsystem" || n === "gce_exam") updateDependent();
-      else if (n === "level") onLevel();
-      else if (n === "birth_date") updateGuardian();
-      else if (n === "average_not_provided" || n === "ranking_not_provided" || n === "cohort_size_not_provided") onNP(n.replace("_not_provided", ""));
+      else if (n === "level") updateDependent();
+      else if (n === "institution_name") onSchoolInput();
+      else if (n === "average_not_provided") onNP();
       else if (fileStore[n]) onFiles(n);
       clearError(n); refresh();
     });
-    form.addEventListener("input", function (e) { var n = e.target.name; if (!n) return; if (n === "birth_date") updateGuardian(); clearError(n); refresh(); });
+    form.addEventListener("input", function (e) {
+      var n = e.target.name; if (!n) return;
+      if (n === "institution_name") onSchoolInput();
+      if (n === "motivation") updateCounter();
+      clearError(n); refresh();
+    });
     form.addEventListener("submit", onSubmit);
     $$("[data-ztf-add-school]").forEach(function (b) { b.addEventListener("click", openAddSchool); });
     $$("[data-ztf-reset]").forEach(function (b) { b.addEventListener("click", reset); });
     $$("[data-ztf-lang]").forEach(function (b) { b.addEventListener("click", function () { applyLang(b.getAttribute("data-ztf-lang")); }); });
+    $$("[data-ztf-pdf]").forEach(function (b) { b.addEventListener("click", function () { if (lastRecord) makePdf(lastRecord); }); });
+    $$("[data-ztf-lookup-btn]").forEach(function (b) { b.addEventListener("click", lookup); });
+    var lc = $("#ztf-lookup-code"); if (lc) lc.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); lookup(); } });
 
-    if (window.ZTF_DEMO === false) { applyLang(lang); updateGuardian(); return; }
-    var demo = document.createElement("div"); demo.className = "ztf-demo";
-    demo.innerHTML = '<span data-i18n="demo.title"></span><button type="button" data-kind="pupil" data-i18n="demo.pupil"></button><button type="button" data-kind="student" data-i18n="demo.student"></button>';
-    $$("button", demo).forEach(function (b) { b.addEventListener("click", function () { fillDemo(b.getAttribute("data-kind")); }); });
-    document.body.appendChild(demo);
-
+    if (window.ZTF_DEMO !== false) {
+      var demo = document.createElement("div"); demo.className = "ztf-demo";
+      demo.innerHTML = '<span data-i18n="demo.title"></span><button type="button" data-kind="pupil" data-i18n="demo.pupil"></button><button type="button" data-kind="student" data-i18n="demo.student"></button>';
+      $$("button", demo).forEach(function (b) { b.addEventListener("click", function () { fillDemo(b.getAttribute("data-kind")); }); });
+      document.body.appendChild(demo);
+    }
     applyLang(lang);
-    updateGuardian();
   }
 
-  window.ZTF = { validate: validate, refresh: refresh, summary: summary, renderRecap: renderRecap, fillDemo: fillDemo, toast: toast, tr: tr, lang: function () { return lang; }, setLang: applyLang };
+  window.ZTF = { validate: validate, refresh: refresh, summary: summary, renderRecap: renderRecap, fillDemo: fillDemo, toast: toast,
+    tr: tr, lang: function () { return lang; }, setLang: applyLang, makePdf: makePdf, describe: describe };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();

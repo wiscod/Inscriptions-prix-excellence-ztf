@@ -59,10 +59,6 @@ input:disabled,select:disabled{background:#f6f3ea;color:#a8a28f}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:none;border:0;color:#8a6a14;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;padding:2px 0;text-decoration:underline;text-underline-offset:3px}.link-btn:disabled{opacity:.4}
 .drop{background:#fff;border-color:#d8cfb4}
-.guardian,.gce{border:1px solid var(--line);background:#fbf6e6;border-radius:14px;padding:18px 18px 2px;margin:0 0 20px}
-.guardian-h,.gce-h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-bottom:14px}
-.guardian-h strong,.gce-h strong{font-family:"Cormorant Garamond",serif;font-size:1.25rem;color:var(--navy)}
-.guardian-h span,.gce-h span{font-size:.82rem;color:var(--muted)}
 .choice-opt{background:#fff;border-color:#ddd5bf}.choice-opt b{font-family:"Cormorant Garamond",serif;font-size:1.2rem;color:var(--navy)}
 .choice-opt:has(input:checked){border-color:var(--gold);background:#fffaf0}
 .facts{display:grid;gap:10px;margin:0 0 20px;padding:0;list-style:none;font-size:.82rem;color:#c9cde4}
@@ -127,7 +123,7 @@ window.ZTF_PAGE_I18N = {
     <div data-ztf-hide-on-success>
       <form data-ztf-form>
         <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="num">I</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
-        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="num">II</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="num">II</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
         <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="num">III</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
         <div class="consent-wrap" data-ztf-slot="consent"></div>
       </form>
@@ -135,7 +131,7 @@ window.ZTF_PAGE_I18N = {
     <div class="success" data-ztf-success hidden>
       <svg class="laurel" style="color:#c79d2f" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="32" cy="32" r="22"/><path d="M23 32l6 6 12-13"/></svg>
       <h2 data-i18n="success.title"></h2>
-      <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <div data-ztf-slot="receipt"></div>
       <button type="button" data-ztf-reset data-i18n="btn.new"></button>
     </div>
   </main>
@@ -143,6 +139,7 @@ window.ZTF_PAGE_I18N = {
 <footer>© <span data-i18n="brand.org"></span> · <span data-i18n="p.footer"></span></footer>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/ztf-lists.js"></script>
 <script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>

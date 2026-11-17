@@ -54,8 +54,6 @@ input:disabled,select:disabled{background:#f2f4f7;color:#98a2b3}
 .notice{background:#fffaeb;border:1px solid #fedf89;border-radius:14px;padding:12px;font-size:.85rem;margin:0 0 16px}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:#eef7f1;border:0;color:var(--green-d);font:inherit;font-size:.86rem;font-weight:700;cursor:pointer;padding:10px 12px;border-radius:10px;margin-top:4px}.link-btn:disabled{opacity:.4}
-.guardian,.gce{background:#f3faf5;border:1px solid #cdeed7;border-radius:16px;padding:14px 12px 0;margin-bottom:16px}
-.guardian-h,.gce-h{display:grid;gap:2px;margin-bottom:12px;font-size:.88rem}.guardian-h span,.gce-h span{color:var(--muted);font-size:.8rem}
 .drop{padding:22px 14px;background:#fafbfc;border-radius:14px}
 .consent-card{margin:4px 12px 0;background:#fff;border-radius:18px;border:1px solid var(--line);padding:16px}
 .consent .np{color:var(--ink);align-items:flex-start}
@@ -80,7 +78,7 @@ window.ZTF_PAGE_I18N = {
   "p.until": ["⏰ Date limite :", "⏰ Deadline:"],
   "p.todo": ["À remplir", "To do"], "p.done": ["✓ Complet", "✓ Done"],
   "p.s2.s": ["Établissement, classe ou niveau, résultats", "Institution, class or level, results"],
-  "p.s3.s": ["Pièce d'identité, bulletins…", "ID, report cards…"]
+  "p.s3.s": ["Relevés de notes, motivation…", "Transcripts, motivation…"]
 };
 </script>
 </head>
@@ -106,7 +104,7 @@ window.ZTF_PAGE_I18N = {
         </details>
         <details class="sec" id="s2" data-ztf-section>
           <summary><span class="ic">🎓</span><span class="t"><span data-i18n="sec.academic"></span><small data-i18n="p.s2.s"></small></span><span class="st"></span><span class="chev">▾</span></summary>
-          <div class="body"><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></div>
+          <div class="body"><div data-ztf-slot="academic"></div></div>
         </details>
         <details class="sec" id="s3" data-ztf-section>
           <summary><span class="ic">📎</span><span class="t"><span data-i18n="sec.attachments"></span><small data-i18n="p.s3.s"></small></span><span class="st"></span><span class="chev">▾</span></summary>
@@ -120,7 +118,7 @@ window.ZTF_PAGE_I18N = {
   <div class="success" data-ztf-success hidden>
     <div class="ok">✓</div>
     <h2 data-i18n="success.title"></h2>
-    <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
+      <div data-ztf-slot="receipt"></div>
     <button type="button" data-ztf-reset data-i18n="btn.new"></button>
   </div>
 </div>
@@ -131,6 +129,7 @@ window.ZTF_PAGE_I18N = {
 </div></div>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/ztf-lists.js"></script>
 <script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="shared/form-engine.js"></script>

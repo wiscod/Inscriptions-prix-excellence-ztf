@@ -3,9 +3,9 @@
  * DELETE /api/admin/dossiers/:id : supprime le dossier et toutes ses pièces jointes (définitif).
  * Réservé à l'administration (mot de passe ADMIN_PASSWORD).
  */
-import { ID_RE, checkAdmin, deletePaths, fail, json, listAll, pendingPath, readJSON, recordPath, segments } from "../../../lib/common.js";
+import { ID_RE, checkAdmin, deletePaths, fail, json, listAll, lookupPath, pendingPath, readJSON, recordPath, segments } from "../../../lib/common.js";
 
-const strip = ({ uploadTokenHash, ...rest }) => rest;
+const strip = ({ uploadTokenHash, lookupHash, ...rest }) => rest;
 
 export default {
   async fetch(req) {
@@ -17,7 +17,7 @@ export default {
 
     if (req.method === "DELETE") {
       const chunks = (await listAll(`fichiers/${id}/`)).map((b) => b.pathname);
-      await deletePaths([...chunks, pendingPath(id), recordPath(id)]);
+      await deletePaths([...chunks, pendingPath(id), ...(d.lookupHash ? [lookupPath(d.lookupHash)] : []), recordPath(id)]);
       console.log(`Dossier supprimé par l'administration : ${id} (${chunks.length} morceaux de fichiers)`);
       return json({ deleted: id, chunks: chunks.length });
     }

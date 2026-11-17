@@ -4,7 +4,7 @@
  */
 import { checkAdmin, fail, json, listAll, readJSON } from "../../../lib/common.js";
 
-const strip = ({ uploadTokenHash, ...rest }) => rest;
+const strip = ({ uploadTokenHash, lookupHash, ...rest }) => rest;
 
 export default {
   async fetch(req) {

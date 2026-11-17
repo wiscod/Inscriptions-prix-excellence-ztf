@@ -49,9 +49,6 @@ input:disabled,select:disabled{background:#f3f5f7;color:#94a3b8}
 .notice{background:#fffbe6;border-left:4px solid var(--yellow);padding:10px 14px;border-radius:8px;font-size:.88rem;margin:0 0 18px}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
 .link-btn{align-self:flex-start;background:none;border:0;color:var(--green-d);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;padding:2px 0}.link-btn:disabled{opacity:.4;cursor:not-allowed}
-.guardian,.gce{border:1px solid #cbead5;background:#f6fbf8;border-radius:14px;padding:16px 16px 2px;margin:0 0 18px}
-.guardian-h,.gce-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:14px;font-size:.9rem}
-.guardian-h strong,.gce-h strong{color:var(--green-d)}.guardian-h span,.gce-h span{color:var(--muted);font-size:.82rem}
 .consent .np{font-size:.9rem;color:var(--ink);align-items:flex-start}.consent .np i{color:var(--green-d);font-style:normal}
 .captcha{margin:6px 0 18px}
 .submit{width:100%;padding:16px;border:0;border-radius:12px;background:var(--yellow);color:var(--navy);font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;box-shadow:0 6px 18px rgba(248,218,73,.45)}
@@ -72,8 +69,6 @@ window.ZTF_PAGE_I18N = {
   "p.chip1": ["Réservé au Cameroun", "Cameroon only"], "p.chip2": ["Secondaire et supérieur", "Secondary and higher education"],
   "p.chip3": ["Francophones et anglophones", "Francophone and anglophone"], "p.chip4": ["Bourse pour les lauréats", "Scholarship for winners"],
   "p.footer": ["Prix d'Excellence ZTF", "ZTF Excellence Award"],
-  "p.success.id": ["Numéro de dossier :", "Application number:"],
-  "p.success.keep": ["Notez ce numéro : il vous sera demandé si vous contactez la Fondation.", "Write this number down: you will need it if you contact the Foundation."],
   "err.server": ["Le serveur a refusé le dossier :", "The server rejected the application:"],
   "err.tooMany": ["trop d'envois depuis cette connexion. Réessayez dans une minute.", "too many submissions from this connection. Try again in a minute."]
 };
@@ -99,9 +94,10 @@ window.ZTF_PAGE_I18N = {
   <div class="card">
     <div data-ztf-hide-on-success>
       <div class="deadline">📅 <p style="margin:0"><strong data-i18n="deadline.label"></strong> · <span data-i18n-html="deadline.text"></span></p></div>
+      <div data-ztf-slot="lookup"></div>
       <form data-ztf-form>
         <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n">1</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
-        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="subsystem"></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
         <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n">3</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
         <div data-ztf-slot="consent"></div>
       </form>
@@ -109,9 +105,7 @@ window.ZTF_PAGE_I18N = {
     <div class="success" data-ztf-success hidden>
       <div class="ok">✓</div>
       <h2 data-i18n="success.title"></h2>
-      <p><span data-i18n="p.success.id"></span> <strong data-ztf-success-id style="font-size:1.15rem;color:var(--navy)"></strong></p>
-      <p><span data-i18n="success.text"></span> <strong data-ztf-success-email></strong></p>
-      <p class="hint" data-i18n="p.success.keep"></p>
+      <div data-ztf-slot="receipt"></div>
       <button class="btn-out" type="button" data-ztf-reset data-i18n="btn.new"></button>
     </div>
   </div>
@@ -120,6 +114,7 @@ window.ZTF_PAGE_I18N = {
 <footer><strong data-i18n="brand.org"></strong> · <span data-i18n="p.footer"></span></footer>
 
 <script src="shared/form-data.js"></script>
+<script src="shared/ztf-lists.js"></script>
 <script src="shared/form-i18n.js"></script>
 <script src="shared/form-markup.js"></script>
 <script src="js/submit.js"></script>

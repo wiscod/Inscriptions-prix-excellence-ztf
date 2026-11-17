@@ -1,73 +1,65 @@
 # Inscriptions — Prix d'Excellence ZTF
 
-Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**.
+Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**. Hébergé sur **Vercel**.
 
-- **Formulaire** : https://prix-ztf-candidature.netlify.app (basé sur la maquette 1)
-- **Administration** : https://prix-ztf-candidature.netlify.app/admin/ (mot de passe `ADMIN_PASSWORD`)
-- **Maquettes** : https://prix-ztf-candidature.netlify.app/maquettes/
+- **Formulaire** : `/` (basé sur la maquette 1)
+- **Administration** : `/admin/` (mot de passe `ADMIN_PASSWORD`)
+- **Maquettes** : `/maquettes/`
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
 - **Organisateur** : la Fondation Zacharias Tanee Fomum. Le prix porte le nom du Pr Zacharias Tanee Fomum, chimiste (DSc en chimie organique), qui a montré qu'on peut exceller à la fois « dans le faire et dans l'être ».
 - **Objectif** : « un instrument d'incitation mentale pour stimuler les intellectuels à travailler dur dans l'intérêt de la nation et du monde ». Il récompense l'excellence académique ; une **bourse financière** est remise aux lauréats.
-- **Historique** : 5 éditions depuis 2021 (277 postulants la première année, près de 6 300 participants en 2025, venus des 10 régions du Cameroun et d'une dizaine de pays). Comité d'organisation présidé par le Pr Dieudonné Njamen (Université de Ngaoundéré).
+- **Historique** : 5 éditions depuis 2021 (277 postulants la première année, près de 6 300 participants en 2025, venus des 10 régions du Cameroun et d'une dizaine de pays).
 - **Déroulement** : appel à candidatures → collecte des dossiers → classement par catégorie → auditions → jury scientifique → publication des lauréats → cérémonie de remise des prix (Yaoundé).
 - **Identité visuelle** : vert `#33a15a`, jaune `#f8da49`, bleu nuit `#030842`.
 
-## Décisions prises
+## Sources des champs
 
-| Question | Décision |
-|---|---|
-| Listes d'établissements de la référence (système français : CPGE, BUT, INSP…) | Adaptées au Cameroun ; mêmes champs, même ordre |
-| Public | Secondaire (6e → Terminale, Form 1 → Upper Sixth) **et** supérieur |
-| Langue | Français + anglais |
-| Mineurs | Âge minimum 9 ans ; sous 18 ans, parent ou tuteur obligatoire |
-| Résultats | Francophone : moyenne /20, rang, effectif. Anglophone : moyenne et rang du bulletin, plus grades GCE si examen passé |
-| Relevés de notes | Champ de dépôt séparé et obligatoire ; diplômes dans un champ facultatif |
+- Formulaire de référence : [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) (structure de départ).
+- Formulaire officiel actuel du prix : [apply.excellenceawardsztf.com](https://apply.excellenceawardsztf.com/). On en reprend les listes (niveaux, séries, domaines d'études, catégories d'établissements, 594 écoles du Cameroun), le genre, l'e-mail facultatif, la motivation (2 000 caractères), la limite de 4 Mo par fichier, l'identifiant et la fiche PDF à imprimer pour l'audition, et le support WhatsApp.
+
+Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, parent ou tuteur, résultats GCE, case CGU (en attendant les textes).
 
 ## Champs du formulaire
 
-Les champs 1-8, 13-20, 23, 26 et 27 suivent la référence [africaexcellenceawards.org/candidature](https://africaexcellenceawards.org/candidature) ; les autres viennent des décisions ci-dessus. La référence n'a qu'un champ « Diplômes et relevés de notes » : il est ici coupé en deux (24 et 25). La case d'acceptation des CGU de la référence est retirée pour l'instant, en attendant les textes.
+| Section | Champ | Obligatoire |
+|---|---|---|
+| Informations personnelles | Genre (Homme / Femme), Nom, Prénom, Nationalité, Date de naissance, Ville / Village, Numéro de téléphone | oui |
+| | Adresse électronique | non |
+| Informations académiques | Catégorie d'établissement (9 catégories officielles) | oui |
+| | École durant l'année 2025/2026 : liste officielle filtrée par catégorie, ou « Mon établissement n'est pas dans la liste » | oui |
+| | Classe (6ème … Terminale, Form 1 … Upper Sixth) **ou** Niveau d'éducation (BAC +1 … > BAC +5 / PhD) | oui |
+| | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur) | oui |
+| | Moyenne générale (+ « Je n'ai pas de notes / moyenne » pour > BAC +5) | oui, sauf case cochée |
+| Pièces jointes et motivation | Relevés de notes et bulletins 2025/2026 (images ou PDF, 4 Mo par fichier) | oui |
+| | Diplômes et relevés d'examens officiels | non |
+| | Tout document utile complémentaire | non |
+| | Motivation (2 000 caractères) | non |
 
-| # | Section | Champ | Obligatoire |
-|---|---|---|---|
-| 1-8 | Informations générales | Civilité, Nom, Prénom, Nationalité, Date de naissance, Ville de résidence, Téléphone (indicatif + numéro), Adresse électronique | oui |
-| 9 | ↳ si moins de 18 ans | Lien avec le candidat (Père, Mère, Tuteur légal, Autre membre de la famille) | oui |
-| 10 | | Nom et prénom, Téléphone du parent ou tuteur (+ e-mail facultatif) | oui |
-| 11 | | Autorisation du parent ou tuteur | oui |
-| 12 | Parcours scolaire et académique | Sous-système éducatif (francophone / anglophone) | oui |
-| 13 | | Établissement (catégorie) : 2 catégories du secondaire, 8 du supérieur | oui |
-| 14 | | Établissement (sous-catégorie) : liste dépendante | oui |
-| 15 | | Établissement (nom) : recherche + « Mon établissement n'est pas dans la liste » | oui |
-| 16 | | Domaine d'études (supérieur, 93 domaines) **ou** Série / filière (secondaire) | oui |
-| 17 | | Niveau (BAC+1 … Post-BAC+5, Autre) **ou** Classe (6e … Terminale / Form 1 … Upper Sixth) | oui |
-| 18 | | Moyenne (+ « Je n'ai pas de notes / moyenne » si Post-BAC+5) | oui, sauf case cochée |
-| 19 | | Classement dans la promotion **ou** Rang dans la classe (+ « Non communiqué ») | valeur ou case |
-| 20 | | Taille de la promotion **ou** Effectif de la classe (+ « Non communiqué ») | valeur ou case |
-| 21 | ↳ si secondaire anglophone | Dernier examen GCE passé (aucun / O Level / A Level) | oui |
-| 22 | ↳ si examen GCE passé | Matières et grades obtenus | oui |
-| 23 | Pièces jointes | Pièce d'identité (Passeport ou CNI ; acte de naissance pour un mineur) : PDF, PNG, JPG | oui |
-| 24 | | Relevés de notes et bulletins (2025-2026), plusieurs fichiers | oui |
-| 25 | | Diplômes et relevés d'examens officiels (CEP, BEPC, Probatoire, Bac, GCE, BTS, Licence…) | non |
-| 26 | | Tout document utile complémentaire | non |
-| 27 | | Informations complémentaires | non |
+Les listes officielles sont dans [`maquettes/shared/ztf-lists.js`](maquettes/shared/ztf-lists.js), utilisé à la fois par le navigateur et par le serveur.
 
-Les listes complètes (en français et en anglais) sont dans [`maquettes/shared/form-data.js`](maquettes/shared/form-data.js).
+## Après l'envoi
+
+Le candidat reçoit un **numéro de dossier** et un **identifiant** (ex. `BU9G3-JG42A`). Il télécharge sa **fiche de candidature en PDF**, à imprimer et apporter à l'audition. Plus tard, « Déjà inscrit ? » en haut du formulaire lui permet de retélécharger sa fiche avec son identifiant. Si le candidat a donné un e-mail et que le service d'envoi est configuré, il reçoit aussi un accusé de réception avec son identifiant.
 
 ## Fonctionnement de l'envoi
 
-1. Le navigateur envoie la fiche et la liste des fichiers à `POST /api/dossiers`. Le serveur refait tous les contrôles du formulaire, enregistre la fiche (état « en cours ») et renvoie le numéro de dossier et un jeton d'envoi.
-2. Chaque fichier (4 Mo au plus) part en morceaux de 3 Mo (`PUT /api/dossiers/:id/files/...`), car une fonction Netlify n'accepte qu'environ 4,5 Mo par requête. Des morceaux plus petits passent aussi mieux sur une connexion mobile ; en cas de coupure, chaque morceau est réessayé trois fois.
-3. `POST /api/dossiers/:id/finalize` vérifie que tous les morceaux sont arrivés, passe le dossier à l'état « envoyé » et envoie l'accusé de réception au candidat.
-4. Chaque nuit à 03 h 17 UTC, une tâche planifiée supprime les envois restés inachevés plus de 48 heures.
+1. `POST /api/dossiers` : la fiche et la liste des fichiers. Le serveur refait tous les contrôles (dont la cohérence catégorie / niveau / série), enregistre la fiche (état « en cours ») et renvoie le numéro de dossier et un jeton d'envoi.
+2. `PUT /api/dossiers/:id/files/...` : chaque fichier part en morceaux de 3 Mo (une fonction Vercel n'accepte que 4,5 Mo par requête) ; chaque morceau est réessayé trois fois en cas de coupure.
+3. `POST /api/dossiers/:id/finalize` : vérifie que tout est arrivé, passe le dossier à l'état « soumis » et renvoie l'identifiant.
+4. `POST /api/lookup` : « Déjà inscrit ? », renvoie la fiche correspondant à un identifiant.
+5. Chaque nuit à 03 h 17 UTC, une tâche planifiée (`vercel.json`) supprime les envois restés inachevés plus de 48 heures.
 
-Les fiches et les fichiers sont stockés dans Netlify Blobs (stores `candidatures`, `candidature-fichiers`, `candidatures-en-cours`). Ces stores sont partagés entre la production et les prévisualisations de déploiement : ne pas faire de tests d'envoi sur une prévisualisation.
+Stockage : un store **Vercel Blob privé** (rien n'y est lisible sans passer par les fonctions). Fonctions et stockage dans la région de Paris (`cdg1`), la plus proche du Cameroun.
 
-## Variables d'environnement (Netlify)
+## Variables d'environnement (Vercel)
 
 | Variable | Rôle | Obligatoire |
 |---|---|---|
+| `BLOB_READ_WRITE_TOKEN` | accès au store Blob, créé quand le store est relié au projet | oui |
 | `ADMIN_PASSWORD` | mot de passe de la page `/admin/` | oui |
+| `CRON_SECRET` | protège la tâche de nettoyage quotidienne | oui |
 | `RESEND_API_KEY` | clé de l'API Resend pour l'accusé de réception ; sans elle, aucun e-mail ne part | non |
 | `EMAIL_FROM` | expéditeur, ex. `Prix d'Excellence ZTF <candidatures@excellenceawardsztf.com>` (domaine vérifié chez Resend) | avec `RESEND_API_KEY` |
 | `DEADLINE` | date limite (ISO 8601, ex. `2027-03-31T23:59:59+01:00`) ; après elle, les nouveaux dossiers sont refusés | non |
@@ -79,28 +71,24 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 ```
 site/
   index.html                  formulaire réel (maquette 1 + envoi au serveur)
-  js/submit.js                envoi du dossier : fiche, fichiers en morceaux, validation finale
-  admin/index.html            liste des dossiers, fiche détaillée, pièces jointes, export CSV, suppression
-netlify/
-  functions/                  API : dossier-create, dossier-upload, dossier-finalize,
-                              admin-dossiers, admin-file, cleanup-abandoned (tâche planifiée)
-  lib/                        stockage, contrôles des champs, e-mail
+  js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
+  admin/index.html            liste des dossiers, fiche, pièces jointes, export CSV, suppression
+api/                          fonctions Vercel (routage par fichiers)
+  dossiers/index.js           création du dossier
+  dossiers/[id]/files/…       réception des morceaux de fichiers
+  dossiers/[id]/finalize.js   validation finale, identifiant
+  lookup.js                   « Déjà inscrit ? »
+  admin/…                     liste, fiche, suppression, téléchargement des pièces jointes
+  cron/cleanup.js             nettoyage quotidien
+lib/                          stockage Blob, contrôles des champs, e-mail
 maquettes/
   index.html                  galerie des 5 propositions
   1-classique.html … 5-prestige.html
-  shared/form-data.js         listes et paramètres (date limite, contact, âges, 4 Mo par fichier)
+  shared/ztf-lists.js         listes officielles (générées depuis apply.excellenceawardsztf.com)
+  shared/form-data.js         paramètres (date limite, contact, WhatsApp, 4 Mo par fichier)
   shared/form-i18n.js         textes de l'interface en français et en anglais
   shared/form-markup.js       champs du formulaire
-  shared/form-engine.js       langue, champs dépendants, validation, pièces jointes
+  shared/form-engine.js       langue, champs dépendants, validation, pièces jointes, fiche PDF
 scripts/build.mjs             assemble dist/ (site + shared + maquettes)
+vercel.json                   build, région, tâche planifiée
 ```
-
-## Développement local
-
-```
-npm install
-npm run build
-netlify dev          # formulaire sur http://localhost:8888, Blobs simulés en local
-```
-
-Mettre `ADMIN_PASSWORD=...` dans un fichier `.env` (ignoré par git) pour tester `/admin/`.
