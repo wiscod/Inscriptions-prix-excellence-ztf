@@ -24,9 +24,6 @@ a{color:var(--green-d)}
 .hero:after{content:"";position:absolute;inset:auto -10% -60px -10%;height:120px;background:var(--bg);border-radius:50% 50% 0 0}
 .hero h1{font-size:clamp(1.8rem,4vw,2.8rem);margin:.4rem 0 .6rem;letter-spacing:-.02em}
 .hero p{max-width:660px;margin:0 auto;opacity:.92}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px}
-.chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:600}
-.chip.y{background:var(--yellow);color:var(--navy);border-color:var(--yellow)}
 .eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--yellow)}
 .wrap{max-width:920px;margin:-90px auto 0;padding:0 16px 64px;position:relative;z-index:2}
 .card{background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(3,8,66,.08);padding:clamp(20px,4vw,40px)}
@@ -65,9 +62,6 @@ window.ZTF_PAGE_I18N = {
   "p.nav.apply": ["Candidature", "Apply"], "p.nav.contact": ["Contact", "Contact"],
   "p.eyebrow": ["Édition 2026-2027 · Cameroun", "2026-2027 edition · Cameroon"],
   "p.title": ["Candidature au Prix d'Excellence ZTF", "Apply for the ZTF Excellence Award"],
-  "p.lead": ["Un instrument d'incitation mentale pour stimuler les intellectuels à travailler dur dans l'intérêt de la nation et du monde. Élèves du secondaire et étudiants du supérieur : soumettez votre dossier au comité d'experts.", "A mental incentive that spurs young minds to work hard for the good of the nation and the world. Secondary pupils and higher-education students: submit your file to our panel of experts."],
-  "p.chip1": ["Réservé au Cameroun", "Cameroon only"], "p.chip2": ["Secondaire et supérieur", "Secondary and higher education"],
-  "p.chip3": ["Francophones et anglophones", "Francophone and anglophone"], "p.chip4": ["Bourse pour les lauréats", "Scholarship for winners"],
   "p.footer": ["Prix d'Excellence ZTF", "ZTF Excellence Award"],
   "err.server": ["Le serveur a refusé le dossier :", "The server rejected the application:"],
   "err.tooMany": ["trop d'envois depuis cette connexion. Réessayez dans une minute.", "too many submissions from this connection. Try again in a minute."]
@@ -86,8 +80,6 @@ window.ZTF_PAGE_I18N = {
 <section class="hero">
   <div class="eyebrow" data-i18n="p.eyebrow"></div>
   <h1 data-i18n="p.title"></h1>
-  <p data-i18n="p.lead"></p>
-  <div class="chips"><span class="chip y" data-i18n="p.chip1"></span><span class="chip" data-i18n="p.chip2"></span><span class="chip" data-i18n="p.chip3"></span><span class="chip" data-i18n="p.chip4"></span></div>
 </section>
 
 <main class="wrap">
