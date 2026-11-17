@@ -105,7 +105,7 @@ window.ZTF_I18N = {
 
   /* Pièces jointes */
   "lbl.idfile": ["Pièce d'identité (Passeport ou CNI)", "Identity document (passport or national ID card)"],
-  "hint.idfile": ["Mineur sans CNI : acte de naissance. Formats acceptés : PDF, PNG, JPG.", "Minor without an ID card: birth certificate. Accepted formats: PDF, PNG, JPG."],
+  "hint.idfile": ["Mineur sans CNI : acte de naissance. Formats acceptés : PDF, PNG, JPG ; 10 Mo maximum par fichier.", "Minor without an ID card: birth certificate. Accepted formats: PDF, PNG, JPG; 10 MB maximum per file."],
   "lbl.transcripts": ["Relevés de notes et bulletins ({year})", "Transcripts and report cards ({year})"],
   "lbl.transcripts.m": ["(avec classement si possible)", "(with ranking if possible)"],
   "hint.transcripts": ["Tous les bulletins ou relevés de l'année : trimestres pour un élève, semestres pour un étudiant. Seuls les documents du système éducatif camerounais sont acceptés.", "Every report card or transcript for the year: terms for a pupil, semesters for a student. Only documents from the Cameroonian education system are accepted."],
@@ -146,6 +146,12 @@ window.ZTF_I18N = {
   "toast.incomplete.d": ["Merci de compléter les champs signalés en rouge.", "Please complete the fields marked in red."],
   "toast.sent": ["Candidature envoyée !", "Application submitted!"],
   "toast.sent.d": ["Votre dossier a été transmis. Vous recevrez un e-mail de confirmation.", "Your application has been sent. You will receive a confirmation email."],
+  "toast.file": ["Fichier refusé", "File rejected"],
+  "err.fileType": ["« {name} » : format non accepté.", "“{name}”: format not accepted."],
+  "err.fileSize": ["« {name} » dépasse {max} Mo.", "“{name}” is larger than {max} MB."],
+  "err.fileEmpty": ["« {name} » est vide.", "“{name}” is empty."],
+  "toast.failed": ["Envoi impossible", "Could not send"],
+  "toast.failed.d": ["Vérifiez votre connexion puis réessayez.", "Check your connection and try again."],
   "toast.school": ["Établissement ajouté", "Institution added"],
   "toast.school.d": ["« {name} » sera vérifié par notre équipe.", "“{name}” will be checked by our team."],
 

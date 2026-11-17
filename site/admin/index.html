@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Candidatures Prix ZTF</title>
+<style>
+:root{--green:#33a15a;--green-d:#1f7a40;--yellow:#f8da49;--navy:#030842;--ink:#0f172a;--muted:#64748b;--line:#dbe3ea;--bg:#f4f7f5;--danger:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+header b{font-size:1rem}header small{color:#c9cde4;display:block;font-size:.75rem}
+.mark{width:34px;height:34px;border-radius:8px;background:var(--yellow);color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:.75rem;flex:none}
+.brand{display:flex;gap:10px;align-items:center}
+button,input,select{font:inherit}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-weight:600}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn:disabled{opacity:.5;cursor:default}
+header .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+main{padding:16px;max-width:1400px;margin:auto}
+.login{max-width:380px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;gap:12px}
+.login h1{margin:0;font-size:1.2rem}.login input{padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.err{color:var(--danger);margin:0;min-height:1.2em}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.bar input,.bar select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.bar input{flex:1;min-width:200px}
+.count{color:var(--muted);margin-left:auto}
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:980px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #eef2f0;vertical-align:top}
+th{background:#f8faf9;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);position:sticky;top:0}
+tbody tr{cursor:pointer}tbody tr:hover{background:#f6fbf8}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;font-weight:600;background:#eef2f0}
+.tag.ok{background:#dcfae6;color:var(--green-d)}.tag.wait{background:#fff4d6;color:#8a6a00}
+.more{text-align:center;padding:12px}
+dialog{border:0;border-radius:14px;padding:0;width:min(760px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(3,8,66,.45)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+.dlg-h h2{margin:0;font-size:1.05rem}.dlg-b{padding:6px 18px 18px}
+.dlg-b h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);margin:16px 0 6px}
+dl{display:grid;grid-template-columns:minmax(150px,36%) 1fr;gap:5px 14px;margin:0}
+dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
+.files{display:grid;gap:6px}
+.files button{display:flex;justify-content:space-between;gap:10px;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fafcfb;cursor:pointer}
+.files button span{color:var(--muted);white-space:nowrap}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="mark">ZTF</span><div><b>Candidatures au Prix d'Excellence ZTF</b><small>Administration · accès réservé à la Fondation</small></div></div>
+  <button class="btn" id="logout" hidden>Se déconnecter</button>
+</header>
+
+<form class="login" id="login">
+  <h1>Connexion</h1>
+  <label for="pw">Mot de passe d'administration</label>
+  <input id="pw" type="password" autocomplete="current-password" required>
+  <p class="err" id="loginErr"></p>
+  <button class="btn primary">Se connecter</button>
+</form>
+
+<main id="app" hidden>
+  <div class="bar">
+    <input id="q" type="search" placeholder="Rechercher : nom, numéro, établissement, ville, e-mail…">
+    <select id="fStatus"><option value="soumis">Dossiers envoyés</option><option value="en_cours">Envois inachevés</option><option value="">Tous les états</option></select>
+    <select id="fCycle"><option value="">Secondaire et supérieur</option><option value="secondary">Secondaire</option><option value="higher">Supérieur</option></select>
+    <select id="fSub"><option value="">Francophones et anglophones</option><option value="francophone">Francophones</option><option value="anglophone">Anglophones</option></select>
+    <button class="btn" id="csv">Exporter en CSV</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Reçu le</th><th>N° de dossier</th><th>Nom</th><th>Prénom</th><th>Cycle</th><th>Classe / niveau</th><th>Établissement</th><th>Moyenne</th><th>Rang</th><th>Fichiers</th><th>État</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div class="more"><button class="btn" id="more" hidden>Charger les dossiers suivants</button></div>
+</main>
+
+<dialog id="dlg"><div class="dlg-h"><h2 id="dlgTitle"></h2><button class="btn" id="dlgClose">Fermer</button></div><div class="dlg-b" id="dlgBody"></div></dialog>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "ztf-admin-pw", PAGE = 100;
+  var pw = "", items = [], total = 0, offset = 0;
+  var $ = function (id) { return document.getElementById(id); };
+
+  var LABELS = [
+    ["Identité", [["civility", "Civilité"], ["last_name", "Nom"], ["first_name", "Prénom"], ["nationality_name", "Nationalité"], ["birth_date", "Date de naissance"], ["city", "Ville de résidence"], ["phone", "Téléphone"], ["email", "Adresse électronique"], ["lang", "Langue du formulaire"]]],
+    ["Parent ou tuteur", [["guardian_relation", "Lien avec le candidat"], ["guardian_name", "Nom et prénom"], ["guardian_phone", "Téléphone"], ["guardian_email", "E-mail"], ["guardian_consent", "Autorisation donnée"]]],
+    ["Parcours", [["cycle", "Cycle"], ["subsystem", "Sous-système"], ["institution_category", "Établissement (catégorie)"], ["institution_subcategory", "Établissement (sous-catégorie)"], ["institution_name", "Établissement (nom)"], ["field_of_study", "Domaine d'études / série"], ["level", "Niveau / classe"], ["average", "Moyenne"], ["ranking", "Classement / rang"], ["cohort_size", "Taille promotion / effectif"], ["gce_exam", "Examen GCE"], ["gce_results", "Résultats GCE"]]],
+    ["Informations complémentaires", [["additional_notes", "Texte libre"]]]
+  ];
+  var FILE_LABELS = { idfile: "Pièce d'identité", transcripts: "Relevés de notes et bulletins", diplomas: "Diplômes et relevés d'examens", otherfiles: "Documents complémentaires" };
+  var CYCLE = { secondary: "Secondaire", higher: "Supérieur" };
+
+  function store(v) { try { if (v == null) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, v); } catch (e) { /* stockage indisponible */ } }
+  function stored() { try { return sessionStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function fmt(iso) { return iso ? new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : ""; }
+  function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko"; }
+
+  async function api(path, asBlob) {
+    var res = await fetch(path, { headers: { authorization: "Bearer " + pw } });
+    if (res.status === 401) { logout("Mot de passe incorrect."); throw new Error("401"); }
+    if (!res.ok) { var d = {}; try { d = await res.json(); } catch (e) {} throw new Error(d.error || res.status); }
+    return asBlob ? res.blob() : res.json();
+  }
+
+  function value(d, k) {
+    var f = d.fields, v = f[k];
+    if (k === "phone") return f.phone ? f.phone_code + " " + f.phone : "";
+    if (k === "guardian_phone") return f.guardian_phone ? f.guardian_phone_code + " " + f.guardian_phone : "";
+    if (k === "cycle") return CYCLE[v] || v;
+    if (k === "average" && f.average_not_provided) return "Non communiquée";
+    if (k === "ranking" && f.ranking_not_provided) return "Non communiqué";
+    if (k === "cohort_size" && f.cohort_size_not_provided) return "Non communiqué";
+    if (v === true) return "Oui"; if (v === false) return "";
+    return v == null ? "" : String(v);
+  }
+
+  function filtered() {
+    var q = $("q").value.trim().toLowerCase(), st = $("fStatus").value, cy = $("fCycle").value, sb = $("fSub").value;
+    return items.filter(function (d) {
+      if (st && d.status !== st) return false;
+      if (cy && d.fields.cycle !== cy) return false;
+      if (sb && d.fields.subsystem !== sb) return false;
+      if (!q) return true;
+      var f = d.fields;
+      return [d.id, f.last_name, f.first_name, f.institution_name, f.city, f.email, f.level].join(" ").toLowerCase().indexOf(q) >= 0;
+    });
+  }
+
+  function render() {
+    var list = filtered(), tb = $("rows");
+    tb.innerHTML = "";
+    list.forEach(function (d) {
+      var tr = document.createElement("tr"), f = d.fields;
+      [fmt(d.submittedAt || d.createdAt), d.id, f.last_name, f.first_name, CYCLE[f.cycle] || "", f.level, f.institution_name, value(d, "average"), value(d, "ranking"), String(d.files.length)]
+        .forEach(function (v) { var td = document.createElement("td"); td.textContent = v || ""; tr.appendChild(td); });
+      var td = document.createElement("td"), s = document.createElement("span");
+      s.className = "tag " + (d.status === "soumis" ? "ok" : "wait"); s.textContent = d.status === "soumis" ? "Envoyé" : "Inachevé";
+      td.appendChild(s); tr.appendChild(td);
+      tr.addEventListener("click", function () { open(d); });
+      tb.appendChild(tr);
+    });
+    $("count").textContent = list.length + " affiché(s) · " + items.length + " chargé(s) sur " + total;
+    $("more").hidden = items.length >= total;
+  }
+
+  async function load(reset) {
+    if (reset) { items = []; offset = 0; }
+    $("more").disabled = true;
+    try {
+      var r = await api("/api/admin/dossiers?offset=" + offset + "&limit=" + PAGE);
+      total = r.total; offset += r.items.length; items = items.concat(r.items);
+      render();
+    } finally { $("more").disabled = false; }
+  }
+
+  function open(d) {
+    $("dlgTitle").textContent = d.id + " · " + d.fields.first_name + " " + d.fields.last_name;
+    var body = $("dlgBody"); body.innerHTML = "";
+    var meta = document.createElement("dl");
+    [["État", d.status === "soumis" ? "Envoyé" : "Envoi inachevé"], ["Commencé le", fmt(d.createdAt)], ["Envoyé le", fmt(d.submittedAt)],
+      ["Accusé de réception", d.email ? ({ envoye: "envoyé", echec: "échec : " + (d.email.detail || ""), non_configure: "non envoyé (service d'e-mail non configuré)" })[d.email.status] : ""]]
+      .forEach(function (p) { add(meta, p[0], p[1]); });
+    body.appendChild(meta);
+    LABELS.forEach(function (g) {
+      if (g[0] === "Parent ou tuteur" && !d.fields.is_minor) return;
+      var h = document.createElement("h3"); h.textContent = g[0]; body.appendChild(h);
+      var dl = document.createElement("dl");
+      g[1].forEach(function (p) { var v = value(d, p[0]); if (v) add(dl, p[1], v); });
+      body.appendChild(dl);
+    });
+    var h = document.createElement("h3"); h.textContent = "Pièces jointes"; body.appendChild(h);
+    var box = document.createElement("div"); box.className = "files";
+    d.files.forEach(function (fi) {
+      var b = document.createElement("button"); b.type = "button";
+      var n = document.createElement("b"); n.textContent = FILE_LABELS[fi.field] + " : " + fi.name;
+      var s = document.createElement("span"); s.textContent = kb(fi.size) + " · ouvrir";
+      b.appendChild(n); b.appendChild(s);
+      b.addEventListener("click", async function () {
+        var win = window.open("", "_blank");
+        s.textContent = "chargement…";
+        try {
+          var blob = await api("/api/admin/files/" + d.id + "/" + fi.field + "/" + fi.index, true);
+          var url = URL.createObjectURL(blob);
+          if (win) win.location = url; else location.href = url;
+          s.textContent = kb(fi.size) + " · ouvrir";
+        } catch (e) { if (win) win.close(); s.textContent = "erreur : " + e.message; }
+      });
+      box.appendChild(b);
+    });
+    body.appendChild(box);
+    $("dlg").showModal();
+  }
+  function add(dl, k, v) { var dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v || "—"; dl.appendChild(dt); dl.appendChild(dd); }
+
+  async function exportCsv() {
+    var btn = $("csv"); btn.disabled = true;
+    try {
+      while (items.length < total) { btn.textContent = "Chargement " + items.length + " / " + total + "…"; await load(false); }
+      var cols = [["id", "N° de dossier"], ["status", "État"], ["submittedAt", "Envoyé le"]];
+      LABELS.forEach(function (g) { g[1].forEach(function (p) { cols.push(["f:" + p[0], p[1]]); }); });
+      Object.keys(FILE_LABELS).forEach(function (k) { cols.push(["files:" + k, FILE_LABELS[k] + " (fichiers)"]); });
+      var cell = function (v) { v = v == null ? "" : String(v); return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+      var lines = [cols.map(function (c) { return cell(c[1]); }).join(";")];
+      filtered().forEach(function (d) {
+        lines.push(cols.map(function (c) {
+          var k = c[0];
+          if (k.indexOf("f:") === 0) return cell(value(d, k.slice(2)));
+          if (k.indexOf("files:") === 0) return cell(d.files.filter(function (f) { return f.field === k.slice(6); }).map(function (f) { return f.name; }).join(" | "));
+          return cell(k === "submittedAt" ? fmt(d.submittedAt) : k === "status" ? (d.status === "soumis" ? "Envoyé" : "Inachevé") : d[k]);
+        }).join(";"));
+      });
+      var blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+      a.download = "candidatures-prix-ztf-" + new Date().toISOString().slice(0, 10) + ".csv"; a.click();
+    } catch (e) { alert("Export impossible : " + e.message); }
+    finally { btn.disabled = false; btn.textContent = "Exporter en CSV"; }
+  }
+
+  function logout(msg) { pw = ""; store(null); $("app").hidden = true; $("logout").hidden = true; $("login").hidden = false; $("loginErr").textContent = msg || ""; }
+  async function login(p) {
+    pw = p; $("loginErr").textContent = "";
+    try { await load(true); store(p); $("login").hidden = true; $("app").hidden = false; $("logout").hidden = false; }
+    catch (e) { if (e.message !== "401") $("loginErr").textContent = "Connexion impossible : " + e.message; }
+  }
+
+  $("login").addEventListener("submit", function (e) { e.preventDefault(); login($("pw").value); });
+  $("logout").addEventListener("click", function () { logout(); });
+  $("more").addEventListener("click", function () { load(false); });
+  $("csv").addEventListener("click", exportCsv);
+  ["q", "fStatus", "fCycle", "fSub"].forEach(function (id) { $(id).addEventListener("input", render); });
+  $("dlgClose").addEventListener("click", function () { $("dlg").close(); });
+  if (stored()) login(stored());
+})();
+</script>
+</body>
+</html>

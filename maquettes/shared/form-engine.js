@@ -218,9 +218,17 @@
   function syncInput(name) {
     try { var dt = new DataTransfer(); fileStore[name].forEach(function (f) { dt.items.add(f); }); el(name).files = dt.files; } catch (e) { /* navigateur ancien */ }
   }
+  function fileOk(f, input) {
+    var ext = (f.name.split(".").pop() || "").toLowerCase(), allowed = (input.getAttribute("accept") || "").replace(/\./g, "").split(",");
+    if (allowed[0] && allowed.indexOf(ext) < 0) { toast(tr("toast.file"), tr("err.fileType", { name: f.name }), true); return false; }
+    if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name, max: D.maxFileMB }), true); return false; }
+    if (!f.size) { toast(tr("toast.file"), tr("err.fileEmpty", { name: f.name }), true); return false; }
+    return true;
+  }
   function onFiles(name) {
-    var input = el(name), picked = Array.prototype.slice.call(input.files || []);
-    if (input.multiple) picked.forEach(function (f) { if (!fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f); });
+    var input = el(name), picked = Array.prototype.slice.call(input.files || []).filter(function (f) { return fileOk(f, input); });
+    if (!input.multiple && !picked.length) { syncInput(name); return; }
+    if (input.multiple) picked.forEach(function (f) { if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f); });
     else fileStore[name] = picked.slice(0, 1);
     syncInput(name); renderFiles(name);
   }
@@ -392,18 +400,50 @@
   }
 
   /* ---------- Envoi (simulé dans la maquette) ---------- */
+  /** Valeurs à transmettre : la valeur enregistrée de chaque champ visible (libellés français pour les listes). */
+  function payload() {
+    var p = { lang: lang === "en" ? "en" : "fr" }, minor = isMinor(), gv = gceVisible();
+    ["civility", "last_name", "first_name", "nationality", "birth_date", "city", "phone_code", "phone", "email",
+      "subsystem", "institution_category", "institution_subcategory", "institution_name", "field_of_study", "level",
+      "average", "ranking", "cohort_size", "additional_notes"].forEach(function (n) { p[n] = fieldValue(n); });
+    p.cycle = (el("cycle") ? fieldValue("cycle") : "") || cycle() || "";
+    var names; try { names = new Intl.DisplayNames(["fr"], { type: "region" }); } catch (e) { names = null; }
+    p.nationality_name = names && p.nationality ? names.of(p.nationality) : p.nationality;
+    Object.keys(NP).forEach(function (f) { p[NP[f]] = el(NP[f]).checked; });
+    if (minor) ["guardian_relation", "guardian_name", "guardian_phone_code", "guardian_phone", "guardian_email"].forEach(function (n) { p[n] = fieldValue(n); });
+    p.is_minor = minor; p.guardian_consent = minor ? el("guardian_consent").checked : false;
+    if (gv) { p.gce_exam = fieldValue("gce_exam"); if (gceTaken()) p.gce_results = fieldValue("gce_results"); }
+    p.cgu = el("cgu").checked;
+    return p;
+  }
+  function busy(on, pct) {
+    $$('button[type="submit"]').forEach(function (b) {
+      if (on) {
+        if (!b.dataset.busy) { b.dataset.busy = "1"; b.dataset.label = b.innerHTML; }
+        b.disabled = true; b.innerHTML = '<span class="ztf-spin"></span>' + esc(tr("btn.sending")) + (pct != null ? " " + pct + " %" : "");
+      } else if (b.dataset.busy) { b.innerHTML = b.dataset.label; delete b.dataset.busy; b.disabled = !el("cgu").checked; }
+    });
+  }
+  function success(id) {
+    $$("[data-ztf-success-email]").forEach(function (n) { n.textContent = fieldValue("email"); });
+    $$("[data-ztf-success-id]").forEach(function (n) { n.textContent = id || ""; });
+    $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = true; });
+    $$("[data-ztf-success]").forEach(function (n) { n.hidden = false; n.scrollIntoView({ behavior: "smooth", block: "start" }); });
+    toast(tr("toast.sent"), tr("toast.sent.d"));
+  }
   function onSubmit(e) {
     e.preventDefault();
     if (!validate()) return;
-    var btns = $$('button[type="submit"]');
-    btns.forEach(function (b) { b.dataset.busy = "1"; b.disabled = true; b.dataset.label = b.innerHTML; b.innerHTML = '<span class="ztf-spin"></span>' + esc(tr("btn.sending")); });
-    setTimeout(function () {
-      btns.forEach(function (b) { b.innerHTML = b.dataset.label; delete b.dataset.busy; });
-      $$("[data-ztf-success-email]").forEach(function (n) { n.textContent = fieldValue("email"); });
-      $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = true; });
-      $$("[data-ztf-success]").forEach(function (n) { n.hidden = false; n.scrollIntoView({ behavior: "smooth", block: "start" }); });
-      toast(tr("toast.sent"), tr("toast.sent.d"));
-    }, 1100);
+    busy(true);
+    if (typeof window.ZTF_SUBMIT === "function") {
+      // Site réel : envoi au serveur (voir site/js/submit.js)
+      var files = {}; Object.keys(fileStore).forEach(function (k) { files[k] = fileStore[k].slice(); });
+      window.ZTF_SUBMIT(payload(), files, function (pct) { busy(true, pct); })
+        .then(function (res) { busy(false); success(res && res.id); })
+        .catch(function (err) { busy(false); toast(tr("toast.failed"), (err && err.message) || tr("toast.failed.d"), true); });
+      return;
+    }
+    setTimeout(function () { busy(false); success(""); }, 1100); // maquette : envoi simulé
   }
   function reset() {
     form.reset(); Object.keys(fileStore).forEach(function (k) { fileStore[k] = []; renderFiles(k); });
@@ -541,6 +581,7 @@
     $$("[data-ztf-reset]").forEach(function (b) { b.addEventListener("click", reset); });
     $$("[data-ztf-lang]").forEach(function (b) { b.addEventListener("click", function () { applyLang(b.getAttribute("data-ztf-lang")); }); });
 
+    if (window.ZTF_DEMO === false) { applyLang(lang); updateGuardian(); return; }
     var demo = document.createElement("div"); demo.className = "ztf-demo";
     demo.innerHTML = '<span data-i18n="demo.title"></span><button type="button" data-kind="pupil" data-i18n="demo.pupil"></button><button type="button" data-kind="student" data-i18n="demo.student"></button>';
     $$("button", demo).forEach(function (b) { b.addEventListener("click", function () { fillDemo(b.getAttribute("data-kind")); }); });
