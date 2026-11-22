@@ -93,3 +93,14 @@ maquettes/
 scripts/build.mjs             assemble dist/ (site + shared + maquettes)
 vercel.json                   build, région, tâche planifiée
 ```
+
+## Flyer avec QR code
+
+`flyer/flyer-prix-ztf-A4.pdf` (impression A4) et `flyer/flyer-prix-ztf.jpg` (partage WhatsApp et réseaux). Le QR code mène au formulaire. Pour le régénérer, par exemple après un changement d'adresse :
+
+```
+node flyer/build-flyer.cjs https://nouvelle-adresse.example
+```
+
+Le script a besoin des paquets `qrcode`, `jsqr`, `pngjs` et `playwright` ; il vérifie à la fin que le QR code se lit et mène à la bonne adresse.
+

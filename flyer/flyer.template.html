@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Flyer Prix d'Excellence ZTF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Great+Vibes&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;background:#06104a}
+body{font-family:Montserrat,sans-serif;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{position:relative;width:210mm;height:297mm;overflow:hidden;background:#06104a}
+/* Photo du lauréat (affiche officielle) */
+.photo{position:absolute;inset:0 0 auto 0;height:150mm;background:url(__LAUREAT__) center 20%/cover}
+.photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,74,.25) 0%,rgba(6,16,74,.35) 45%,#06104a 100%)}
+.stars{position:absolute;inset:0;opacity:.6;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 72%,#ffe9a3 50%,transparent 51%),radial-gradient(2px 2px at 46% 34%,#fff3c4 50%,transparent 51%),radial-gradient(1px 1px at 63% 12%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 78% 58%,#ffe9a3 50%,transparent 51%),radial-gradient(1px 1px at 88% 26%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 8% 88%,#ffe9a3 50%,transparent 51%),radial-gradient(1.5px 1.5px at 94% 84%,#fff 50%,transparent 51%);background-size:110mm 110mm}
+.content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;padding:12mm 14mm 0}
+.ribbon{position:relative;display:inline-block;background:linear-gradient(180deg,#ec2b31,#a3121a);color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:13pt;padding:3mm 9mm;box-shadow:0 2mm 5mm rgba(0,0,0,.35)}
+.ribbon:before,.ribbon:after{content:"";position:absolute;top:0;bottom:0;width:6mm;background:inherit}
+.ribbon:before{left:-4mm;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,60% 50%)}
+.ribbon:after{right:-4mm;clip-path:polygon(0 0,100% 0,40% 50%,100% 100%,0 100%)}
+.kicker{margin-top:6mm;font-weight:800;font-size:9.5pt;letter-spacing:.14em;text-transform:uppercase;color:#ffe9a3;text-shadow:0 1mm 3mm rgba(0,0,0,.6)}
+.script{font-family:"Great Vibes",cursive;font-size:58pt;line-height:1;margin-top:3mm;text-shadow:0 1mm 5mm rgba(0,0,0,.6)}
+.gold{background:linear-gradient(180deg,#fff6c8 0%,#f3cf63 38%,#d39a2b 62%,#fbe08a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.name{font-family:Cinzel,serif;font-weight:900;font-size:25pt;line-height:1;margin-top:1mm;text-align:center;filter:drop-shadow(0 .6mm 0 rgba(0,0,0,.5))}
+.name em{display:block;font-style:normal;font-size:40pt;letter-spacing:.05em}
+.edition{display:flex;align-items:center;gap:4mm;margin-top:3mm;font-family:Cinzel,serif;font-weight:700;font-size:14pt;color:#ffe9a3}
+.edition:before,.edition:after{content:"";width:28mm;height:.5mm;background:linear-gradient(90deg,transparent,#e8b93c)}
+.edition:after{background:linear-gradient(90deg,#e8b93c,transparent)}
+/* Carte QR */
+.card{position:relative;margin-top:9mm;width:100%;display:grid;grid-template-columns:62mm 1fr;gap:7mm;align-items:center;background:#fffdf6;color:#0d1330;border-radius:6mm;padding:7mm;border:.6mm solid #e8b93c;box-shadow:0 4mm 12mm rgba(0,0,0,.45)}
+.qr{background:#fff;border-radius:3mm;padding:2mm;border:.4mm solid #e7dcbc}
+.qr svg{display:block;width:100%;height:auto}
+.qr-cap{text-align:center;font-weight:800;font-size:10pt;color:#06104a;margin-top:2.5mm;text-transform:uppercase;letter-spacing:.06em}
+.info h2{margin:0;padding-right:2mm;font-size:17pt;font-weight:900;color:#06104a;line-height:1.15}
+.info .who{margin:2mm 0 0;font-size:10.5pt;font-weight:600;color:#a8761c}
+.info h3{margin:5mm 0 1.5mm;font-size:9.5pt;text-transform:uppercase;letter-spacing:.08em;color:#d61f26}
+.info ul{margin:0;padding-left:5mm;font-size:10pt;line-height:1.45}
+.info .url{margin-top:4mm;font-weight:800;font-size:10pt;color:#06104a;word-break:break-all}
+.seal{position:absolute;right:-5mm;top:-27mm;width:34mm;height:34mm;border-radius:50%;display:grid;place-items:center;text-align:center;color:#fff;background:radial-gradient(circle at 50% 40%,#f03a3f,#b5141b 70%);box-shadow:0 0 0 1.6mm #f7d36b,0 0 0 2.6mm #b07c1d,0 3mm 8mm rgba(0,0,0,.45);transform:rotate(-8deg)}
+.seal small{display:block;font-weight:800;font-size:7.5pt;line-height:1.1;max-width:24mm;margin:0 auto 1mm}
+.seal b{display:block;font-weight:900;font-size:13pt;line-height:1;color:#ffe08a;text-shadow:0 .5mm 0 #7a1a00}
+/* Séminaire */
+.event{margin-top:9mm;display:flex;justify-content:center}
+.event>div{padding:0 7mm;text-align:center;border-left:.6mm solid #e8b93c}
+.event>div:first-child{border-left:0}
+.event b{display:block;font-weight:900;font-size:17pt;line-height:1.1;color:#ffe9a3}
+.event span{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.seminar{margin-top:3mm;font-size:9.5pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#c9cdf0}
+/* Étapes + trophée */
+.how{margin-top:9mm;width:100%;display:grid;grid-template-columns:1fr 46mm;gap:7mm;align-items:center}
+.how h3{margin:0 0 4mm;font-size:11pt;text-transform:uppercase;letter-spacing:.1em;color:#ffe9a3}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:3.5mm}
+.steps li{display:grid;grid-template-columns:10mm 1fr;gap:4mm;align-items:center;font-size:11pt;font-weight:600;line-height:1.3}
+.steps b{width:10mm;height:10mm;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#06104a;background:linear-gradient(180deg,#fff0b3,#f0c64f 45%,#c98f23);box-shadow:0 0 0 .5mm #fff}
+.steps em{font-style:normal;color:#ffe9a3}
+.trophy{width:46mm;height:46mm;border-radius:5mm;background:url(__TROPHEE__) center/cover;box-shadow:0 0 0 .6mm #e8b93c,0 3mm 8mm rgba(0,0,0,.45)}
+/* Bande dorée (bas de l'affiche) */
+.foot{position:absolute;left:0;right:0;bottom:0;padding:5mm 10mm 6mm;background:linear-gradient(180deg,#f7dc86,#c99a33);color:#06104a;text-align:center}
+.foot .row{display:flex;justify-content:center;flex-wrap:wrap;gap:1.5mm 8mm;font-weight:800;font-size:10.5pt}
+.foot small{display:block;margin-top:1.5mm;font-weight:600;font-size:8.5pt}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="photo"></div>
+  <div class="stars"></div>
+  <div class="content">
+    <span class="ribbon">Candidatures ouvertes</span>
+    <div class="kicker">Séminaire sur l'excellence académique · Acte IX</div>
+    <div class="script">Prix d'Excellence</div>
+    <div class="name gold">Zacharias Tanee <em>Fomum</em></div>
+    <div class="edition">6e édition</div>
+
+    <div class="card">
+      <div class="seal"><div><small>Postuler jusqu'au</small><b>25 Nov 2026</b></div></div>
+      <div>
+        <div class="qr">__QR__</div>
+        <div class="qr-cap">Scannez pour candidater</div>
+      </div>
+      <div class="info">
+        <h2>Prix d'Excellence académique</h2>
+        <p class="who">Élèves du secondaire et étudiants du supérieur au Cameroun, francophones et anglophones</p>
+        <h3>À préparer</h3>
+        <ul>
+          <li>Vos relevés de notes et bulletins 2025/2026 (photo nette ou PDF, 4 Mo maximum par fichier)</li>
+          <li>Un numéro de téléphone valide</li>
+          <li>Votre moyenne générale de l'année</li>
+        </ul>
+        <div class="url">__URL_TEXT__</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div><b>12 déc.</b><span>2026</span></div>
+      <div><b>08h00</b><span>Yaoundé</span></div>
+      <div><b>Palais des Sports</b><span>Séminaire Acte IX</span></div>
+    </div>
+
+    <div class="how">
+      <div>
+        <h3>Comment candidater</h3>
+        <ol class="steps">
+          <li><b>1</b><span>Scannez le QR code avec l'appareil photo de votre téléphone</span></li>
+          <li><b>2</b><span>Remplissez le formulaire et joignez vos relevés de notes</span></li>
+          <li><b>3</b><span>Téléchargez votre fiche de candidature et <em>apportez-la imprimée à votre audition</em></span></li>
+        </ol>
+      </div>
+      <div class="trophy" role="img" aria-label="Trophée ZTF Excellence Awards"></div>
+    </div>
+  </div>
+  </div>
+  <div class="foot">
+    <div class="row"><span>excellenceawardsztf.com</span><span>☎ +237 641 25 24 81 / 651 27 62 63</span></div>
+    <small>Assistance technique sur WhatsApp : +237 656 138 785 · Fondation Zacharias Tanee Fomum</small>
+  </div>
+</div>
+</body>
+</html>
