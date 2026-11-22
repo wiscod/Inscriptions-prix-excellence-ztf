@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Candidature Prix ZTF · Mobile hybride</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Great+Vibes&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../affiche/affiche.css">
+<link rel="stylesheet" href="hybride.css">
+<style>
+html,body{background:#e3efe7}
+.app{max-width:520px;margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 0 1px rgba(0,0,0,.04),0 10px 40px rgba(0,0,0,.06);padding-bottom:150px}
+.bar{position:sticky;top:0;z-index:20;background:var(--green);color:#fff;padding:12px 16px}
+.bar-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar b{display:block;font-size:1rem}.bar small{opacity:.85;font-size:.75rem}
+.bar .lang-switch{border-color:rgba(255,255,255,.45)}.bar .lang-switch button{color:#fff;padding:6px 9px}.bar .lang-switch button[aria-pressed=true]{background:#fff;color:var(--green-d)}
+.track{height:6px;border-radius:6px;background:rgba(255,255,255,.25);margin-top:10px;overflow:hidden}.track div{height:100%;width:0;background:var(--yellow);transition:width .35s}
+.hero{text-align:center;padding:120px 16px 20px;background:linear-gradient(180deg,rgba(3,8,66,.05),var(--site-navy) 82%),url(../affiche/img/trophee.jpg) center 25%/cover}
+.hero .h-script{font-size:2.9rem}
+.hero .h-name{font-family:Cinzel,serif;font-weight:900;font-size:1.35rem;margin-top:2px}
+.dl{margin:14px 12px 0;border-radius:18px;padding:14px;text-align:center;color:#fff;background:linear-gradient(135deg,var(--green-d),var(--green))}
+.dl .t{font-weight:800;text-transform:uppercase;font-size:.82rem;letter-spacing:.04em;color:var(--yellow)}
+.dl .countdown{margin-top:10px}.dl .countdown div{min-width:62px;background:rgba(3,8,66,.35);border-color:rgba(255,255,255,.35)}
+.pad{padding:14px 12px 0}
+.list{padding:12px;display:grid;gap:12px}
+details.sec{background:#fff;border-radius:18px;border:1px solid var(--line-l);overflow:hidden;margin:0}
+details.sec>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:15px;cursor:pointer;font-weight:700}
+details.sec>summary::-webkit-details-marker{display:none}
+summary .n{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--site-navy);color:var(--yellow);font-weight:800;box-shadow:0 0 0 2px #f2c94c}
+details.sec.is-complete summary .n{background:var(--green);color:#fff;box-shadow:none}
+summary .t{flex:1;min-width:0}summary small{display:block;font-weight:400;color:var(--muted);font-size:.76rem}
+summary .st{font-size:.7rem;font-weight:700;color:var(--muted);background:#f2f4f7;padding:4px 8px;border-radius:999px;white-space:nowrap}
+details.sec.is-complete summary .st{background:#dcfae6;color:var(--green-d)}
+.body{padding:14px 14px 16px;border-top:1px solid var(--line-l)}
+.form-site input,.form-site select,.form-site textarea{font-size:16px;min-height:50px}.form-site .np input{min-height:0}
+.consent-card{margin:2px 12px 0;padding:16px;border:1px solid var(--line-l);border-radius:18px;background:#fff}
+.consent-card .submit{display:none}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line-l)}
+.dock-in{max-width:488px;margin:auto;display:flex;align-items:center;gap:12px}
+.dock .info{flex:1;font-size:.76rem;color:var(--muted);line-height:1.25}.dock .info b{display:block;color:var(--ink);font-size:.95rem}
+.dock-btn{flex:none;min-height:52px;padding:0 18px;border:0;border-radius:14px;font:inherit;font-weight:800;color:var(--site-navy);background:linear-gradient(180deg,#ffe98a,#f8da49 50%,#efc12e);cursor:pointer}
+.ztf-demo{bottom:92px!important}
+footer.site{display:none}
+</style>
+</head>
+<body>
+<div class="app form-site">
+  <header class="bar">
+    <div class="bar-row"><div><b data-i18n="brand.name"></b><small data-i18n="h.eyebrow"></small></div><div data-ztf-slot="lang"></div></div>
+    <div class="track"><div data-ztf-progress></div></div>
+  </header>
+  <div class="hero sparkle">
+    <div class="h-script">Prix d'Excellence</div>
+    <div class="h-name gold-text">ZACHARIAS TANEE FOMUM</div>
+  </div>
+  <div data-ztf-hide-on-success>
+    <div class="dl"><div class="t"><span data-i18n="a.until"></span> <span data-i18n="a.until.date"></span></div>
+      <div data-cd-open><div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div><div><b data-cd="s">00</b><span data-i18n="a.cd.sec"></span></div></div></div><div data-cd-closed hidden data-i18n="a.cd.closed"></div></div>
+    <div class="pad" data-ztf-slot="lookup"></div>
+    <form data-ztf-form id="form">
+      <div class="list">
+        <details class="sec" id="s1" data-ztf-section open><summary><span class="n">1</span><span class="t"><span data-i18n="sec.identity"></span><small data-i18n="sec.identity.s"></small></span><span class="st"></span></summary><div class="body" data-ztf-slot="identity"></div></details>
+        <details class="sec" id="s2" data-ztf-section><summary><span class="n">2</span><span class="t"><span data-i18n="sec.academic"></span><small data-i18n="sec.academic.s"></small></span><span class="st"></span></summary><div class="body" data-ztf-slot="academic"></div></details>
+        <details class="sec" id="s3" data-ztf-section><summary><span class="n">3</span><span class="t"><span data-i18n="sec.attachments"></span><small data-i18n="sec.attachments.s"></small></span><span class="st"></span></summary><div class="body" data-ztf-slot="attachments"></div></details>
+      </div>
+      <div class="consent-card" data-ztf-slot="consent"></div>
+    </form>
+  </div>
+  <div class="success" data-ztf-success hidden><div class="ok">✓</div><h2 data-i18n="success.title"></h2><div data-ztf-slot="receipt"></div><button class="again" type="button" data-ztf-reset data-i18n="btn.new"></button></div>
+</div>
+<div class="dock" data-ztf-hide-on-success><div class="dock-in">
+  <div class="info"><b data-ztf-progress-text>0 %</b><span data-i18n="progress.done"></span></div>
+  <button type="submit" form="form" class="dock-btn"><span data-i18n="btn.submit"></span></button>
+</div></div>
+<footer class="site"><strong data-i18n="brand.org"></strong> · <span data-i18n="brand.name"></span>
+  <div class="contacts">excellenceawardsztf.com · ☎ <span data-i18n="a.phones"></span></div>
+  <div style="margin-top:6px;opacity:.7"><span data-i18n="h.mock"></span> · 5</div></footer>
+<script>window.ZTF_PAGE_I18N = { "a.seminar.short": ["Séminaire Acte IX", "Seminar Act IX"], "p.todo": ["À remplir", "To do"], "p.done": ["✓ Complet", "✓ Done"] };</script>
+<script src="../shared/form-data.js"></script>
+<script src="../shared/ztf-lists.js"></script>
+<script src="../shared/form-i18n.js"></script>
+<script src="hybride.js"></script>
+<script src="../affiche/affiche.js"></script>
+<script src="../shared/form-markup.js"></script>
+<script src="../shared/form-engine.js"></script>
+<script>
+(function () {
+  function badges() { [].forEach.call(document.querySelectorAll("details.sec"), function (d) { d.querySelector(".st").textContent = ZTF.tr(d.classList.contains("is-complete") ? "p.done" : "p.todo"); }); }
+  document.addEventListener("ztf:progress", badges); document.addEventListener("ztf:lang", badges);
+  document.addEventListener("ztf:invalid", function (e) { var d = e.detail.first.closest("details"); if (d) d.open = true; });
+})();
+</script>
+</body>
+</html>

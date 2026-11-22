@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidature Prix ZTF · Vert et nuit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Great+Vibes&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../affiche/affiche.css">
+<link rel="stylesheet" href="hybride.css">
+<style>
+.hero{display:grid;grid-template-columns:1.25fr 1fr;min-height:420px}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+.hero .l{background:linear-gradient(135deg,var(--green-d),var(--green) 70%);color:#fff;padding:46px clamp(16px,5vw,64px) 120px;display:flex;flex-direction:column;justify-content:center}
+.hero .l .h-script{font-size:clamp(2.8rem,6vw,4.4rem);margin-top:8px}
+.hero .l .h-name{font-size:clamp(1.3rem,3vw,2.1rem)}
+.hero .l p{max-width:46ch;opacity:.92;margin:14px 0 0}
+.hero .r{position:relative;color:#fff;padding:36px 24px 120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
+  background:linear-gradient(180deg,rgba(3,8,66,.55),var(--site-navy) 80%),url(../affiche/img/trophee.jpg) center/cover}
+.hero .r .lbl{font-size:.8rem;color:#c9cdf0}
+.hero .r .seal{margin-bottom:6px}
+@media(max-width:860px){.hero .l{padding-bottom:40px}}
+.wrap{max-width:920px;margin:-80px auto 0;padding:0 16px 64px;position:relative;z-index:2}
+.sec-h{border-bottom:0;padding-bottom:0}
+.sec-h h2{position:relative;padding-bottom:8px}
+.sec-h h2:after{content:"";position:absolute;left:0;bottom:0;width:60px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),#f2c94c)}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="#"><span class="mark">ZTF</span><span><span data-i18n="brand.name"></span><small data-i18n="brand.org"></small></span></a>
+  <div class="right">
+    <nav class="nav"><a href="#" data-i18n="p.nav.home"></a><a href="#" data-i18n="p.nav.prize"></a><a href="#" data-i18n="p.nav.winners"></a><a class="on" href="#" data-i18n="p.nav.apply"></a><a href="#" data-i18n="p.nav.contact"></a></nav>
+    <div data-ztf-slot="lang"></div>
+  </div>
+</div></header>
+
+<section class="hero">
+  <div class="l sparkle">
+    <div class="eyebrow" data-i18n="h.eyebrow"></div>
+    <div class="h-script">Prix d'Excellence</div>
+    <h1 class="h-name gold-on-green">Zacharias Tanee Fomum</h1>
+    <p data-i18n="a.note.1"></p>
+  </div>
+  <div class="r sparkle">
+    <div class="seal sm"><div><small data-i18n="a.until"></small><b data-i18n="a.until.date"></b></div></div>
+    <div data-cd-open><div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div><div><b data-cd="s">00</b><span data-i18n="a.cd.sec"></span></div></div><p class="lbl" data-i18n="a.cd.left"></p></div>
+    <div class="event"><div><b data-i18n="a.date"></b><span data-i18n="a.year"></span></div><div><b data-i18n="a.time"></b><span data-i18n="a.city"></span></div><div><b data-i18n="a.venue"></b><span data-i18n="a.seminar.short"></span></div></div>
+  </div>
+</section>
+<main class="wrap">
+  <div class="card form-site">
+    <div data-ztf-hide-on-success>
+      <div data-ztf-slot="lookup"></div>
+      <form data-ztf-form>
+        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n">1</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n">3</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
+        <div data-ztf-slot="consent"></div>
+      </form>
+    </div>
+    <div class="success" data-ztf-success hidden>
+      <div class="ok">✓</div>
+      <h2 data-i18n="success.title"></h2>
+      <div data-ztf-slot="receipt"></div>
+      <button class="again" type="button" data-ztf-reset data-i18n="btn.new"></button>
+    </div>
+  </div>
+</main>
+<footer class="site"><strong data-i18n="brand.org"></strong> · <span data-i18n="brand.name"></span>
+  <div class="contacts">excellenceawardsztf.com · ☎ <span data-i18n="a.phones"></span></div>
+  <div style="margin-top:6px;opacity:.7"><span data-i18n="h.mock"></span> · 2</div></footer>
+<script>window.ZTF_PAGE_I18N = { "a.seminar.short": ["Séminaire Acte IX", "Seminar Act IX"] };</script>
+<script src="../shared/form-data.js"></script>
+<script src="../shared/ztf-lists.js"></script>
+<script src="../shared/form-i18n.js"></script>
+<script src="hybride.js"></script>
+<script src="../affiche/affiche.js"></script>
+<script src="../shared/form-markup.js"></script>
+<script src="../shared/form-engine.js"></script>
+</body>
+</html>
