@@ -3,7 +3,7 @@
 Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**. Hébergé sur **Vercel**. Date limite affichée : 25 novembre 2026 (affiche officielle) ; les envois restent ouverts tant que la Fondation ne les ferme pas (variable `DEADLINE`).
 
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
-- **Administration** : `/admin/` (mot de passe `ADMIN_PASSWORD`)
+- **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
@@ -32,7 +32,7 @@ Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, p
 | | Classe (6ème … Terminale, Form 1 … Upper Sixth) **ou** Niveau d'éducation (BAC +1 … > BAC +5 / PhD) | oui |
 | | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur) | oui |
 | | Moyenne générale (+ « Je n'ai pas de notes / moyenne » pour > BAC +5) | oui, sauf case cochée |
-| Pièces jointes et motivation | Relevés de notes et bulletins 2025/2026 (images ou PDF, 4 Mo par fichier) | oui |
+| Pièces jointes et motivation | Relevés de notes et bulletins 2025/2026 (images ou PDF, 4 Mo par fichier ; les photos sont réduites dans le navigateur avant l'envoi) | oui |
 | | Diplômes et relevés d'examens officiels | non |
 | | Tout document utile complémentaire | non |
 | | Motivation (2 000 caractères) | non |
@@ -51,14 +51,34 @@ Le candidat reçoit un **numéro de dossier** et un **identifiant** (ex. `BU9G3-
 4. `POST /api/lookup` : « Déjà inscrit ? », renvoie la fiche correspondant à un identifiant.
 5. Chaque nuit à 03 h 17 UTC, une tâche planifiée (`vercel.json`) supprime les envois restés inachevés plus de 48 heures.
 
+Photos : au moment du choix, toute image de plus de 600 Ko est réduite dans le navigateur (2 000 pixels au plus sur le grand côté, JPEG), ce qui ramène une photo de téléphone à quelques centaines de Ko. Les PDF ne sont pas modifiés : au-delà de 4 Mo, ils sont refusés.
+
 Stockage : un store **Vercel Blob privé** (rien n'y est lisible sans passer par les fonctions). Fonctions et stockage dans la région de Paris (`cdg1`), la plus proche du Cameroun.
+
+## Administration
+
+Chaque personne a son propre compte. Trois rôles :
+
+| Rôle | Peut |
+|---|---|
+| Lecteur | consulter les dossiers, ouvrir les pièces jointes, exporter en CSV |
+| Gestionnaire | en plus, supprimer un dossier |
+| Administrateur | en plus, créer et désactiver des comptes, changer les rôles, réinitialiser un mot de passe, lire le journal |
+
+- **Premier accès** : tant qu'aucun compte n'existe, se connecter avec l'identifiant `admin` et le mot de passe `ADMIN_PASSWORD`. L'écran qui s'ouvre sert uniquement à créer le premier compte administrateur, avec son propre mot de passe. Dès qu'un compte existe, ce premier accès est refusé.
+- **Nouveaux comptes** : un administrateur choisit l'identifiant, le nom et le rôle. Le site affiche une seule fois un mot de passe provisoire, à transmettre à la personne ; elle doit le remplacer à sa première connexion (10 caractères au moins).
+- **Sessions** : 12 heures. Désactiver un compte, changer son rôle ou son mot de passe ferme ses sessions ouvertes. Il reste toujours au moins un administrateur actif, et personne ne peut désactiver son propre compte.
+- **Journal** : chaque connexion (réussie ou refusée), dossier consulté, pièce jointe ouverte, suppression, export CSV et changement de compte est noté avec la date, la personne et le dossier concerné. Les administrateurs le lisent dans l'onglet « Journal ».
+
+Comptes et journal sont rangés dans le même store Blob privé (`comptes/`, `journal/`). Les mots de passe y sont stockés hachés (scrypt).
 
 ## Variables d'environnement (Vercel)
 
 | Variable | Rôle | Obligatoire |
 |---|---|---|
 | `BLOB_READ_WRITE_TOKEN` | accès au store Blob, créé quand le store est relié au projet | oui |
-| `ADMIN_PASSWORD` | mot de passe de la page `/admin/` | oui |
+| `ADMIN_PASSWORD` | mot de passe du premier accès à `/admin/` (identifiant `admin`), utilisable seulement tant qu'aucun compte n'existe | oui |
+| `SESSION_SECRET` | clé de signature des sessions de l'administration ; à défaut, dérivée de `BLOB_READ_WRITE_TOKEN` | non |
 | `CRON_SECRET` | protège la tâche de nettoyage quotidienne | oui |
 | `RESEND_API_KEY` | clé de l'API Resend pour l'accusé de réception ; sans elle, aucun e-mail ne part | non |
 | `EMAIL_FROM` | expéditeur, ex. `Prix d'Excellence ZTF <candidatures@excellenceawardsztf.com>` (domaine vérifié chez Resend) | avec `RESEND_API_KEY` |
@@ -73,15 +93,15 @@ site/
   index.html                  formulaire réel (maquette « Affiche et formulaire » + envoi au serveur)
   css/affiche.css, js/affiche.js, img/   identité des affiches, compte à rebours, affiche
   js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
-  admin/index.html            liste des dossiers, fiche, pièces jointes, export CSV, suppression
+  admin/index.html            connexion, dossiers, comptes, journal
 api/                          fonctions Vercel (routage par fichiers)
   dossiers/index.js           création du dossier
   dossiers/[id]/files/…       réception des morceaux de fichiers
   dossiers/[id]/finalize.js   validation finale, identifiant
   lookup.js                   « Déjà inscrit ? »
-  admin/…                     liste, fiche, suppression, téléchargement des pièces jointes
+  admin.js                    toute l'administration (/api/admin/… y est redirigé par vercel.json)
   cron/cleanup.js             nettoyage quotidien
-lib/                          stockage Blob, contrôles des champs, e-mail
+lib/                          stockage Blob, contrôles des champs, comptes et journal (auth.js), e-mail
 maquettes/
   index.html                  galerie des 5 propositions
   1-classique.html … 5-prestige.html

@@ -220,14 +220,47 @@
   function fileOk(f, input) {
     var ext = (f.name.split(".").pop() || "").toLowerCase(), allowed = (input.getAttribute("accept") || "").replace(/\./g, "").split(",");
     if (allowed[0] && allowed.indexOf(ext) < 0) { toast(tr("toast.file"), tr("err.fileType", { name: f.name }), true); return false; }
-    if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name }), true); return false; }
     if (!f.size) { toast(tr("toast.file"), tr("err.fileEmpty", { name: f.name }), true); return false; }
     return true;
   }
+  /**
+   * Allège une photo avant l'envoi : 2000 pixels au plus sur le grand côté, JPEG d'environ 500 Ko.
+   * Le texte d'un bulletin photographié reste lisible ; les PDF ne sont pas modifiés.
+   */
+  var SHRINK_OVER = 600 * 1024, SHRINK_TARGET = 550 * 1024, SHRINK_SIDE = 2000;
+  function shrink(f) {
+    return new Promise(function (resolve) {
+      if (!/^image\/(jpeg|png)$/.test(f.type) || f.size <= SHRINK_OVER || !window.URL || !document.createElement("canvas").toBlob) return resolve(f);
+      var url = URL.createObjectURL(f), img = new Image();
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(f); };
+      img.onload = function () {
+        var k = Math.min(1, SHRINK_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+        var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        var q = 0.82;
+        (function encode() {
+          c.toBlob(function (b) {
+            if (!b) return resolve(f);
+            if (b.size > SHRINK_TARGET && q > 0.55) { q -= 0.09; return encode(); }
+            if (b.size >= f.size) return resolve(f);
+            resolve(new File([b], f.name.replace(/\.(png|jpe?g)$/i, "") + ".jpg", { type: "image/jpeg", lastModified: Date.now() }));
+          }, "image/jpeg", q);
+        })();
+      };
+      img.src = url;
+    });
+  }
   function onFiles(name) {
     var input = el(name), picked = Array.prototype.slice.call(input.files || []).filter(function (f) { return fileOk(f, input); });
-    picked.forEach(function (f) { if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f); });
-    syncInput(name); renderFiles(name);
+    if (!picked.length) { syncInput(name); renderFiles(name); return; }
+    Promise.all(picked.map(shrink)).then(function (files) {
+      files.forEach(function (f) {
+        if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name, max: D.maxFileMB }), true); return; }
+        if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f);
+      });
+      syncInput(name); renderFiles(name); clearError(name); refresh();
+    });
   }
   function renderFiles(name) {
     $$('[data-ztf-filelist="' + name + '"]').forEach(function (box) {
