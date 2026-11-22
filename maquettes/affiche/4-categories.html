@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidature Prix ZTF · Catégories des prix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="affiche.css">
+<style>
+body{background:#f4f1e8;color:var(--ink)}
+.band{background:var(--navy);color:#fff;overflow:hidden}
+.band-in{max-width:1120px;margin:auto;padding:22px 16px 30px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+@media(max-width:760px){.band-in{grid-template-columns:1fr}.band .trophy{display:none}}
+.band .top{display:flex;justify-content:space-between;align-items:center;grid-column:1/-1}
+.band .top b{font-family:Cinzel,serif;letter-spacing:.08em;color:var(--gold)}
+.band .script{font-size:clamp(2.6rem,6vw,4.4rem);color:#fff}
+.band .name{font-family:Cinzel,serif;font-weight:900;font-size:clamp(1.3rem,3vw,2.1rem);line-height:1.05;margin:0}
+.band .meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.8rem;font-weight:700;color:var(--gold-l)}
+.chip.red{background:var(--red);border-color:var(--red);color:#fff}
+.trophy{width:250px;border-radius:16px;box-shadow:0 0 0 1px var(--line)}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 16px 70px}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:26px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--navy);color:#fff;border-radius:18px;padding:20px;border:1px solid var(--line)}
+.panel h2{margin:0 0 8px;font-size:.95rem;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.side{display:grid;gap:20px}
+.founder{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center}
+.founder img{width:110px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 0 0 3px var(--gold)}
+.founder b{display:block;font-family:Cinzel,serif;color:var(--gold-l);font-size:1.02rem}
+.founder q{display:block;margin-top:8px;font-family:"Great Vibes",cursive;font-size:1.7rem;line-height:1.1;color:#fff}
+.event-card{text-align:center}
+.event-card .event{margin-top:10px}
+.event-card .event b{font-size:1.3rem}
+.event-card .event>div:last-child{flex-basis:100%;border-left:0;margin-top:8px}
+.formcard{background:#fff;border-radius:20px;padding:clamp(20px,4vw,40px);box-shadow:0 16px 40px rgba(6,16,74,.12);border-top:6px solid var(--gold)}
+.formcard>h2{margin:0 0 4px;font-family:Cinzel,serif;color:var(--navy);font-size:1.4rem}
+.formcard>p.lead{margin:0 0 22px;color:var(--muted);font-size:.9rem}
+.formcard>p.lead b{color:var(--red-d)}
+.sec{margin-bottom:36px}
+.sec-h{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.sec-h .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:var(--gold-l);font-weight:800;flex:none}
+.sec.is-complete .sec-h .n{background:var(--gold);color:var(--navy)}
+.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy)}
+.success{text-align:center;padding:24px 0}
+.success h2{font-family:Cinzel,serif;color:var(--navy)}
+.success .again{margin-top:14px;font:inherit;font-weight:700;padding:11px 20px;border-radius:999px;border:1px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+footer{background:var(--navy);color:var(--gold-l);padding:18px 16px 70px;text-align:center}
+footer small{display:block;color:#b9bfe6;margin-top:6px}
+</style>
+</head>
+<body>
+<header class="band sparkle">
+  <div class="band-in">
+    <div class="top on-dark"><b>ZTF EXCELLENCE AWARDS</b><div data-ztf-slot="lang"></div></div>
+    <div>
+      <div class="script">Prix d'Excellence</div>
+      <h1 class="name gold-text">ZACHARIAS TANEE FOMUM</h1>
+      <div class="meta"><span class="chip" data-i18n="a.edition"></span><span class="chip red"><span data-i18n="a.until"></span> <span data-i18n="a.until.date"></span></span><span class="chip" data-i18n="a.seminar"></span></div>
+    </div>
+    <img class="trophy" src="img/trophee.jpg" alt="Trophée ZTF Excellence Awards">
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid" data-ztf-hide-on-success>
+    <section class="panel">
+      <h2 data-i18n="a.cat.title"></h2>
+      <table class="prizes">
+        <thead><tr><th data-i18n="a.cat.col1"></th><th data-i18n="a.cat.col2"></th></tr></thead>
+        <tbody>
+          <tr class="is-this"><td><span data-i18n="a.cat.1"></span><span class="this" data-i18n="a.cat.this"></span></td><td data-i18n="a.cat.1c"></td></tr>
+          <tr><td data-i18n="a.cat.2"></td><td data-i18n="a.cat.2c"></td></tr>
+          <tr><td data-i18n="a.cat.3"></td><td data-i18n="a.cat.3c"></td></tr>
+          <tr><td data-i18n="a.cat.4"></td><td data-i18n="a.cat.4c"></td></tr>
+          <tr><td data-i18n="a.cat.5"></td><td data-i18n="a.cat.5c"></td></tr>
+          <tr><td data-i18n="a.cat.6"></td><td data-i18n="a.cat.6c"></td></tr>
+          <tr><td data-i18n="a.cat.7"></td><td data-i18n="a.cat.7c"></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <div class="side">
+      <section class="panel founder"><img src="img/fondateur.jpg" alt="Pr Zacharias Tanee Fomum"><div><b data-i18n="a.founder"></b><q data-i18n="a.founder.q"></q></div></section>
+      <section class="panel event-card">
+        <h2 data-i18n="a.seminar"></h2>
+        <div class="event">
+          <div><b data-i18n="a.date"></b><span data-i18n="a.year"></span></div>
+          <div><b data-i18n="a.time"></b><span data-i18n="a.city"></span></div>
+          <div><b data-i18n="a.venue"></b><span>&nbsp;</span></div>
+        </div>
+        <div style="margin-top:14px" data-cd-open><div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div></div></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="formcard form-light">
+    <div data-ztf-hide-on-success>
+      <h2 data-i18n="a.cat.1"></h2>
+      <p class="lead"><span data-i18n="a.cat.1c"></span> · <b><span data-i18n="a.until"></span> <span data-i18n="a.until.date"></span></b></p>
+      <div data-ztf-slot="lookup"></div>
+      <form data-ztf-form>
+        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n">1</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n">2</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n">3</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
+        <div data-ztf-slot="consent"></div>
+      </form>
+    </div>
+    <div class="success" data-ztf-success hidden>
+      <h2 data-i18n="success.title"></h2>
+      <div data-ztf-slot="receipt"></div>
+      <button class="again" type="button" data-ztf-reset data-i18n="btn.new"></button>
+    </div>
+  </section>
+</main>
+
+<footer><div class="contacts"><span>excellenceawardsztf.com</span><span>☎ <span data-i18n="a.phones"></span></span></div><small><span data-i18n="a.social"></span> · <span data-i18n="a.mock"></span> · 4</small></footer>
+
+<script src="../shared/form-data.js"></script>
+<script src="../shared/ztf-lists.js"></script>
+<script src="../shared/form-i18n.js"></script>
+<script src="affiche.js"></script>
+<script src="../shared/form-markup.js"></script>
+<script src="../shared/form-engine.js"></script>
+</body>
+</html>

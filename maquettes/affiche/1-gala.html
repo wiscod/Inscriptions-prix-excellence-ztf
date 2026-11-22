@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidature Prix ZTF · Gala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="affiche.css">
+<style>
+body{background:var(--night);color:#fff}
+.top{position:absolute;inset:0 0 auto 0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(16px,4vw,40px)}
+.top .mark{font-family:Cinzel,serif;font-weight:900;color:var(--gold);letter-spacing:.1em}
+/* Héros : le lauréat doré de l'affiche */
+.hero{position:relative;min-height:640px;display:grid;align-items:end;overflow:hidden;
+  background:radial-gradient(ellipse at 70% 30%,rgba(19,36,127,.0),var(--night) 75%),url(img/laureat.jpg) 70% 0/cover no-repeat}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,10,51,.2) 0%,rgba(3,10,51,.35) 45%,var(--night) 92%)}
+.hero-in{position:relative;z-index:2;text-align:center;padding:120px 16px 40px}
+.kicker{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.8rem;color:var(--gold-l);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.hero .script{font-size:clamp(3.4rem,9vw,6.4rem);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.6);margin-top:10px}
+.hero .name{font-family:Cinzel,serif;font-weight:900;font-size:clamp(1.6rem,4.4vw,3.2rem);line-height:1;margin:4px 0 0;text-shadow:none;filter:drop-shadow(0 3px 0 rgba(0,0,0,.45))}
+.hero .name em{display:block;font-style:normal;font-size:1.65em;letter-spacing:.06em}
+.hero .gold-rule{margin:14px auto 0;font-family:Cinzel,serif;font-weight:700;font-size:1.35rem;color:var(--gold-l)}
+.hero .event{margin-top:26px}
+.seal-wrap{position:absolute;right:clamp(10px,6vw,90px);bottom:150px;z-index:3}
+@media(max-width:760px){.seal-wrap{position:static;display:flex;justify-content:center;margin-top:22px}.hero{min-height:0}}
+/* Compte à rebours + carte du formulaire */
+.cd-band{text-align:center;padding:10px 16px 30px}
+.cd-band p{margin:8px 0 0;color:#b9bfe6;font-size:.85rem}
+.wrap{max-width:940px;margin:0 auto;padding:0 16px 70px}
+.card{position:relative;border-radius:22px;padding:clamp(20px,4vw,42px);background:linear-gradient(180deg,rgba(11,26,107,.92),rgba(6,16,74,.96));
+  border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,233,163,.15)}
+.card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(232,185,60,.18);border-radius:16px;pointer-events:none}
+.card>*{position:relative}
+.sec{margin-bottom:40px}
+.sec-h{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.sec-h .n{font-family:Cinzel,serif;font-weight:900;font-size:2.1rem;line-height:1}
+.sec-h h2{margin:0;font-family:Cinzel,serif;font-weight:700;font-size:1.25rem;color:#fff;letter-spacing:.06em;text-transform:uppercase}
+.sec-h:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.success{text-align:center;padding:30px 8px}
+.success h2{font-family:Cinzel,serif;color:var(--gold-l)}
+.success .again{margin-top:16px;font:inherit;font-weight:700;padding:11px 20px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--gold-l);cursor:pointer}
+footer{border-top:1px solid var(--line);background:linear-gradient(180deg,#f4d57a,#c99a33);color:var(--night);padding:18px 16px 70px}
+footer .note{text-align:center;font-size:.75rem;margin-top:6px;opacity:.75}
+</style>
+</head>
+<body>
+<div class="top on-dark"><span class="mark">ZTF AWARDS</span><div data-ztf-slot="lang"></div></div>
+
+<header class="hero sparkle">
+  <div class="hero-in">
+    <div class="kicker" data-i18n="a.seminar"></div>
+    <div class="script">Prix d'Excellence</div>
+    <h1 class="name gold-text">Zacharias Tanee <em>Fomum</em></h1>
+    <div class="gold-rule" data-i18n="a.edition"></div>
+    <div class="event">
+      <div><b data-i18n="a.date"></b><span data-i18n="a.year"></span></div>
+      <div><b data-i18n="a.time"></b><span data-i18n="a.city"></span></div>
+      <div><b data-i18n="a.venue"></b><span data-i18n="brand.name"></span></div>
+    </div>
+  </div>
+  <div class="seal-wrap"><div class="seal"><div><small data-i18n="a.until"></small><b data-i18n="a.until.date"></b></div></div></div>
+</header>
+
+<section class="cd-band" data-ztf-hide-on-success>
+  <div data-cd-open>
+    <div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div><div><b data-cd="s">00</b><span data-i18n="a.cd.sec"></span></div></div>
+    <p data-i18n="a.cd.left"></p>
+  </div>
+  <p data-cd-closed hidden data-i18n="a.cd.closed"></p>
+</section>
+
+<main class="wrap">
+  <div class="card form-dark">
+    <div data-ztf-hide-on-success>
+      <div data-ztf-slot="lookup"></div>
+      <form data-ztf-form>
+        <section class="sec" id="s1" data-ztf-section><div class="sec-h"><span class="n gold-text">I</span><h2 data-i18n="sec.identity"></h2></div><div data-ztf-slot="identity"></div></section>
+        <section class="sec" id="s2" data-ztf-section><div class="sec-h"><span class="n gold-text">II</span><h2 data-i18n="sec.academic"></h2></div><div data-ztf-slot="academic"></div></section>
+        <section class="sec" id="s3" data-ztf-section><div class="sec-h"><span class="n gold-text">III</span><h2 data-i18n="sec.attachments"></h2></div><div data-ztf-slot="attachments"></div></section>
+        <div data-ztf-slot="consent"></div>
+      </form>
+    </div>
+    <div class="success" data-ztf-success hidden>
+      <h2 data-i18n="success.title"></h2>
+      <div data-ztf-slot="receipt"></div>
+      <button class="again" type="button" data-ztf-reset data-i18n="btn.new"></button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="contacts"><span>excellenceawardsztf.com</span><span>☎ <span data-i18n="a.phones"></span></span></div>
+  <div class="note"><span data-i18n="a.social"></span> · <span data-i18n="a.mock"></span> · 1 « Gala »</div>
+</footer>
+
+<script src="../shared/form-data.js"></script>
+<script src="../shared/ztf-lists.js"></script>
+<script src="../shared/form-i18n.js"></script>
+<script src="affiche.js"></script>
+<script src="../shared/form-markup.js"></script>
+<script src="../shared/form-engine.js"></script>
+</body>
+</html>

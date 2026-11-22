@@ -6,7 +6,7 @@
 window.ZTF_DATA = {
   edition: "2026-2027",
   schoolYear: "2025/2026",
-  deadline: ["[date à définir]", "[date to be set]"],
+  deadline: ["25 novembre 2026", "25 November 2026"],   // affiche officielle de la 6e édition
   contactEmail: "contact@excellenceawardsztf.com",
   whatsapp: "237656138785",   // support technique (même numéro que le formulaire officiel)
   minAge: 9,
