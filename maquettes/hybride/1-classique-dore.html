@@ -10,14 +10,18 @@
 <link rel="stylesheet" href="hybride.css">
 <style>
 .deadline{display:flex;gap:10px;align-items:flex-start;background:#f0faf3;border:1px solid #cbead5;color:var(--green-d);border-radius:12px;padding:12px 16px;font-size:.9rem;margin-bottom:26px}
-.hero{position:relative;overflow:hidden;color:#fff;text-align:center;padding:48px 16px 130px;background:linear-gradient(135deg,var(--green-d),var(--green) 60%,var(--green-l))}
-.hero:before{content:"";position:absolute;inset:0;background:url(../affiche/img/laureat.jpg) right 20% / auto 120% no-repeat;opacity:.28;mix-blend-mode:luminosity;-webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 75%);mask-image:linear-gradient(90deg,transparent 30%,#000 75%)}
+.hero{position:relative;overflow:hidden;color:#fff;padding:56px 16px 150px;
+  background:linear-gradient(100deg,var(--green-d) 0%,rgba(31,122,64,.97) 38%,rgba(31,122,64,.55) 50%,rgba(31,122,64,0) 64%),url(../affiche/img/laureat.jpg) right center/auto 128% no-repeat,var(--site-navy)}
+.hero .in{max-width:1120px;margin:auto}
+.hero .event{justify-content:flex-start}.hero .event>div:first-child{padding-left:0}
+.hero .gold-rule{justify-content:flex-start}.hero .gold-rule:before{display:none}
+@media(max-width:760px){.hero{background:linear-gradient(180deg,rgba(31,122,64,.8),rgba(31,122,64,.95) 70%),url(../affiche/img/laureat.jpg) center/cover}}
 .hero:after{content:"";position:absolute;inset:auto -10% -60px -10%;height:120px;background:var(--bg);border-radius:50% 50% 0 0}
 .hero>*{position:relative;z-index:1}
 .hero .h-script{font-size:clamp(3rem,7vw,5rem);margin-top:6px}
 .hero .h-name{font-size:clamp(1.4rem,3.4vw,2.4rem)}
-.hero .gold-rule{margin:12px auto 0;font-family:Cinzel,serif;font-weight:700;color:#fff3c4}
-.hero .gold-rule:before,.hero .gold-rule:after{background:linear-gradient(90deg,transparent,#ffe27a)}
+.hero .gold-rule{margin:12px 0 0;max-width:420px;font-family:Cinzel,serif;font-weight:700;color:#fff3c4}
+.hero .gold-rule:after{background:linear-gradient(90deg,#ffe27a,transparent)}
 .hero .event{margin-top:20px}.hero .event b{color:#fff3c4}
 .hero .event>div{border-color:#ffe27a}
 .wrap{max-width:920px;margin:-90px auto 0;padding:0 16px 64px;position:relative;z-index:2}
@@ -34,13 +38,13 @@
   </div>
 </div></header>
 
-<section class="hero sparkle">
+<section class="hero sparkle"><div class="in">
   <div class="eyebrow" data-i18n="a.seminar"></div>
   <div class="h-script">Prix d'Excellence</div>
   <h1 class="h-name gold-on-green">Zacharias Tanee Fomum</h1>
   <div class="gold-rule" data-i18n="a.edition"></div>
   <div class="event"><div><b data-i18n="a.date"></b><span data-i18n="a.year"></span></div><div><b data-i18n="a.time"></b><span data-i18n="a.city"></span></div><div><b data-i18n="a.venue"></b><span data-i18n="a.seminar.short"></span></div></div>
-</section>
+</div></section>
 <main class="wrap">
   <div class="card form-site">
     <div class="seal sm"><div><small data-i18n="a.until"></small><b data-i18n="a.until.date"></b></div></div>

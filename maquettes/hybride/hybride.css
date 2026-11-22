@@ -61,3 +61,19 @@ a{color:var(--green-d)}
 .success .again{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:10px;border:1px solid var(--line-l);background:#fff;font:inherit;font-weight:600;cursor:pointer}
 footer.site{background:var(--site-navy);color:#cbd5e1;text-align:center;padding:24px 16px 80px;font-size:.85rem}
 footer.site strong{color:#fff}footer.site .contacts{color:var(--yellow);margin-top:8px}
+
+/* ---------- Plus de thème des affiches ---------- */
+.card{border-top:5px solid #e8b93c}
+.sec-h{border-bottom:2px solid transparent;border-image:linear-gradient(90deg,#e8b93c,#eef2f0 55%) 1}
+.sec-h .n{background:linear-gradient(180deg,#fff0b3,#f0c64f 45%,#c98f23);color:var(--site-navy);box-shadow:0 0 0 2px #fff,0 0 0 3px #c98f23}
+.sec.is-complete .sec-h .n{background:var(--green);color:#fff;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--green)}
+.form-site .submit{background:linear-gradient(180deg,#fff0b3,#f0c64f 45%,#c98f23);text-transform:uppercase;letter-spacing:.06em;border-radius:999px;box-shadow:0 8px 22px rgba(201,143,35,.35),inset 0 1px 0 rgba(255,255,255,.7)}
+.form-site .drop{border-color:#e2c46f;background:#fffcf2}
+.form-site .notice{border-left-color:#e8b93c}
+footer.site{background:linear-gradient(180deg,#f7dc86,#c99a33);color:var(--site-navy)}
+footer.site strong{color:var(--site-navy)}footer.site .contacts{color:var(--site-navy);font-weight:800}
+/* Carte « fondateur » (portrait de l'affiche) */
+.founder-mini{display:flex;align-items:center;gap:14px;text-align:left}
+.founder-mini img{width:74px;height:92px;object-fit:cover;border-radius:12px;box-shadow:0 0 0 3px #f2c94c,0 8px 18px rgba(0,0,0,.3);flex:none}
+.founder-mini b{display:block;font-family:Cinzel,serif;font-size:.95rem;color:#ffe9a3}
+.founder-mini q{display:block;font-family:"Great Vibes",cursive;font-size:1.55rem;line-height:1.05;color:#fff;margin-top:2px}

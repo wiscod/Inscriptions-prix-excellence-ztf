@@ -9,13 +9,18 @@
 <link rel="stylesheet" href="../affiche/affiche.css">
 <link rel="stylesheet" href="hybride.css">
 <style>
-.hero{color:#fff;text-align:center;padding:46px 16px 120px;background:linear-gradient(135deg,var(--green-d),var(--green) 60%,var(--green-l))}
+.hero{color:#fff;text-align:center;padding:56px 16px 130px;background:linear-gradient(180deg,rgba(31,122,64,.72),rgba(31,122,64,.93) 75%),url(../affiche/img/laureat.jpg) center 35%/cover}
 .hero .h-script{font-size:clamp(3rem,7vw,4.8rem);margin-top:6px}
 .hero .h-name{font-size:clamp(1.3rem,3.2vw,2.2rem)}
 .hero .sub{margin:10px 0 0;font-weight:600;opacity:.92}
 .wrap{max-width:960px;margin:-86px auto 0;padding:0 16px 64px;position:relative;z-index:2}
 .strip{position:relative;margin-bottom:18px;box-shadow:0 16px 40px rgba(3,8,66,.25);border:1px solid rgba(232,185,60,.4)}
 .strip .seal{position:absolute;left:-30px;top:-34px}
+@media(min-width:1041px){.strip{padding-left:110px}}
+.strip .tro{height:112px;border-radius:14px;box-shadow:0 0 0 3px #e8b93c,0 10px 24px rgba(0,0,0,.35)}
+.strip .event>div{padding:4px 16px}
+@media(min-width:1041px){.strip{padding-right:110px}.strip .tro{position:absolute;right:-26px;top:-28px}}
+@media(max-width:700px){.strip .tro{display:none}}
 @media(max-width:1040px){.strip .seal{position:static}}
 .cats{margin:0 0 26px;border:1px solid var(--line-l);border-radius:14px;background:#f8faf9;padding:4px 14px}
 .cats summary{cursor:pointer;font-weight:700;padding:10px 0;color:var(--site-navy)}
@@ -43,6 +48,7 @@
     <div class="seal sm"><div><small data-i18n="a.until"></small><b data-i18n="a.until.date"></b></div></div>
     <div class="event"><div><b data-i18n="a.date"></b><span data-i18n="a.year"></span></div><div><b data-i18n="a.time"></b><span data-i18n="a.city"></span></div><div><b data-i18n="a.venue"></b><span data-i18n="a.seminar.short"></span></div></div>
     <div data-cd-open><div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div><div><b data-cd="s">00</b><span data-i18n="a.cd.sec"></span></div></div></div>
+    <img class="tro" src="../affiche/img/trophee.jpg" alt="Trophée ZTF Excellence Awards">
   </div>
   <div class="card form-site">
     <div data-ztf-hide-on-success>
