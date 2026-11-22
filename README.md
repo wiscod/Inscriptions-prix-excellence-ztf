@@ -1,8 +1,8 @@
 # Inscriptions — Prix d'Excellence ZTF
 
-Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**. Hébergé sur **Vercel**.
+Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, réservé pour l'instant aux candidats du **Cameroun**, ouvert aux **élèves du secondaire** et aux **étudiants du supérieur**, en **français et en anglais**. Hébergé sur **Vercel**. Date limite affichée : 25 novembre 2026 (affiche officielle) ; les envois restent ouverts tant que la Fondation ne les ferme pas (variable `DEADLINE`).
 
-- **Formulaire** : `/` (basé sur la maquette 1)
+- **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (mot de passe `ADMIN_PASSWORD`)
 - **Maquettes** : `/maquettes/`
 
@@ -70,7 +70,8 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 
 ```
 site/
-  index.html                  formulaire réel (maquette 1 + envoi au serveur)
+  index.html                  formulaire réel (maquette « Affiche et formulaire » + envoi au serveur)
+  css/affiche.css, js/affiche.js, img/   identité des affiches, compte à rebours, affiche
   js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
   admin/index.html            liste des dossiers, fiche, pièces jointes, export CSV, suppression
 api/                          fonctions Vercel (routage par fichiers)

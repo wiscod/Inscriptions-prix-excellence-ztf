@@ -411,17 +411,19 @@
     var keep = lang; if (lang === "both") lang = "fr";
     return loadJsPDF().then(function (JsPDF) {
       var doc = new JsPDF({ unit: "mm", format: "a4" }), W = 210, M = 16, y = 0;
-      doc.setFillColor(3, 8, 66); doc.rect(0, 0, W, 30, "F");
-      doc.setTextColor(248, 218, 73); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-      doc.text(pdfText(tr("brand.org").toUpperCase()), M, 11);
-      doc.setTextColor(255, 255, 255); doc.setFontSize(17); doc.text(pdfText(tr("brand.name") + " · " + tr("pdf.title")), M, 21);
-      y = 40;
+      // En-tête clair : fond crème, filets dorés, titre bleu nuit
+      doc.setFillColor(255, 251, 240); doc.rect(0, 0, W, 32, "F");
+      doc.setFillColor(232, 185, 60); doc.rect(0, 0, W, 2.2, "F"); doc.rect(M, 31, W - 2 * M, 0.6, "F");
+      doc.setTextColor(168, 118, 28); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+      doc.text(pdfText(tr("brand.org").toUpperCase()), M, 12);
+      doc.setTextColor(6, 16, 74); doc.setFont("times", "bold"); doc.setFontSize(19); doc.text(pdfText(tr("brand.name") + " · " + tr("pdf.title")), M, 23);
+      y = 42;
       doc.setTextColor(15, 23, 42); doc.setFontSize(11); doc.setFont("helvetica", "bold");
       doc.text(pdfText(tr("success.id") + " " + rec.id), M, y);
       doc.setFont("helvetica", "normal"); doc.setFontSize(10);
       if (rec.submittedAt) doc.text(pdfText(tr("pdf.date") + " " + fmtDate(rec.submittedAt)), W - M, y, { align: "right" });
       y += 8;
-      doc.setFillColor(253, 236, 234); doc.setDrawColor(192, 57, 43);
+      doc.setFillColor(255, 246, 244); doc.setDrawColor(214, 31, 38);
       var warn = doc.splitTextToSize(pdfText(tr("pdf.warning")), W - 2 * M - 8);
       doc.rect(M, y, W - 2 * M, warn.length * 5 + 6, "FD");
       doc.setTextColor(150, 30, 20); doc.setFont("helvetica", "bold"); doc.text(warn, M + 4, y + 6.5);
@@ -433,9 +435,9 @@
       if (rec.fields.motivation) groups.push({ group: tr("lbl.motivation"), items: [["", rec.fields.motivation]] });
       groups.forEach(function (g) {
         if (y > 265) { doc.addPage(); y = 20; }
-        doc.setTextColor(31, 122, 64); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+        doc.setTextColor(6, 16, 74); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
         doc.text(pdfText(g.group.toUpperCase()), M, y); y += 2;
-        doc.setDrawColor(219, 227, 234); doc.line(M, y, W - M, y); y += 6;
+        doc.setDrawColor(232, 185, 60); doc.setLineWidth(0.5); doc.line(M, y, W - M, y); doc.setLineWidth(0.2); y += 6;
         doc.setFontSize(10);
         g.items.forEach(function (it) {
           var lw = it[0] ? 58 : 0;
