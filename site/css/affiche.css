@@ -37,7 +37,7 @@ a{color:var(--gold)}
 .ribbon:before{left:-12px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,60% 50%)}
 .ribbon:after{right:-12px;clip-path:polygon(0 0,100% 0,40% 50%,100% 100%,0 100%)}
 
-/* Médaillon « Postuler jusqu'au 25 Nov 2026 » */
+/* Médaillon « Postuler jusqu'au 28 Nov 2026 » */
 .seal{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;text-align:center;color:#fff;
   background:radial-gradient(circle at 50% 40%,#f03a3f,#b5141b 70%);box-shadow:0 0 0 6px #f7d36b,0 0 0 10px #b07c1d,0 14px 30px rgba(0,0,0,.45);transform:rotate(-8deg)}
 .seal small{display:block;font-weight:800;font-size:.8rem;line-height:1.1;max-width:104px;margin:0 auto 4px}

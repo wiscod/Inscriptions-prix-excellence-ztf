@@ -1,17 +1,17 @@
 /*
  * Éléments communs à la série « affiche » : textes de l'événement (FR/EN) et compte à rebours
- * jusqu'à la date limite de l'affiche (25 novembre 2026, fin de journée à Yaoundé, UTC+1).
+ * jusqu'à la date limite (28 novembre 2026, fin de journée à Yaoundé, UTC+1).
  * À charger avant shared/form-engine.js (il complète window.ZTF_PAGE_I18N).
  */
 (function () {
   "use strict";
-  var DEADLINE = new Date("2026-11-25T23:59:59+01:00").getTime();
+  var DEADLINE = new Date("2026-11-28T23:59:59+01:00").getTime();
   var T = {
     "a.edition": ["6e édition", "6th edition"],
     "a.seminar": ["Séminaire sur l'excellence académique · Acte IX", "Seminar on academic excellence · Act IX"],
     "a.apply": ["Candidature", "Application"],
     "a.until": ["Postuler jusqu'au", "Apply by"],
-    "a.until.date": ["25 Nov 2026", "25 Nov 2026"],
+    "a.until.date": ["28 Nov 2026", "28 Nov 2026"],
     "a.date": ["12 déc.", "12 Dec"], "a.year": ["2026", "2026"],
     "a.time": ["08h00", "8:00 am"], "a.city": ["Yaoundé", "Yaoundé"],
     "a.venue": ["Palais des Sports", "Palais des Sports"],
