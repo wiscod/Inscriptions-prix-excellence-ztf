@@ -46,14 +46,26 @@ Le candidat reçoit un **numéro de dossier** et un **identifiant** (ex. `BU9G3-
 ## Fonctionnement de l'envoi
 
 1. `POST /api/dossiers` : la fiche et la liste des fichiers. Le serveur refait tous les contrôles (dont la cohérence catégorie / niveau / série), enregistre la fiche (état « en cours ») et renvoie le numéro de dossier et un jeton d'envoi.
-2. `PUT /api/dossiers/:id/files/...` : chaque fichier part en morceaux de 3 Mo (une fonction Vercel n'accepte que 4,5 Mo par requête) ; chaque morceau est réessayé trois fois en cas de coupure.
-3. `POST /api/dossiers/:id/finalize` : vérifie que tout est arrivé, passe le dossier à l'état « soumis » et renvoie l'identifiant.
+2. Avec Cloudflare R2 : le navigateur envoie chaque fichier directement dans le stockage, à une adresse signée valable 2 heures reçue à l'étape 1 (les fichiers ne passent pas par Vercel). Sans R2 : `PUT /api/dossiers/:id/files/...`, en morceaux de 3 Mo (une fonction Vercel n'accepte que 4,5 Mo par requête). Chaque envoi est réessayé trois fois en cas de coupure.
+3. `POST /api/dossiers/:id/finalize` : vérifie que chaque fichier est arrivé en entier, à la taille annoncée, passe le dossier à l'état « soumis » et renvoie l'identifiant.
 4. `POST /api/lookup` : « Déjà inscrit ? », renvoie la fiche correspondant à un identifiant.
 5. Chaque nuit à 03 h 17 UTC, une tâche planifiée (`vercel.json`) supprime les envois restés inachevés plus de 48 heures.
 
 Photos : au moment du choix, toute image de plus de 600 Ko est réduite dans le navigateur (2 000 pixels au plus sur le grand côté, JPEG), ce qui ramène une photo de téléphone à quelques centaines de Ko. Les PDF ne sont pas modifiés : au-delà de 4 Mo, ils sont refusés.
 
-Stockage : un store **Vercel Blob privé** (rien n'y est lisible sans passer par les fonctions). Fonctions et stockage dans la région de Paris (`cdg1`), la plus proche du Cameroun.
+Stockage : **Cloudflare R2** (bucket privé) dès que les quatre variables `R2_…` sont posées, sinon le store **Vercel Blob privé** d'origine. Rien n'y est lisible sans passer par les fonctions ; l'administration ouvre les pièces jointes par un lien signé valable 5 minutes. Fonctions dans la région de Paris (`cdg1`), la plus proche du Cameroun.
+
+Pourquoi R2 : l'offre gratuite de Vercel Blob s'arrête à 1 Go et 2 000 écritures par mois (environ 250 dossiers), et bloque le stockage 30 jours en cas de dépassement. R2 offre 10 Go et 1 million d'écritures par mois, puis 0,015 $ par Go et par mois ; les téléchargements sont gratuits.
+
+### Passer de Vercel Blob à R2
+
+1. Créer le bucket R2 et lui donner cette règle CORS (bucket → *Settings* → *CORS policy*) :
+   `[{"AllowedOrigins":["https://prix-ztf-candidature.vercel.app"],"AllowedMethods":["PUT","GET","HEAD"],"AllowedHeaders":["content-type"],"MaxAgeSeconds":3600}]`
+2. Créer une clé d'API R2 « Object Read & Write » limitée à ce bucket.
+3. Poser `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` dans Vercel, puis redéployer.
+4. Recopier l'existant (comptes, journal, dossiers, pièces jointes recollées en un seul fichier), à relancer jusqu'à `"remaining": 0` :
+   `curl -X POST https://prix-ztf-candidature.vercel.app/api/admin/migrate -H "x-migrate-secret: $ADMIN_PASSWORD"`
+   Garder `BLOB_READ_WRITE_TOKEN` tant que la recopie n'est pas terminée.
 
 ## Administration
 
@@ -76,7 +88,8 @@ Comptes et journal sont rangés dans le même store Blob privé (`comptes/`, `jo
 
 | Variable | Rôle | Obligatoire |
 |---|---|---|
-| `BLOB_READ_WRITE_TOKEN` | accès au store Blob, créé quand le store est relié au projet | oui |
+| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | stockage Cloudflare R2 ; les quatre ensemble | recommandé |
+| `BLOB_READ_WRITE_TOKEN` | accès au store Vercel Blob (stockage sans R2, et source de la recopie vers R2) | sans R2 |
 | `ADMIN_PASSWORD` | mot de passe du premier accès à `/admin/` (identifiant `admin`), utilisable seulement tant qu'aucun compte n'existe | oui |
 | `SESSION_SECRET` | clé de signature des sessions de l'administration ; à défaut, dérivée de `BLOB_READ_WRITE_TOKEN` | non |
 | `CRON_SECRET` | protège la tâche de nettoyage quotidienne | oui |

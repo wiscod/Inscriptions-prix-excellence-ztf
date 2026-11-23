@@ -17,6 +17,7 @@ export default {
     if (tokenHash(req.headers.get("x-upload-token") || "") !== dossier.uploadTokenHash) return fail("Jeton d'envoi invalide.", 403);
 
     const entry = dossier.files.find((f) => f.field === field && f.index === index);
+    if (entry && entry.direct) return fail("Ce fichier s'envoie directement au stockage.", 409);
     if (!entry || !Number.isInteger(chunk) || chunk < 0 || chunk >= entry.chunks) return fail("Morceau de fichier inattendu.", 400);
 
     const data = await req.arrayBuffer();

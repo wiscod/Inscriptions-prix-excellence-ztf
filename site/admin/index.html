@@ -300,8 +300,11 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
         var win = window.open("", "_blank");
         s.textContent = "chargement…";
         try {
-          var blob = await api("files/" + d.id + "/" + fi.field + "/" + fi.index, { blob: true });
-          var url = URL.createObjectURL(blob);
+          var res = await fetch("/api/admin/files/" + d.id + "/" + fi.field + "/" + fi.index, { headers: { authorization: "Bearer " + token } });
+          if (res.status === 401) { logout("Session expirée : reconnectez-vous."); throw new Error("401"); }
+          if (!res.ok) { var er = {}; try { er = await res.json(); } catch (x) {} throw new Error(er.error || res.status); }
+          // Avec R2, le serveur renvoie un lien signé de courte durée ; sinon, le fichier lui-même.
+          var url = (res.headers.get("content-type") || "").indexOf("application/json") === 0 ? (await res.json()).url : URL.createObjectURL(await res.blob());
           if (win) win.location = url; else location.href = url;
           s.textContent = kb(fi.size) + " · ouvrir";
         } catch (e) { if (win) win.close(); s.textContent = "erreur : " + e.message; }

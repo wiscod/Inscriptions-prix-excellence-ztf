@@ -14,10 +14,13 @@
  *   POST   accounts                  créer un compte                          (administrateur, ou premier accès)
  *   POST   accounts/:username        { action: reset | disable | enable | role, role }   (administrateur)
  *   GET    journal                   dernières actions                        (administrateur)
+ *   POST   migrate                   recopie Vercel Blob → Cloudflare R2, par lots (en-tête x-migrate-secret = ADMIN_PASSWORD)
  */
 import {
-  ID_RE, MIME, chunkPath, deletePaths, fail, json, listAll, lookupPath, pendingPath, readJSON, readStream, recordPath,
+  ID_RE, MIME, USE_R2, chunkPath, deletePaths, fail, filePath, json, listAll, lookupPath, pendingPath, readJSON, readStream, recordPath,
+  safeEqual, signedUrl, writeBytes,
 } from "../lib/common.js";
+import { get as blobGet, list as blobList } from "@vercel/blob";
 import {
   MIN_PASSWORD, ROLES, ROLE_LABELS, USERNAME_RE, hashPassword, listAccounts, logEvent, login, makeToken, publicAccount,
   readAccount, readJournal, requireUser, saveAccount, tempPassword,
@@ -103,6 +106,14 @@ export default {
         const entry = d && d.files.find((f) => f.field === field && f.index === index);
         if (!entry) return fail("Fichier introuvable.", 410);
         await logEvent(r.user, "fichier téléchargé", id, entry.name);
+        if (USE_R2) {
+          // Lien signé valable 5 minutes : le fichier part directement de R2, sans passer par Vercel.
+          const url = await signedUrl(filePath(id, field, index), "GET", 300, {
+            "response-content-type": MIME[entry.ext] || "application/octet-stream",
+            "response-content-disposition": `inline; filename*=UTF-8''${encodeURIComponent(entry.name)}`,
+          });
+          return json({ url });
+        }
         let c = 0, reader = null;
         const stream = new ReadableStream({
           async pull(ctrl) {
@@ -188,6 +199,8 @@ export default {
         return json({ events: await readJournal(Math.min(1000, Number(url.searchParams.get("limit")) || 300)) });
       }
 
+      if (seg[0] === "migrate" && m === "POST") return migrate(req, url);
+
       return fail("Adresse inconnue.", 400);
     } catch (e) {
       console.error(e);
@@ -195,3 +208,45 @@ export default {
     }
   },
 };
+
+/*
+ * Recopie unique de Vercel Blob vers Cloudflare R2, à lancer une fois les variables R2 posées.
+ * Les pièces jointes découpées en morceaux sont recollées en un seul fichier. Ce qui existe déjà dans R2
+ * n'est pas recopié : on peut relancer jusqu'à ce que `remaining` vaille 0.
+ */
+async function migrate(req, url) {
+  const secret = process.env.ADMIN_PASSWORD;
+  if (!secret || !safeEqual(req.headers.get("x-migrate-secret") || "", secret)) return fail("Accès refusé.", 401);
+  if (!USE_R2 || !process.env.BLOB_READ_WRITE_TOKEN) return fail("R2 et Vercel Blob doivent être configurés tous les deux.", 400);
+  const budget = Math.min(400, Number(url.searchParams.get("limit")) || 150);
+  const blobs = [];
+  let cursor;
+  do {
+    const r = await blobList({ cursor, limit: 1000 });
+    blobs.push(...r.blobs);
+    cursor = r.hasMore ? r.cursor : undefined;
+  } while (cursor);
+  const inR2 = new Set((await listAll("")).map((b) => b.pathname));
+  const readBlob = async (p) => {
+    const r = await blobGet(p, { access: "private", useCache: false });
+    if (!r || r.statusCode !== 200) throw new Error("lecture impossible : " + p);
+    return Buffer.from(await new Response(r.stream).arrayBuffer());
+  };
+  // Tâches : un objet simple → même chemin ; des morceaux fichiers/<id>/<champ>/<rang>/<n> → fichiers/<id>/<champ>/<rang>.
+  const tasks = new Map();
+  for (const b of blobs) {
+    const m = b.pathname.match(/^(fichiers\/[^/]+\/[^/]+\/\d+)\/(\d+)$/);
+    const target = m ? m[1] : b.pathname;
+    if (!tasks.has(target)) tasks.set(target, []);
+    tasks.get(target).push({ path: b.pathname, n: m ? Number(m[2]) : 0, type: b.contentType });
+  }
+  const todo = [...tasks.entries()].filter(([target]) => !inR2.has(target));
+  let copied = 0;
+  for (const [target, parts] of todo.slice(0, budget)) {
+    parts.sort((a, b) => a.n - b.n);
+    const data = Buffer.concat(await Promise.all(parts.map((p) => readBlob(p.path))));
+    await writeBytes(target, data, target.endsWith(".json") ? "application/json" : "application/octet-stream");
+    copied++;
+  }
+  return json({ total: tasks.size, alreadyThere: tasks.size - todo.length, copied, remaining: todo.length - copied });
+}
