@@ -96,7 +96,7 @@ window.ZTF_I18N = {
   "btn.submit": ["Soumettre ma candidature", "Submit my application"],
   "btn.sending": ["Envoi en cours...", "Sending..."],
   "foot.required": ["* Champs obligatoires.", "* Required fields."],
-  "foot.support": ["Besoin d'assistance technique ? Écrivez-nous sur <a href=\"https://wa.me/{whatsapp}\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>.", "Need technical help? Message us on <a href=\"https://wa.me/{whatsapp}\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>."],
+  "foot.support": ["Besoin d'assistance technique ? Écrivez-nous sur WhatsApp : {walink}", "Need technical help? Message us on WhatsApp: {walink}"],
   "foot.secure": ["Les fichiers sont transmis de manière sécurisée via notre serveur.", "Files are sent securely through our server."],
 
   "err.required": ["Ce champ est obligatoire.", "This field is required."],

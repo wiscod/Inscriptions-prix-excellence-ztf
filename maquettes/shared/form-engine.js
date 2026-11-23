@@ -27,12 +27,15 @@
   }
 
   /* ---------- Traduction ---------- */
+  // Logo WhatsApp (Simple Icons, CC0), affiché à côté du numéro d'assistance.
+  var WA_ICON = '<svg class="ztf-wa-icon" viewBox="0 0 24 24" width="18" height="18" aria-label="WhatsApp" role="img"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
   function interp(s, l, vars) {
     return s.replace(/\{(\w+)\}/g, function (m, k) {
       if (vars && vars[k] != null) return vars[k];
       if (k === "year") return D.schoolYear;
       if (k === "contact") return D.contactEmail;
       if (k === "whatsapp") return D.whatsapp;
+      if (k === "walink") return '<a class="ztf-wa" href="https://wa.me/' + D.whatsapp + '" target="_blank" rel="noopener">' + WA_ICON + D.whatsappDisplay + "</a>";
       if (k === "deadline") return l === "en" ? D.deadline[1] : D.deadline[0];
       if (k === "min") return D.minAge;
       if (k === "max") return D.maxFileMB;
@@ -485,7 +488,7 @@
         y += 4;
       });
       doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.setFont("helvetica", "normal");
-      doc.text(pdfText(tr("brand.org") + " · " + D.contactEmail + " · WhatsApp +" + D.whatsapp), M, 290);
+      doc.text(pdfText(tr("brand.org") + " · " + D.contactEmail + " · WhatsApp " + D.whatsappDisplay), M, 290);
       doc.save("fiche-candidature-" + rec.id + ".pdf");
     }).catch(function () { toast(tr("toast.failed"), tr("pdf.error"), true); })
       .then(function () { lang = keep; });
@@ -611,6 +614,7 @@
       ".ztf-file-list li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       ".ztf-file-list button{background:none;border:0;color:inherit;opacity:.7;cursor:pointer;font:inherit;text-decoration:underline}" +
       ".ztf-file-count{font-size:.8rem;opacity:.8;margin:.4rem 0 0}" +
+      ".ztf-wa{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:600}.ztf-wa-icon{flex:none}" +
       "#ztf-toasts{position:fixed;right:16px;bottom:16px;z-index:9999;display:grid;gap:8px;max-width:min(380px,calc(100vw - 32px))}" +
       ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity .3s,transform .3s}" +
       ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px)}.ztf-toast span{opacity:.75}" +
