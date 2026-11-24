@@ -80,7 +80,6 @@
       '<p class="hint counter" data-ztf-counter></p>');
 
   S.consent =
-    '<div class="captcha" data-ztf-captcha></div>' +
     '<button type="submit" class="submit"><span data-i18n="btn.submit"></span></button>' +
     '<p class="foot-note" data-i18n="foot.required"></p>' +
     '<p class="foot-note" data-i18n-html="foot.support"></p>' +

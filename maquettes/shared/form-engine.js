@@ -596,13 +596,6 @@
     setTimeout(function () { t.classList.add("is-out"); setTimeout(function () { t.remove(); }, 300); }, 4200);
   }
 
-  /* ---------- Captcha (emplacement Cloudflare Turnstile) ---------- */
-  function renderCaptcha() {
-    $$("[data-ztf-captcha]").forEach(function (box) {
-      box.innerHTML = '<label class="ztf-captcha"><input type="checkbox" checked disabled> <span data-i18n="captcha"></span><small>Turnstile</small></label>';
-    });
-  }
-
   function injectBaseStyles() {
     var css = "" +
       ".ztf-error{color:var(--ztf-danger,#c0392b);font-size:.8rem;margin:.35rem 0 0}" +
@@ -623,8 +616,6 @@
       ".ztf-dialog input{font:inherit;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;font-weight:400}" +
       ".ztf-dialog-actions{display:flex;justify-content:flex-end;gap:8px}.ztf-btn-ghost,.ztf-btn-primary{font:inherit;font-weight:600;padding:9px 16px;border-radius:10px;cursor:pointer}" +
       ".ztf-btn-ghost{background:#fff;border:1px solid #d1d5db}.ztf-btn-primary{background:#33a15a;color:#fff;border:0}" +
-      ".ztf-captcha{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid rgba(127,127,127,.35);border-radius:6px;font-size:.85rem;background:rgba(127,127,127,.06)}" +
-      ".ztf-captcha small{opacity:.55;margin-left:18px}.ztf-captcha input{width:auto!important;min-height:0!important}" +
       ".drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 14px;border:1.5px dashed rgba(127,127,127,.45);border-radius:12px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}" +
       ".drop:hover,.drop:focus-within{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}" +
       ".drop input[type=file]{position:absolute!important;inset:0;width:100%!important;height:100%!important;opacity:0;cursor:pointer;padding:0!important;border:0!important}" +
@@ -661,7 +652,7 @@
 
   function init() {
     form = $("[data-ztf-form]"); if (!form) return;
-    injectBaseStyles(); renderCaptcha();
+    injectBaseStyles();
     form.setAttribute("novalidate", "");
 
     var bd = el("birth_date"), max = new Date();

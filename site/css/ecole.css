@@ -28,5 +28,5 @@ html[lang=fr] .facts .l:after{content:"\00a0:"}
 html[lang=en] .facts .l:after{content:":"}
 .facts .v{font-weight:800}
 .tbd{display:inline-block;font-size:.85rem;font-weight:700;font-style:italic;color:var(--red-d);border:1.5px dashed currentColor;border-radius:999px;padding:1px 11px}
-.credit{position:absolute;right:10px;bottom:6px;margin:0;font-size:.62rem;max-width:calc(100% - 20px);text-align:right;opacity:.85;color:#fff}
-.credit a{color:inherit}
+.photo-credit{margin:4px 0 0;font-size:.72rem}
+.photo-credit a{color:inherit}

@@ -40,11 +40,15 @@ for (const s of SCHOOLS) {
           <li><span class="l" data-i18n="e.venue"></span> <span class="tbd" data-i18n="e.tbd"></span></li>
         </ul></div>
       </div>
-      <p class="credit"><span data-i18n="e.photo"></span> : ${s.photo.author}, <a href="https://commons.wikimedia.org/wiki/File:${s.photo.file}" target="_blank" rel="noopener">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>
     </header>
 `;
+  // Crédit exigé par la licence CC BY-SA de la photo : une ligne en bas de page, pas sur la photo.
+  const credit = `<p class="photo-credit"><span data-i18n="e.photo"></span> : ${s.photo.author}, <a href="https://commons.wikimedia.org/wiki/File:${s.photo.file}" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>`;
+  const footOrg = '<p data-i18n="brand.org"></p></div>';
+  if (!site.includes(footOrg)) throw new Error("pied de page introuvable dans site/index.html");
   let html = site
     .replace(header, hero)
+    .replace(footOrg, `<p data-i18n="brand.org"></p>${credit}</div>`)
     .replace(/<title>[^<]*<\/title>/, `<title>Candidature ${s.short} · Prix d'Excellence ZTF</title>`)
     .replace(/(<meta name="description" content=")[^"]*/, `$1Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de l'${s.title} (${s.short}).`)
     .replace(/(href|src)="(css|js|img|shared)\//g, '$1="/$2/')
