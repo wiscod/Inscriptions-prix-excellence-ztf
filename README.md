@@ -5,7 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
-- **Pages par école** (en préparation, ENSPY d'abord) : `/maquettes/ecoles/`, 5 maquettes de la colonne de gauche ; le formulaire de droite reste celui du site
+- **Pages par école** (en préparation, ENSPY d'abord) : `/maquettes/ecoles/`, 5 maquettes de l'en-tête de droite (logos, date limite, audition, lieu) ; l'affiche de gauche et le formulaire restent ceux du site
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 

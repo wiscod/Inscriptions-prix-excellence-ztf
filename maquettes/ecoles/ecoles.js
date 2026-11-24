@@ -1,5 +1,5 @@
 /*
- * Pages par école : textes de la colonne de gauche (FR/EN).
+ * Pages par école : textes de l'en-tête de droite (FR/EN).
  * À charger après ../../affiche/affiche.js et avant ../../shared/form-engine.js.
  * Audition et lieu ne sont pas encore connus : la page affiche « À préciser » (clé e.tbd)
  * tant que la Fondation ne les a pas communiqués.

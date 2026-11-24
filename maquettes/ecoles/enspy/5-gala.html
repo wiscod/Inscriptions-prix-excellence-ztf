@@ -7,42 +7,70 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../affiche/affiche.css">
+<style>
+body{background:var(--paper);color:var(--ink)}
+.layout{display:grid;grid-template-columns:minmax(320px,40%) 1fr;min-height:100vh}
+.layout>*{min-width:0}
+@media(max-width:980px){.layout{grid-template-columns:1fr}}
+/* Colonne affiche */
+.poster{background:var(--night);position:relative}
+.poster-in{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:18px}
+.poster img{max-height:calc(100vh - 150px);max-width:100%;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 30px 60px rgba(0,0,0,.6)}
+.poster .countdown div{min-width:58px}
+@media(max-width:980px){.poster-in{position:static;height:auto;padding:22px 16px}.poster img{max-height:none;width:min(420px,100%)}}
+.poster .lbl{color:#b9bfe6;font-size:.8rem;text-align:center}
+/* Colonne formulaire */
+.main{padding:28px clamp(16px,5vw,64px) 80px;max-width:880px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+.head .script{font-size:clamp(2.4rem,4.5vw,3.4rem);color:var(--navy)}
+.head .sub{font-family:Cinzel,serif;font-weight:900;font-size:1.05rem;letter-spacing:.06em;margin-top:2px}
+.head .ed{display:block;font-family:Montserrat,sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-top:6px}
+.dl{display:flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:12px;padding:10px 14px;margin:0 0 22px;font-size:.9rem}
+.dl b{color:var(--gold-l)}
+.dl .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(214,31,38,.25);flex:none}
+.sec{margin-bottom:38px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--gold),transparent) 1}
+.sec-h .n{font-family:Cinzel,serif;font-weight:900;font-size:1.6rem;color:var(--gold-d)}
+.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy);text-transform:uppercase;letter-spacing:.05em}
+.success{text-align:center;padding:30px 0}
+.success h2{font-family:Cinzel,serif;color:var(--navy)}
+.success .again{margin-top:14px;font:inherit;font-weight:700;padding:11px 20px;border-radius:999px;border:1px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid #e1d6b4;color:var(--muted);font-size:.82rem}
+</style>
 <link rel="stylesheet" href="../ecoles.css">
 </head>
 <body class="v5">
-<!-- Maquette 5 « Gala » : générée par scripts/maquettes-ecoles.mjs, ne pas modifier à la main. -->
+<!-- Maquette 5 « Gala » : générée par scripts/maquettes-ecoles.mjs depuis site/index.html, ne pas modifier à la main. -->
 <div class="layout">
-  <aside class="school sparkle">
-    <div class="school-in">
-      <div class="bg"><img src="../img/enspy-batiment.jpg" alt="Bâtiment des salles de cours de l'ENSPY"></div>
-      <div class="medals">
-        <figure class="medal school-logo"><img src="../img/enspy-logo.jpg" alt="Logo de l'ENSPY" data-i18n-aria="e.enspy.logo.alt"></figure>
-        <figure class="medal prize"><img src="../img/prix-provisoire.jpg" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
-      </div>
-      <div><h1 class="title"><span class="k" data-i18n="e.apply"></span><span class="s">ENSPY</span></h1><p class="school-name"><span data-i18n="e.enspy.name"></span> · <span data-i18n="e.enspy.univ"></span></p></div>
-      <div class="ticket"><ul class="facts">
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="l" data-i18n="e.deadline"></span><span class="v" data-i18n="e.deadline.v"></span></li>
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg><span class="l" data-i18n="e.audition"></span><span class="v"><span class="tbd" data-i18n="e.tbd"></span></span></li>
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span class="l" data-i18n="e.venue"></span><span class="v"><span class="tbd" data-i18n="e.tbd"></span></span></li>
-      </ul></div>
-      <div class="cd" data-cd-open>
+  <aside class="poster sparkle">
+    <div class="poster-in">
+      <img src="../../affiche/img/affiche-gala.jpg" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
+      <div data-cd-open>
         <div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div></div>
         <p class="lbl" data-i18n="a.cd.left"></p>
       </div>
-      <p class="credit"><span data-i18n="e.photo"></span> : Marcell NEMG, <a href="https://commons.wikimedia.org/wiki/File:Batiment-polytech-cmr.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>
     </div>
   </aside>
 
   <main class="main">
-    <div class="head">
-      <div>
-        <div class="script">Prix d'Excellence</div>
-        <div class="sub gold-text" style="filter:brightness(.8)">ZACHARIAS TANEE FOMUM</div>
-        <span class="ed"><span data-i18n="a.edition"></span> · <span data-i18n="a.cat.1"></span></span>
+    <header class="hero">
+      <div class="hero-bg"><img src="../img/enspy-batiment.jpg" alt="Bâtiment des salles de cours de l'ENSPY"></div>
+      <div class="hero-lang" data-ztf-slot="lang"></div>
+      <div class="hero-in">
+        <div class="medals">
+          <figure class="medal school-logo"><img src="../img/enspy-logo.jpg" alt="Logo de l'ENSPY" data-i18n-aria="e.enspy.logo.alt"></figure>
+          <figure class="medal prize"><img src="../img/prix-provisoire.jpg" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
+        </div>
+        <h1 class="title"><span class="k" data-i18n="e.apply"></span> <span class="s">ENSPY</span></h1>
+        <p class="school-name"><span data-i18n="e.enspy.name"></span> · <span data-i18n="e.enspy.univ"></span></p>
+        <div class="ticket"><ul class="facts">
+          <li><span class="l" data-i18n="e.deadline"></span> <b class="v" data-i18n="e.deadline.v"></b></li>
+          <li><span class="l" data-i18n="e.audition"></span> <span class="tbd" data-i18n="e.tbd"></span></li>
+          <li><span class="l" data-i18n="e.venue"></span> <span class="tbd" data-i18n="e.tbd"></span></li>
+        </ul></div>
       </div>
-      <div data-ztf-slot="lang"></div>
-    </div>
-    <p class="dl" data-ztf-hide-on-success><span class="dot"></span><span><span data-i18n="a.until"></span> <b data-i18n="a.until.date"></b> · <span data-i18n="a.seminar"></span></span></p>
+      <p class="credit"><span data-i18n="e.photo"></span> : Marcell NEMG, <a href="https://commons.wikimedia.org/wiki/File:Batiment-polytech-cmr.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>
+    </header>
 
     <div class="form-light">
       <div data-ztf-hide-on-success>
