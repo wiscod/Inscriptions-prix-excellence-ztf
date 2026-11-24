@@ -26,7 +26,7 @@ import {
   readAccount, readJournal, requireUser, saveAccount, tempPassword,
 } from "../lib/auth.js";
 
-const strip = ({ uploadTokenHash, lookupHash, ...rest }) => rest;
+const strip = ({ uploadTokenHash, lookupHash, finalTokenHash, codeSealed, ...rest }) => rest;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function body(req) { try { return await req.json(); } catch { return {}; } }
 

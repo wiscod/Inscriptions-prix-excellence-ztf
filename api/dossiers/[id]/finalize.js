@@ -6,7 +6,7 @@
 import { sendConfirmation } from "../../../lib/email.js";
 import {
   ID_RE, MAX_FILE_BYTES, chunkPath, codeHash, filePath, deletePaths, fail, json, listAll, lookupPath, newCode, pendingPath, readJSON, recordPath,
-  segments, tokenHash, writeJSON,
+  openCode, sealCode, segments, tokenHash, writeJSON,
 } from "../../../lib/common.js";
 
 export default {
@@ -16,8 +16,13 @@ export default {
     if (!ID_RE.test(id)) return fail("Numéro de dossier invalide.", 400);
     const dossier = await readJSON(recordPath(id));
     if (!dossier) return fail("Dossier introuvable.", 410);
-    if (dossier.status === "soumis") return fail("Ce dossier est déjà envoyé.", 409);
-    if (tokenHash(req.headers.get("x-upload-token") || "") !== dossier.uploadTokenHash) return fail("Jeton d'envoi invalide.", 403);
+    const token = req.headers.get("x-upload-token") || "";
+    if (dossier.status === "soumis") {
+      // Nouvelle demande après une réponse perdue : même jeton → même identifiant.
+      const code = dossier.finalTokenHash && dossier.codeSealed && tokenHash(token) === dossier.finalTokenHash ? openCode(dossier.codeSealed, token) : null;
+      return code ? json({ id, code }) : fail("Ce dossier est déjà envoyé.", 409);
+    }
+    if (tokenHash(token) !== dossier.uploadTokenHash) return fail("Jeton d'envoi invalide.", 403);
 
     const stored = await listAll(`fichiers/${id}/`);
     const have = new Map(stored.map((b) => [b.pathname, b.size]));
@@ -28,10 +33,12 @@ export default {
 
     const code = newCode();
     dossier.lookupHash = codeHash(code);
+    dossier.codeSealed = sealCode(code, token);
     await writeJSON(lookupPath(dossier.lookupHash), { id });
 
     dossier.status = "soumis";
     dossier.submittedAt = new Date().toISOString();
+    dossier.finalTokenHash = dossier.uploadTokenHash; // ne sert plus qu'à rejouer cette réponse
     delete dossier.uploadTokenHash;
     dossier.email = await sendConfirmation(dossier, code);
     await writeJSON(recordPath(id), dossier);
