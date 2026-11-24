@@ -27,7 +27,7 @@ La Fondation a accepté l'usage d'images non libres (sites officiels, logos). El
 
 | Fichier | Contenu | Source | Licence |
 |---|---|---|---|
-| `fmsb-batiment.jpg` | Bibliothèque de la Faculté de médecine et des sciences biomédicales (2014) | Bdx, https://commons.wikimedia.org/wiki/File:University_of_Yaoundé_I_-_Faculty_of_Medicine_and_Biomedical_Sciences_-_Library_(2014).jpg | CC BY-SA 4.0 |
+| `fmsb-batiment.jpg` | Cour intérieure de la Faculté de médecine et des sciences biomédicales | photo fournie par la Fondation (novembre 2026) | à confirmer |
 | `fmsb-logo.jpg` | Blason de l'Université de Yaoundé I (la FMSB n'a pas de logo propre trouvable en ligne) | https://fr.wikipedia.org/wiki/Fichier:Blason_univ_Yaoundé_1.png | logo, non libre |
 | `enset-batiment.jpg` | Vue aérienne de l'entrée du campus de l'Université de Douala | photo fournie par la Fondation (novembre 2026) | à confirmer |
 | `enset-logo.jpg` | Logo de l'Université de Douala (site de l'ENSET injoignable), agrandi par Real-ESRGAN | https://fr.wikipedia.org/wiki/Fichier:Logo_de_l'Université_de_Douala.png | logo, non libre |

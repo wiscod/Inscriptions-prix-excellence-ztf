@@ -34,7 +34,7 @@ const SCHOOLS = [
     fields: ["Medicine", "Pharmacology", "Dentistry", "BiomedicalSciences"],
     title: "Faculté de médecine et des sciences biomédicales de l'Université de Yaoundé I",
     logo: { src: "fmsb-logo.jpg", alt: "Blason de l'Université de Yaoundé I", i18n: "e.fmsb.logo.alt" },
-    photo: { src: "fmsb-batiment.jpg", alt: "Bibliothèque de la Faculté de médecine et des sciences biomédicales", credit: "Bdx, Wikimedia Commons, CC BY-SA 4.0", pos: "50% 55%" },
+    photo: { src: "fmsb-batiment.jpg", alt: "Cour intérieure de la Faculté de médecine et des sciences biomédicales", credit: "photo fournie par la Fondation (novembre 2026)", pos: "50% 45%" },
     names: ["e.fmsb.name", "e.fmsb.univ"],
   },
   {
