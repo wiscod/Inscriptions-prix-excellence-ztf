@@ -19,4 +19,4 @@ Toutes les photos viennent de Wikimedia Commons et sont sous licence **CC BY-SA 
 
 | Fichier | Contenu | Source |
 |---|---|---|
-| `prix-provisoire.jpg` | Trophée « ZTF Excellence Awards », recadré en carré | Découpé dans le flyer de la Fondation (`maquettes/affiche/img/trophee.jpg`). À remplacer par le logo officiel du prix dès qu'il sera fourni. |
+| `prix-provisoire.jpg` | Trophée « ZTF Excellence Awards » ; sur /enspy (`site/img/ecoles/`), le trophée entier centré sur fond bleu nuit, fabriqué par `scripts/medaille-prix.py` | Découpé dans le flyer de la Fondation (`maquettes/affiche/img/trophee.jpg`). À remplacer par le logo officiel du prix dès qu'il sera fourni. |
