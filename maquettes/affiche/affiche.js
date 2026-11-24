@@ -42,7 +42,7 @@
     "a.cat.7": ["Prix d'Excellence pour personnes handicapées", "Excellence Award for people with disabilities"], "a.cat.7c": ["", ""],
     "a.founder": ["Pr Zacharias Tanee Fomum", "Prof. Zacharias Tanee Fomum"],
     "a.founder.q": ["Exceller dans le faire et dans l'être.", "Excellence in doing and in being."],
-    "a.phones": ["+237 641 25 24 81 / 651 27 62 63", "+237 641 25 24 81 / 651 27 62 63"],
+    "a.phones": ["+33 6 52 74 80 82", "+33 6 52 74 80 82"],
     "a.social": ["Prix d'excellence ZTF sur Facebook, Instagram, X, YouTube, WhatsApp et TikTok", "ZTF Excellence Award on Facebook, Instagram, X, YouTube, WhatsApp and TikTok"],
     "a.mock": ["Maquette inspirée des affiches officielles", "Mock-up based on the official posters"]
   };
