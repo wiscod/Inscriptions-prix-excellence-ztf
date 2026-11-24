@@ -63,10 +63,12 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
 .danger-zone{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .danger-zone p{margin:0;color:var(--muted);font-size:.85rem}
 .btn.danger{background:var(--paper);border-color:var(--danger);color:var(--danger)}.btn.danger:hover{background:#fdecea}
+.net{position:sticky;top:0;z-index:20;margin:0;padding:8px 16px;text-align:center;font-weight:600;background:#fff3c4;color:#5c3d00;border-bottom:1px solid var(--line)}
 [hidden]{display:none!important}
 </style>
 </head>
 <body>
+<p class="net" id="net" role="status" hidden></p>
 <header>
   <div class="brand"><span class="mark">ZTF</span><div><b>Candidatures au Prix d'Excellence ZTF</b><small>Administration · accès réservé à la Fondation</small></div></div>
   <div class="who" id="who" hidden><span><b id="whoName"></b> · <span id="whoRole"></span></span><button class="btn small" id="pwBtn">Mon mot de passe</button><button class="btn small" id="logout">Se déconnecter</button></div>
@@ -185,15 +187,44 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
   function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko"; }
   function can(role) { return me && !me.bootstrap && RANK[me.role] >= RANK[role]; }
 
+  /* Réseau instable : délai d'attente de 30 s par requête ; les lectures (GET) sont relancées trois fois
+     (après 2, 5 puis 10 s, ou dès le retour du réseau) avant d'afficher une erreur. Les modifications ne sont
+     jamais relancées automatiquement, pour ne pas risquer de les faire deux fois. */
+  var TIMEOUT = 30000, PAUSES = [2000, 5000, 10000];
+  function net(msg) { $("net").textContent = msg || ""; $("net").hidden = !msg; }
+  function pause(ms) {
+    return new Promise(function (ok) {
+      var done = function () { window.removeEventListener("online", done); clearTimeout(t); ok(); };
+      var t = setTimeout(done, ms); window.addEventListener("online", done);
+    });
+  }
+  async function fetchT(url, init) {
+    if (typeof AbortController !== "function") return fetch(url, init);
+    var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, TIMEOUT);
+    init.signal = ctl.signal;
+    try { return await fetch(url, init); } finally { clearTimeout(t); }
+  }
   async function api(path, opts) {
     opts = opts || {};
-    var headers = { authorization: "Bearer " + token };
+    var method = opts.method || "GET", headers = { authorization: "Bearer " + token };
     if (opts.body) headers["content-type"] = "application/json";
-    var res = await fetch("/api/admin/" + path, { method: opts.method || "GET", headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined });
+    for (var i = 0; ; i++) {
+      var res = null;
+      try { res = await fetchT("/api/admin/" + path, { method: method, headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined }); } catch (e) { res = null; }
+      if ((!res || res.status >= 500) && method === "GET" && i < PAUSES.length) {
+        net(navigator.onLine === false ? "Hors connexion : la demande repartira dès le retour du réseau." : "Connexion lente ou coupée : nouvelle tentative…");
+        await pause(PAUSES[i]); continue;
+      }
+      net("");
+      if (!res) throw new Error("pas de réponse du serveur (connexion coupée ou trop lente). Vérifiez la connexion et réessayez.");
+      break;
+    }
     if (res.status === 401 && path !== "login") { logout("Session expirée : reconnectez-vous."); throw new Error("401"); }
     if (!res.ok) { var d = {}; try { d = await res.json(); } catch (e) {} throw new Error(d.error || res.status); }
     return opts.blob ? res.blob() : res.json();
   }
+  window.addEventListener("offline", function () { net("Hors connexion : les dossiers déjà affichés restent consultables."); });
+  window.addEventListener("online", function () { if (/^Hors connexion/.test($("net").textContent)) net(""); });
 
   /* ---------- Écrans ---------- */
   function screen(id) {

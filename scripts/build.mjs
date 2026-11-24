@@ -14,4 +14,6 @@ mkdirSync(out, { recursive: true });
 cpSync(new URL("../site/", import.meta.url), out, { recursive: true });
 cpSync(new URL("../maquettes/shared/", import.meta.url), new URL("shared/", out), { recursive: true });
 cpSync(new URL("../maquettes/", import.meta.url), new URL("maquettes/", out), { recursive: true });
+// Images AVIF/WebP, adresses versionnées (?v=…) pour le cache long, version du service worker.
+await import("./optimise-dist.mjs");
 console.log("dist/ prêt");

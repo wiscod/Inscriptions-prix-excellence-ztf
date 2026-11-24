@@ -148,3 +148,6 @@ a,button,summary,label{-webkit-tap-highlight-color:transparent}
 /* Langue sur fond sombre */
 .on-dark .lang-switch{border-color:rgba(232,185,60,.5);color:#fff}
 .on-dark .lang-switch button[aria-pressed=true]{background:var(--gold);color:var(--night)}
+
+/* Images en <picture> (AVIF/WebP, ajoutées au build) : la mise en page reste celle de l'<img> seule */
+picture{display:contents}

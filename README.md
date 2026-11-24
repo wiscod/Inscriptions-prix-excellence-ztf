@@ -56,6 +56,17 @@ Le candidat reçoit un **numéro de dossier** et un **identifiant** (ex. `BU9G3-
 
 Photos : au moment du choix, toute image de plus de 600 Ko est réduite dans le navigateur (2 000 pixels au plus sur le grand côté, JPEG), ce qui ramène une photo de téléphone à quelques centaines de Ko. Les PDF ne sont pas modifiés : au-delà de 4 Mo, ils sont refusés.
 
+## Connexions lentes et instables
+
+Le site est surtout utilisé au Cameroun, en 3G ou Edge, avec des coupures et des forfaits limités.
+
+- **Poids de la page** : l'affiche et les photos des écoles sont servies en AVIF ou WebP, à la largeur dont l'écran a besoin (`scripts/images-web.py` crée les variantes, le build pose les `<picture>`). Les polices sont hébergées sur le site (`site/fonts/`, `site/css/polices.css`) ; Great Vibes est réduite aux lettres du titre. jsPDF est servi par le site (`site/vendor/`, cdnjs en secours) et se charge pendant l'envoi, pour que la fiche PDF soit prête à la fin.
+- **Cache** : au build, chaque CSS, JS, image et police est appelé avec `?v=<empreinte>` et mis en cache un an (`vercel.json`) ; à la visite suivante, seule la page HTML est redemandée. Un service worker (`site/sw.js`) garde la page pour qu'elle s'ouvre même sans réseau ; la page reste toujours demandée au réseau d'abord.
+- **Brouillon** : les réponses (localStorage) et les pièces jointes (IndexedDB) restent sur l'appareil 7 jours au plus, si la page se recharge ou se ferme. Elles sont effacées après l'envoi ou avec « Tout effacer ». Rien ne part au serveur avant l'envoi. Un bandeau signale quand l'appareil est hors connexion.
+- **Envoi** : chaque requête a un délai d'attente et est relancée jusqu'à 6 fois (pause de 2 s à 30 s) ; si le téléphone est hors connexion, l'envoi attend le retour du réseau. Un envoi interrompu est gardé : en appuyant de nouveau sur « Envoyer ma candidature », même après un rechargement, seuls les fichiers qui ne sont pas encore arrivés repartent (même dossier, tant que la fiche et les fichiers n'ont pas changé et que les adresses d'envoi sont valables). Si la réponse de `/finalize` se perd, la nouvelle demande renvoie le même identifiant (gardé chiffré avec le jeton d'envoi, que seul le navigateur du candidat connaît).
+- **Administration** : délai d'attente de 30 s ; les lectures sont relancées 3 fois avant d'afficher une erreur, avec un message de connexion lente ou coupée. Les modifications ne sont jamais relancées automatiquement.
+- **Tests** : `npm run build && node tests/reseau.cjs` lance un serveur local (`tests/serveur-local.mjs` : `dist/` avec les en-têtes de Vercel, les vraies fonctions `api/`, un faux R2 en mémoire) et rejoue le formulaire en 3G lente, avec coupures pendant l'envoi, réponse finale perdue, erreurs serveur, passage hors ligne, rechargement en cours d'envoi, page rouverte sans réseau, en français et en anglais.
+
 Stockage : **Cloudflare R2** (bucket privé) dès que les quatre variables `R2_…` sont posées, sinon le store **Vercel Blob privé** d'origine. Rien n'y est lisible sans passer par les fonctions ; l'administration ouvre les pièces jointes par un lien signé valable 5 minutes. Fonctions dans la région de Paris (`cdg1`), la plus proche du Cameroun.
 
 Pourquoi R2 : l'offre gratuite de Vercel Blob s'arrête à 1 Go et 2 000 écritures par mois (environ 250 dossiers), et bloque le stockage 30 jours en cas de dépassement. R2 offre 10 Go et 1 million d'écritures par mois, puis 0,015 $ par Go et par mois ; les téléchargements sont gratuits.
@@ -131,6 +142,11 @@ maquettes/
   shared/form-engine.js       langue, champs dépendants, validation, pièces jointes, fiche PDF
   ecoles/                     pages par école : galerie, enspy/1-…5-….html, ecoles.css, ecoles.js, img/ (+ SOURCES.md)
 scripts/build.mjs             régénère les pages par école puis assemble dist/ (site + shared + maquettes)
+scripts/optimise-dist.mjs     dernière étape du build : <picture> AVIF/WebP, adresses ?v=<empreinte>, version du service worker
+scripts/images-web.py         variantes AVIF/WebP des images (à relancer après l'ajout d'une image, ex. une nouvelle école)
+site/sw.js                    service worker (page disponible hors connexion)
+site/fonts/, site/css/polices.css, site/vendor/   polices et jsPDF servis par le site
+tests/serveur-local.mjs, tests/reseau.cjs          tests de bout en bout sur réseau lent ou coupé
 scripts/pages-ecoles.mjs      site/<école>/index.html à partir de site/index.html (une entrée par école)
 scripts/controle-ecrans.cjs   `npm run controle` : ouvre / et chaque page d'école à 5 largeurs (iPhone, iPad, 1280, 1440, 1920 px), fait les captures (.controle-ecrans/) et signale défilement horizontal, bandeau qui n'atteint pas le bord, image cassée ou déformée, champs sous 16 px et cibles tactiles sous 24 px sur écran tactile
 scripts/maquettes-ecoles.mjs  régénère maquettes/ecoles/enspy/ à partir du formulaire de site/index.html

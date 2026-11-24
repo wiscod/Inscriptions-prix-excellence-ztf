@@ -1,0 +1,112 @@
+{
+ "/img/affiche-gala.jpg": {
+  "base": "/img/affiche-gala",
+  "widths": [
+   480,
+   720,
+   960,
+   1280,
+   1808
+  ],
+  "sizes": null
+ },
+ "/img/ecoles/enset-batiment.jpg": {
+  "base": "/img/ecoles/enset-batiment",
+  "widths": [
+   640,
+   960
+  ],
+  "sizes": "(max-width: 980px) 100vw, 60vw"
+ },
+ "/img/ecoles/enspy-batiment.jpg": {
+  "base": "/img/ecoles/enspy-batiment",
+  "widths": [
+   640,
+   960,
+   1280,
+   1600
+  ],
+  "sizes": "(max-width: 980px) 100vw, 60vw"
+ },
+ "/img/ecoles/fmsb-batiment.jpg": {
+  "base": "/img/ecoles/fmsb-batiment",
+  "widths": [
+   640,
+   960,
+   1037
+  ],
+  "sizes": "(max-width: 980px) 100vw, 60vw"
+ },
+ "/img/ecoles/polytech-douala-batiment.jpg": {
+  "base": "/img/ecoles/polytech-douala-batiment",
+  "widths": [
+   640,
+   960,
+   1280
+  ],
+  "sizes": "(max-width: 980px) 100vw, 60vw"
+ },
+ "/img/ecoles/udm-batiment.jpg": {
+  "base": "/img/ecoles/udm-batiment",
+  "widths": [
+   640,
+   960,
+   1280
+  ],
+  "sizes": "(max-width: 980px) 100vw, 60vw"
+ },
+ "/img/ecoles/enset-logo.jpg": {
+  "base": "/img/ecoles/enset-logo",
+  "widths": [
+   160,
+   320,
+   480
+  ],
+  "sizes": "138px"
+ },
+ "/img/ecoles/enspy-logo.jpg": {
+  "base": "/img/ecoles/enspy-logo",
+  "widths": [
+   160,
+   320,
+   480
+  ],
+  "sizes": "138px"
+ },
+ "/img/ecoles/fmsb-logo.jpg": {
+  "base": "/img/ecoles/fmsb-logo",
+  "widths": [
+   160,
+   320,
+   480
+  ],
+  "sizes": "138px"
+ },
+ "/img/ecoles/polytech-douala-logo.jpg": {
+  "base": "/img/ecoles/polytech-douala-logo",
+  "widths": [
+   160,
+   320,
+   480
+  ],
+  "sizes": "138px"
+ },
+ "/img/ecoles/udm-logo.jpg": {
+  "base": "/img/ecoles/udm-logo",
+  "widths": [
+   160,
+   320,
+   480
+  ],
+  "sizes": "138px"
+ },
+ "/img/ecoles/prix-provisoire.jpg": {
+  "base": "/img/ecoles/prix-provisoire",
+  "widths": [
+   160,
+   320,
+   440
+  ],
+  "sizes": "138px"
+ }
+}

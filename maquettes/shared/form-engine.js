@@ -18,7 +18,8 @@
   var both = document.documentElement.getAttribute("data-ztf-mode") === "both";
   var lang = both ? "both" : initialLang();
   var form, fileStore = { transcripts: [], diplomas: [], otherfiles: [] }, lastRecord = null;
-  var JSPDF_URL = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+  // jsPDF : copie servie par le site (cache long, pas de domaine tiers à joindre), cdnjs en secours.
+  var JSPDF_URLS = ["/vendor/jspdf-2.5.1.umd.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"];
 
   function initialLang() {
     var q = (location.search.match(/[?&]lang=(fr|en)\b/) || [])[1]; if (q) return q;
@@ -249,6 +250,7 @@
     $$("[data-ztf-lang]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-ztf-lang") === lang)); });
     populateStatic(); updateCategories(); updateDependent(); updateCounter();
     Object.keys(fileStore).forEach(renderFiles);
+    $$(".ztf-send-status").forEach(function (p) { if (p.dataset.key) p.textContent = tr(p.dataset.key); });
     refresh();
     document.dispatchEvent(new CustomEvent("ztf:lang", { detail: { lang: lang } }));
   }
@@ -299,7 +301,7 @@
         if (f.size > D.maxFileMB * 1048576) { toast(tr("toast.file"), tr("err.fileSize", { name: f.name, max: D.maxFileMB }), true); return; }
         if (fileStore[name].length < D.maxFilesPerField && !fileStore[name].some(function (g) { return g.name === f.name && g.size === f.size; })) fileStore[name].push(f);
       });
-      syncInput(name); renderFiles(name); clearError(name); refresh();
+      syncInput(name); renderFiles(name); clearError(name); refresh(); draftSaveFiles();
     });
   }
   function renderFiles(name) {
@@ -311,7 +313,7 @@
       files.forEach(function (f, i) {
         var li = document.createElement("li"), span = document.createElement("span"), b = document.createElement("button");
         span.textContent = f.name; b.type = "button"; b.textContent = tr("files.remove");
-        b.addEventListener("click", function () { fileStore[name].splice(i, 1); syncInput(name); renderFiles(name); refresh(); });
+        b.addEventListener("click", function () { fileStore[name].splice(i, 1); syncInput(name); renderFiles(name); refresh(); draftSaveFiles(); });
         li.appendChild(span); li.appendChild(b); ul.appendChild(li);
       });
       box.appendChild(ul);
@@ -342,6 +344,101 @@
     dlg.querySelector("[name=school]").value = "";
     dlg.returnValue = "";
     dlg.showModal();
+  }
+
+  /* Effets d'un changement de valeur sur les champs qui en dépendent (saisie, ou reprise d'un brouillon). */
+  function react(n) {
+    if (n === "institution_category") onCategory();
+    else if (n === "cycle") { updateCategories(); onCategory(); }
+    else if (n === "level") updateDependent();
+    else if (n === "field_of_study") onFos();
+    else if (n === "institution_name") onSchoolInput();
+    else if (n === "average_not_provided") onNP();
+  }
+
+  /* ---------- Brouillon gardé sur l'appareil (site réel seulement) ----------
+     Connexion qui coupe, page rechargée, téléphone qui ferme l'onglet : les réponses sont gardées dans le
+     navigateur (localStorage), les pièces jointes dans IndexedDB, 7 jours au plus, puis effacées après l'envoi
+     ou avec « Effacer ». Rien ne part au serveur avant l'envoi. */
+  var DRAFT_KEY = "ztf-brouillon:" + location.pathname, DRAFT_MS = 7 * 864e5, draftOn = false, draftTimer = null;
+  function draftSave() {
+    if (!draftOn) return;
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(function () {
+      var v = {};
+      Array.prototype.forEach.call(form.elements, function (e) {
+        if (!e.name || e.type === "file" || e.type === "submit" || e.type === "button" || e.disabled && e.type !== "hidden") return;
+        if (e.type === "radio") { if (e.checked) v[e.name] = e.value; }
+        else if (e.type === "checkbox") v[e.name] = e.checked;
+        else if (e.value !== "") v[e.name] = e.value;
+      });
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: Date.now(), v: v })); } catch (e) { /* stockage plein ou refusé */ }
+    }, 400);
+  }
+  function filesDb(mode, fn) {
+    return new Promise(function (ok, ko) {
+      if (!window.indexedDB) return ko(new Error("idb"));
+      var r = indexedDB.open("ztf-brouillon", 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore("fichiers"); };
+      r.onerror = function () { ko(r.error); };
+      r.onsuccess = function () {
+        var db = r.result, tx = db.transaction("fichiers", mode), q = fn(tx.objectStore("fichiers"));
+        tx.oncomplete = function () { db.close(); ok(q && q.result); };
+        tx.onerror = tx.onabort = function () { db.close(); ko(tx.error); };
+      };
+    });
+  }
+  function draftSaveFiles() {
+    if (!draftOn) return;
+    var copy = {}; Object.keys(fileStore).forEach(function (k) { copy[k] = fileStore[k].slice(); });
+    filesDb("readwrite", function (s) { return s.put({ at: Date.now(), files: copy }, DRAFT_KEY); }).catch(function () { /* fichiers non gardés */ });
+  }
+  function draftClear() {
+    clearTimeout(draftTimer);
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* stockage indisponible */ }
+    if (draftOn) filesDb("readwrite", function (s) { return s.delete(DRAFT_KEY); }).catch(function () {});
+    $$(".ztf-draft").forEach(function (n) { n.remove(); });
+  }
+  function draftNotice() {
+    if ($(".ztf-draft")) return;
+    var p = document.createElement("p"); p.className = "ztf-draft"; p.setAttribute("role", "status");
+    var s = document.createElement("span"); s.setAttribute("data-i18n", "draft.restored"); paint(s, "draft.restored");
+    var b = document.createElement("button"); b.type = "button"; b.setAttribute("data-i18n", "draft.clear"); paint(b, "draft.clear");
+    b.addEventListener("click", function () { reset(); });
+    p.appendChild(s); p.appendChild(b); form.parentNode.insertBefore(p, form);
+  }
+  function draftRestore() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch (e) { d = null; }
+    if (d && Date.now() - d.at > DRAFT_MS) { draftClear(); d = null; }
+    if (d && d.v) {
+      // Dans l'ordre de la page : chaque champ remplit les listes du suivant (catégorie → école, niveau → série…).
+      Array.prototype.forEach.call(form.elements, function (e) {
+        var n = e.name; if (!n || !(n in d.v) || e.type === "file") return;
+        if (e.type === "radio") { e.checked = e.value === d.v[n]; if (!e.checked) return; }
+        else if (e.type === "checkbox") e.checked = !!d.v[n];
+        else { if (e.disabled && e.type !== "hidden") return; e.value = d.v[n]; }
+        if (n !== "institution_name") react(n);
+      });
+      applyFixedSchool(); updateCounter(); refresh(); draftNotice();
+    }
+    filesDb("readonly", function (s) { return s.get(DRAFT_KEY); }).then(function (r) {
+      if (!r || !r.files || Date.now() - r.at > DRAFT_MS) return;
+      var any = false;
+      Object.keys(fileStore).forEach(function (k) {
+        var list = (r.files[k] || []).filter(function (f) { return f && f.size; });
+        if (list.length && !fileStore[k].length) { fileStore[k] = list; syncInput(k); renderFiles(k); any = true; }
+      });
+      if (any) { refresh(); draftNotice(); }
+    }).catch(function () { /* pas de fichiers gardés */ });
+  }
+
+  /* ---------- Hors connexion ---------- */
+  function watchNetwork() {
+    var bar = document.createElement("div"); bar.id = "ztf-offline"; bar.setAttribute("role", "status"); bar.setAttribute("data-i18n", "net.offline");
+    paint(bar, "net.offline"); document.body.appendChild(bar);
+    var upd = function () { bar.hidden = navigator.onLine !== false; };
+    window.addEventListener("online", upd); window.addEventListener("offline", upd); upd();
   }
 
   /* ---------- Validation ---------- */
@@ -479,14 +576,20 @@
   }
 
   /* ---------- Fiche PDF à imprimer pour l'audition ---------- */
+  var jsPdfPromise = null;
   function loadJsPDF() {
     if (window.jspdf) return Promise.resolve(window.jspdf.jsPDF);
-    return new Promise(function (ok, ko) {
-      var s = document.createElement("script"); s.src = JSPDF_URL;
-      s.onload = function () { window.jspdf ? ok(window.jspdf.jsPDF) : ko(new Error("jsPDF")); };
-      s.onerror = function () { ko(new Error("jsPDF")); };
-      document.head.appendChild(s);
-    });
+    if (jsPdfPromise) return jsPdfPromise;
+    var attempt = function (i) {
+      return new Promise(function (ok, ko) {
+        var s = document.createElement("script"); s.src = JSPDF_URLS[i];
+        s.onload = function () { window.jspdf ? ok(window.jspdf.jsPDF) : ko(new Error("jsPDF")); };
+        s.onerror = function () { s.remove(); ko(new Error("jsPDF")); };
+        document.head.appendChild(s);
+      }).catch(function (e) { if (i + 1 < JSPDF_URLS.length) return attempt(i + 1); throw e; });
+    };
+    jsPdfPromise = attempt(0).catch(function (e) { jsPdfPromise = null; throw e; });
+    return jsPdfPromise;
   }
   // Les polices standard du PDF ne couvrent que l'alphabet latin courant : on remplace les autres caractères.
   function pdfText(s) { return String(s == null ? "" : s).replace(/[’‘]/g, "'").replace(/[“”«»]/g, '"').replace(/[–—]/g, "-").replace(/…/g, "...").replace(/[^\x20-\xFF\n]/g, "?"); }
@@ -556,7 +659,17 @@
   }
 
   /* ---------- Envoi ---------- */
-  function busy(on, pct) {
+  /* Ligne d'état sous le bouton d'envoi : coupure, attente du réseau, reprise possible. */
+  function sendStatus(key) {
+    $$('button[type="submit"]').forEach(function (b) {
+      var p = b.parentNode.querySelector(".ztf-send-status");
+      if (!p) { p = document.createElement("p"); p.className = "ztf-send-status"; p.setAttribute("role", "status"); b.insertAdjacentElement("afterend", p); }
+      p.dataset.key = key || ""; p.textContent = key ? tr(key) : ""; p.hidden = !key;
+      p.classList.toggle("is-warn", key === "send.offline" || key === "send.resume");
+    });
+  }
+  function busy(on, pct, state) {
+    if (on) sendStatus(state === "offline" ? "send.offline" : state === "retry" ? "send.retry" : "");
     $$('button[type="submit"]').forEach(function (b) {
       if (on) {
         if (!b.dataset.busy) { b.dataset.busy = "1"; b.dataset.label = b.innerHTML; }
@@ -565,6 +678,7 @@
     });
   }
   function success(res, fields) {
+    draftClear();
     lastRecord = { id: res.id || "", code: res.code || "", submittedAt: new Date().toISOString(), fields: fields,
       files: Object.keys(fileStore).reduce(function (a, k) { return a.concat(fileStore[k].map(function (f) { return { field: k, name: f.name }; })); }, []) };
     $$("[data-ztf-success-id]").forEach(function (n) { n.textContent = lastRecord.id || "—"; });
@@ -582,14 +696,19 @@
     var fields = payload();
     if (typeof window.ZTF_SUBMIT === "function") {
       var files = {}; Object.keys(fileStore).forEach(function (k) { files[k] = fileStore[k].slice(); });
-      window.ZTF_SUBMIT(fields, files, function (pct) { busy(true, pct); })
-        .then(function (res) { busy(false); success(res || {}, fields); })
-        .catch(function (err) { busy(false); toast(tr("toast.failed"), (err && err.message) || tr("toast.failed.d"), true); });
+      loadJsPDF().catch(function () { /* rechargé au moment de la fiche */ }); // prêt pour la fiche PDF dès l'envoi terminé
+      window.ZTF_SUBMIT(fields, files, function (pct, state) { busy(true, pct, state); })
+        .then(function (res) { busy(false); sendStatus(""); success(res || {}, fields); })
+        .catch(function (err) {
+          busy(false); sendStatus("send.resume");
+          toast(tr("toast.failed"), (err && err.message) || tr("toast.failed.d"), true);
+        });
       return;
     }
     setTimeout(function () { busy(false); success({ id: "ZTF-MAQUETTE-0000" }, fields); }, 1100); // maquette : envoi simulé
   }
   function reset() {
+    draftClear(); sendStatus("");
     form.reset(); Object.keys(fileStore).forEach(function (k) { fileStore[k] = []; renderFiles(k); });
     onNP(); updateCategories(); updateDependent(); applyFixedSchool(); updateCounter();
     ALL.forEach(clearError);
@@ -641,7 +760,7 @@
     var t = document.createElement("div"); t.className = "ztf-toast" + (danger ? " is-danger" : "");
     var b = document.createElement("strong"); b.textContent = title; var p = document.createElement("span"); p.textContent = desc;
     t.appendChild(b); t.appendChild(p); host.appendChild(t);
-    setTimeout(function () { t.classList.add("is-out"); setTimeout(function () { t.remove(); }, 300); }, 4200);
+    setTimeout(function () { t.classList.add("is-out"); setTimeout(function () { t.remove(); }, 300); }, danger ? 9000 : 4200);
   }
 
   function injectBaseStyles() {
@@ -706,6 +825,10 @@
       "@keyframes ztfspin{to{transform:rotate(360deg)}}" +
       ".ztf-demo{position:fixed;left:16px;bottom:16px;z-index:9998;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:calc(100vw - 32px);font:600 12px/1.2 system-ui,sans-serif;padding:8px 10px;border-radius:14px;border:1px dashed rgba(127,127,127,.6);background:rgba(255,255,255,.95);color:#030842;box-shadow:0 4px 14px rgba(0,0,0,.12)}" +
       ".ztf-demo button{font:inherit;padding:6px 10px;border-radius:999px;border:1px solid #cbd5e1;background:#fff;color:#030842;cursor:pointer}.ztf-demo button:hover{background:#f1f5f9}" +
+      ".ztf-send-status{margin:10px 0 0;font-size:.88rem;font-weight:600;text-align:center;color:inherit}.ztf-send-status.is-warn{color:#8a5a00}" +
+      ".ztf-draft{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 18px;padding:10px 14px;border-radius:12px;background:rgba(51,161,90,.08);border:1px solid rgba(51,161,90,.35);font-size:.88rem}" +
+      ".ztf-draft button{font:inherit;font-weight:700;background:none;border:0;padding:6px 0;color:inherit;text-decoration:underline;cursor:pointer}" +
+      "#ztf-offline{position:fixed;left:0;right:0;top:0;z-index:10000;padding:8px 16px;text-align:center;font:600 13px/1.4 system-ui,sans-serif;background:#8a5a00;color:#fff}" +
       "[hidden]{display:none!important}";
     var s = document.createElement("style"); s.textContent = css; document.head.insertBefore(s, document.head.firstChild);
   }
@@ -726,21 +849,15 @@
 
     form.addEventListener("change", function (e) {
       var n = e.target.name; if (!n) return;
-      if (n === "institution_category") onCategory();
-      else if (n === "cycle") { updateCategories(); onCategory(); }
-      else if (n === "level") updateDependent();
-      else if (n === "field_of_study") onFos();
-      else if (n === "institution_name") onSchoolInput();
-      else if (n === "average_not_provided") onNP();
-      else if (fileStore[n]) onFiles(n);
-      clearError(n); refresh();
+      if (fileStore[n]) onFiles(n); else react(n);
+      clearError(n); refresh(); draftSave();
     });
     form.addEventListener("input", function (e) {
       var n = e.target.name; if (!n) return;
       if (n === "institution_name") onSchoolInput();
       if (n === "motivation") updateCounter();
       if (n === "field_of_study_other") clearError("field_of_study");
-      clearError(n); refresh();
+      clearError(n); refresh(); draftSave();
     });
     form.addEventListener("submit", onSubmit);
     $$("[data-ztf-add-school]").forEach(function (b) { b.addEventListener("click", openAddSchool); });
@@ -758,6 +875,7 @@
     }
     applyLang(lang);
     applyFixedSchool();
+    if (typeof window.ZTF_SUBMIT === "function") { draftOn = true; draftRestore(); watchNetwork(); }
   }
 
   window.ZTF = { validate: validate, refresh: refresh, summary: summary, renderRecap: renderRecap, fillDemo: fillDemo, toast: toast,
