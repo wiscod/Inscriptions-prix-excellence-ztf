@@ -4,3 +4,6 @@ dist
 .env
 flyer/flyer.html
 .controle-ecrans/
+.vercel
+.env*
+.wrangler
