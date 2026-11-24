@@ -14,6 +14,13 @@ const SCHOOLS = [
     slug: "enspy", short: "ENSPY",
     // Identifiant dans la liste officielle (maquettes/shared/ztf-lists.js) : catégorie et école remplies d'office.
     schoolId: "ecole-nationale-superieure-polytechnique-de-yaounde-polytechnique",
+    // Domaines d'études proposés : ceux de la liste officielle qui correspondent aux filières de l'école
+    // (rubrique « Filières » de https://polytechnique.cm/, consultée le 24 novembre 2026) :
+    // GC → génie civil ; GET → génie électrique, réseaux & télécom ; GI → informatique ; GIM → génie mécanique
+    // (pas de « génie industriel » dans la liste officielle) ; MSP et MAI → mathématiques, physique ; MET → météorologie ;
+    // programme Data Sciences et IA → intelligence artificielle ; Entreprenariat et management de l'innovation → entrepreneuriat.
+    fields: ["CivilEngineering", "ElectricalEngineering", "NetworksAndTelecom", "ComputerScience", "MechanicalEngineering",
+      "Mathematics", "Physics", "Meteorology", "ArtificialIntelligence", "Entrepreneurship"],
     title: "École nationale supérieure polytechnique de Yaoundé",
     logo: { src: "enspy-logo.jpg", alt: "Logo de l'ENSPY", i18n: "e.enspy.logo.alt" },
     photo: { src: "enspy-batiment.jpg", alt: "Bâtiment des salles de cours de l'ENSPY", author: "Marcell NEMG", file: "Batiment-polytech-cmr.jpg" },
@@ -28,6 +35,8 @@ const header = pick(/    <div class="head">[\s\S]*?<\/div>\n    <\/div>\n    <p 
 
 for (const s of SCHOOLS) {
   if (!globalThis.ZTF_LISTS.schools.some((x) => x[0] === s.schoolId)) throw new Error(`${s.slug} : école ${s.schoolId} absente de la liste officielle`);
+  const unknown = s.fields.filter((k) => !globalThis.ZTF_LISTS.fields.some((f) => f[0] === k));
+  if (unknown.length) throw new Error(`${s.slug} : domaines absents de la liste officielle : ${unknown.join(", ")}`);
   const hero = `    <header class="hero">
       <div class="hero-bg"><!-- Photo : ${s.photo.author}, Wikimedia Commons (File:${s.photo.file}), CC BY-SA 4.0 --><img src="/img/ecoles/${s.photo.src}" alt="${s.photo.alt}"></div>
       <div class="hero-lang" data-ztf-slot="lang"></div>
@@ -53,7 +62,7 @@ for (const s of SCHOOLS) {
     .replace(/(href|src)="(css|js|img|shared)\//g, '$1="/$2/')
     .replace('<link rel="stylesheet" href="/css/affiche.css">', '<link rel="stylesheet" href="/css/affiche.css">\n<link rel="stylesheet" href="/css/ecole.css">')
     .replace('<script src="/js/affiche.js"></script>', '<script src="/js/affiche.js"></script>\n<script src="/js/ecole.js"></script>')
-    .replace('<script src="/shared/form-data.js"></script>', `<script>window.ZTF_FIXED_SCHOOL = "${s.schoolId}";</script>\n<script src="/shared/form-data.js"></script>`)
+    .replace('<script src="/shared/form-data.js"></script>', `<script>window.ZTF_FIXED_SCHOOL = "${s.schoolId}"; window.ZTF_SCHOOL_FIELDS = ${JSON.stringify(s.fields)};</script>\n<script src="/shared/form-data.js"></script>`)
     .replace("<body>", `<body>\n<!-- Page ${s.short} : générée par scripts/pages-ecoles.mjs depuis site/index.html, ne pas modifier à la main. -->`);
   if (html.includes('class="head"') || !html.includes("/js/ecole.js") || !html.includes("/js/submit.js")) throw new Error("remplacement incomplet pour " + s.slug);
   mkdirSync(new URL(`site/${s.slug}/`, root), { recursive: true });

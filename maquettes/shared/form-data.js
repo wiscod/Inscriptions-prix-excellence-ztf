@@ -8,7 +8,7 @@ window.ZTF_DATA = {
   schoolYear: "2025/2026",
   deadline: ["28 novembre 2026", "28 November 2026"],   // date communiquée par la Fondation (6e édition)
   contactEmail: "contact@excellenceawardsztf.com",
-  whatsapp: "33652748082",   // assistance technique (WhatsApp)
+  whatsapp: "33652748082",   // assistance : appels et WhatsApp
   whatsappDisplay: "+33 6 52 74 80 82",
   minAge: 9,
   maxFileMB: 4,               // taille maximale par fichier (comme le formulaire officiel)

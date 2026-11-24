@@ -1,6 +1,7 @@
 /*
  * Textes de l'interface, en français et en anglais : clé → [français, anglais].
- * Variables : {year} année scolaire, {deadline} date limite, {contact} e-mail de contact, {whatsapp} numéro WhatsApp,
+ * Variables : {year} année scolaire, {deadline} date limite, {contact} e-mail de contact, {whatsapp} numéro (appel et WhatsApp),
+ * {tellink} lien d'appel vers ce numéro, {walink} lien WhatsApp,
  * {min} âge minimum, {max} taille ou longueur maximale, {n} nombre, {name} nom.
  * Chaque maquette peut ajouter ses propres textes dans window.ZTF_PAGE_I18N (même format).
  */
@@ -54,6 +55,8 @@ window.ZTF_I18N = {
   "hint.school": ["Commencez à taper puis choisissez dans la liste. Vérifiez bien que votre école n'y est pas avant d'en ajouter une.", "Start typing and pick from the list. Check carefully that your school is not already listed before adding one."],
   "btn.addSchool": ["+ Mon établissement n'est pas dans la liste", "+ My institution is not listed"],
   "lbl.fos": ["Domaine d'études", "Field of study"],
+  "fos.other": ["Autre", "Other"],
+  "ph.fos_other": ["Précisez votre domaine d'études", "Specify your field of study"],
   "lbl.series": ["Série", "Series"],
   "lbl.level": ["Niveau d'éducation", "Education level"],
   "lbl.class": ["Classe", "Class"],
@@ -94,7 +97,8 @@ window.ZTF_I18N = {
   "btn.submit": ["Envoyer ma candidature", "Send my application"],
   "btn.sending": ["Envoi en cours...", "Sending..."],
   "foot.required": ["* Champs obligatoires.", "* Required fields."],
-  "foot.support": ["Besoin d'assistance technique ? Écrivez-nous sur WhatsApp : {walink}", "Need technical help? Message us on WhatsApp: {walink}"],
+  "foot.support": ["Besoin d'assistance technique ? Appelez le {tellink} ou écrivez-nous sur {walink}.", "Need technical help? Call {tellink} or message us on {walink}."],
+  "contact.phone": ["Appel et WhatsApp", "Call and WhatsApp"],
   "foot.secure": ["Vos documents ne sont visibles que par l'équipe de la Fondation.", "Your documents can only be seen by the Foundation's team."],
 
   "err.required": ["Ce champ est obligatoire.", "This field is required."],
@@ -103,6 +107,7 @@ window.ZTF_I18N = {
   "err.phoneIntl": ["Veuillez saisir un numéro de téléphone valide.", "Please enter a valid phone number."],
   "err.age": ["Le candidat doit avoir au moins {min} ans.", "The applicant must be at least {min} years old."],
   "err.choice": ["Faites un choix.", "Please choose an option."],
+  "err.fosOther": ["Précisez votre domaine d'études.", "Please specify your field of study."],
   "toast.file": ["Fichier refusé", "File rejected"],
   "err.fileType": ["« {name} » : format non accepté.", "“{name}”: format not accepted."],
   "err.fileSize": ["« {name} » dépasse {max} Mo.", "“{name}” is larger than {max} MB."],

@@ -5,7 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
-- **Pages par école** : `/enspy` (les autres écoles suivront : `/fmsb`, `/enset`, `/polytech-douala`, `/udm`). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`).
+- **Pages par école** : `/enspy` (les autres écoles suivront : `/fmsb`, `/enset`, `/polytech-douala`, `/udm`). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`). Sur ces pages, la catégorie et l'école sont remplies d'office (champs masqués) et la liste des domaines d'études est limitée à ceux de l'école (`scripts/pages-ecoles.mjs`, avec la source de chaque liste).
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
@@ -31,7 +31,7 @@ Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, p
 | Informations académiques | Catégorie d'établissement (9 catégories officielles) | oui |
 | | École durant l'année 2025/2026 : liste officielle filtrée par catégorie, ou « Mon établissement n'est pas dans la liste » | oui |
 | | Classe (6ème … Terminale, Form 1 … Upper Sixth) **ou** Niveau d'éducation (BAC +1 … > BAC +5 / PhD) | oui |
-| | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur) | oui |
+| | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur ; sur une page d'école, seulement les domaines de ses filières, plus « Autre » à préciser en texte libre) | oui |
 | | Moyenne générale (+ « Je n'ai pas de notes / moyenne » pour > BAC +5) | oui, sauf case cochée |
 | Pièces jointes et motivation | Relevés de notes et bulletins 2025/2026 (images ou PDF, 4 Mo par fichier ; les photos sont réduites dans le navigateur avant l'envoi) | oui |
 | | Diplômes et relevés d'examens officiels | non |
