@@ -19,4 +19,4 @@ Toutes les photos viennent de Wikimedia Commons et sont sous licence **CC BY-SA 
 
 | Fichier | Contenu | Source |
 |---|---|---|
-| `prix-provisoire.jpg` | Trophée « ZTF Excellence Awards » ; sur /enspy (`site/img/ecoles/`), le trophée entier centré sur fond bleu nuit, fabriqué par `scripts/medaille-prix.py` | Découpé dans le flyer de la Fondation (`maquettes/affiche/img/trophee.jpg`). À remplacer par le logo officiel du prix dès qu'il sera fourni. |
+| `prix-provisoire.jpg` | Trophée « ZTF Excellence Awards » ; sur /enspy (`site/img/ecoles/`), le trophée entier centré sur fond bleu nuit, fabriqué par `scripts/medaille-prix.py` à partir de l'affiche agrandie par Real-ESRGAN (`site/img/affiche-gala-2x.jpg`), plus nette que l'affiche anglaise pour cette zone | Découpé dans le flyer de la Fondation (`maquettes/affiche/img/trophee.jpg`). À remplacer par le logo officiel du prix dès qu'il sera fourni. |

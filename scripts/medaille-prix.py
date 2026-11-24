@@ -2,13 +2,15 @@
 # Usage (depuis la racine du dépôt, Python + Pillow) : python3 scripts/medaille-prix.py apercu.png
 from PIL import Image, ImageDraw, ImageFilter
 import sys
-src = Image.open("maquettes/affiche/img/trophee.jpg").convert("RGB")
+# Source la plus nette : le trophée de l'affiche agrandie par Real-ESRGAN (zone repérée par appariement SIFT,
+# même cadrage que maquettes/affiche/img/trophee.jpg, à l'échelle ×2).
+src = Image.open("site/img/affiche-gala-2x.jpg").convert("RGB").crop((1178, 1678, 1808, 2300))
 N = 600
 bg = Image.new("RGB", (N, N), (3, 10, 51)); glow = Image.new("L", (N, N), 0)
 ImageDraw.Draw(glow).ellipse([60, 40, N - 60, N - 80], fill=255); glow = glow.filter(ImageFilter.GaussianBlur(90))
 bg.paste(Image.new("RGB", (N, N), (11, 26, 107)), (0, 0), glow)
 h = int(N * 0.8); w = int(src.width * h / src.height); t = src.resize((w, h), Image.LANCZOS)
-axis = 139 / src.width * w                      # axe vertical du trophée (x = 139 px sur 314)
+axis = 139 / 314 * w                            # axe vertical du trophée (x = 139 px sur 314 dans le cadrage d'origine)
 x = int(N / 2 - axis); y = int((N - h) / 2) + 6
 mask = Image.new("L", (w, h), 0)
 ImageDraw.Draw(mask).ellipse([int(w * .05), int(h * .02), int(w * .95), int(h * 1.02)], fill=255)
