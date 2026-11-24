@@ -3,3 +3,4 @@ node_modules
 dist
 .env
 flyer/flyer.html
+flyer/ecoles/flyer.html
