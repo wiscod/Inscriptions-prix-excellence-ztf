@@ -56,7 +56,10 @@ for (const s of SCHOOLS) {
     </header>
 `;
   let html = site
-    .replace(header, hero)
+    // L'en-tête de l'école sort du formulaire (limité à 880 px) pour couvrir toute la largeur de la partie droite.
+    .replace(header, "")
+    .replace('  <main class="main">', '  <div class="right">\n' + hero + '  <main class="main">')
+    .replace('  </main>\n', '  </main>\n  </div>\n')
     .replace(/<title>[^<]*<\/title>/, `<title>Candidature ${s.short} · Prix d'Excellence ZTF</title>`)
     .replace(/(<meta name="description" content=")[^"]*/, `$1Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de l'${s.title} (${s.short}).`)
     .replace(/(href|src)="(css|js|img|shared)\//g, '$1="/$2/')

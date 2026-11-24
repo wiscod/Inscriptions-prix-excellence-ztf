@@ -4,7 +4,9 @@
  * sur une photo de l'école sous un voile bleu nuit. L'affiche de gauche et le formulaire
  * sont ceux de site/index.html (pages générées par scripts/pages-ecoles.mjs).
  */
-.hero{position:relative;isolation:isolate;overflow:hidden;margin:-28px calc(-1 * clamp(16px,5vw,64px)) 26px;color:#fff}
+.hero{position:relative;isolation:isolate;overflow:hidden;color:#fff}
+/* Partie droite : l'en-tête couvre toute la largeur, le formulaire (880 px au plus) est centré dessous */
+.right>.main{margin-inline:auto}
 .hero-bg{position:absolute;inset:0;z-index:-1}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 62%;display:block}
 .hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,10,51,.45),rgba(3,10,51,.82))}
