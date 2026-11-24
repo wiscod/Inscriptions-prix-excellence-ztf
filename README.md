@@ -5,6 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
+- **Pages par école** (en préparation, ENSPY d'abord) : `/maquettes/ecoles/`, 5 maquettes de la colonne de gauche ; le formulaire de droite reste celui du site
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
@@ -123,7 +124,9 @@ maquettes/
   shared/form-i18n.js         textes de l'interface en français et en anglais
   shared/form-markup.js       champs du formulaire
   shared/form-engine.js       langue, champs dépendants, validation, pièces jointes, fiche PDF
+  ecoles/                     pages par école : galerie, enspy/1-…5-….html, ecoles.css, ecoles.js, img/ (+ SOURCES.md)
 scripts/build.mjs             assemble dist/ (site + shared + maquettes)
+scripts/maquettes-ecoles.mjs  régénère maquettes/ecoles/enspy/ à partir du formulaire de site/index.html
 vercel.json                   build, région, tâche planifiée
 ```
 
