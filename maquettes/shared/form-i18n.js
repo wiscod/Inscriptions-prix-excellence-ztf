@@ -35,7 +35,6 @@ window.ZTF_I18N = {
   "ph.first_name": ["Ex : Jean", "e.g. John"],
   "ph.phone": ["Ex : 6 70 00 00 00", "e.g. 6 70 00 00 00"],
   "ph.email": ["votre.email@exemple.com", "your.email@example.com"],
-  "ph.city": ["Rechercher ou saisir...", "Search or type..."],
 
   /* Profil (maquette 2) */
   "lbl.cycle": ["Vous êtes", "You are"],

@@ -17,9 +17,6 @@ window.ZTF_DATA = {
 
   genders: [["male", "Homme", "Male"], ["female", "Femme", "Female"]],
 
-  /* Suggestions de villes (saisie libre) */
-  cities: ["Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua", "Ngaoundéré", "Bertoua", "Ebolowa", "Buea", "Limbe", "Kumba", "Kribi", "Dschang", "Nkongsamba", "Edéa", "Foumban", "Mbalmayo", "Sangmélima", "Kousséri", "Mokolo", "Bafang", "Mbouda", "Tiko", "Batouri", "Meiganga", "Guider", "Yagoua", "Bafia", "Obala", "Soa", "Mbanga", "Loum", "Wum", "Kumbo", "Ndop", "Mamfe", "Nkambe"],
-
   phoneCodes: [
     { code: "+237", label: "🇨🇲 +237" }, { code: "+33", label: "🇫🇷 +33" }, { code: "+241", label: "🇬🇦 +241" },
     { code: "+235", label: "🇹🇩 +235" }, { code: "+236", label: "🇨🇫 +236" }, { code: "+240", label: "🇬🇶 +240" },

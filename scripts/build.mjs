@@ -4,6 +4,10 @@
 //   maquettes/       → dist/maquettes   (les 5 maquettes, pour mémoire)
 import { cpSync, mkdirSync, rmSync } from "node:fs";
 
+// Pages par école et maquettes ENSPY : régénérées depuis site/index.html avant la copie.
+await import("./pages-ecoles.mjs");
+await import("./maquettes-ecoles.mjs");
+
 const out = new URL("../dist/", import.meta.url);
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });

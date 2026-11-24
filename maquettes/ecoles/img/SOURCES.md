@@ -1,5 +1,7 @@
 # Sources des images (pages par école)
 
+Les images utilisées par les vraies pages (`/enspy`, …) sont des copies de celles-ci dans `site/img/ecoles/`.
+
 Toutes les photos viennent de Wikimedia Commons et sont sous licence **CC BY-SA 4.0** : on peut les réutiliser et les recadrer à condition de citer l'auteur, la licence et la source. Le crédit est affiché en petit sur chaque page, dans un coin de la photo. Les fichiers ci-dessous ont été redimensionnés (1 600 px au plus) et recompressés en JPEG ; rien d'autre n'a été modifié.
 
 ## ENSPY (École nationale supérieure polytechnique de Yaoundé)

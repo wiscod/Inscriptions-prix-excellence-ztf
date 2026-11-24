@@ -42,10 +42,9 @@
       field("last_name", label("last_name", "lbl.last_name", 1) + input("last_name", ' autocomplete="family-name" data-i18n-ph="ph.last_name"')) +
       field("first_name", label("first_name", "lbl.first_name", 1) + input("first_name", ' autocomplete="given-name" data-i18n-ph="ph.first_name"')) +
     "</div>" +
-    '<div class="f-grid cols-3">' +
+    '<div class="f-grid cols-2">' +
       field("nationality", label("nationality", "lbl.nationality", 1) + select("nationality")) +
       field("birth_date", label("birth_date", "lbl.birth_date", 1) + input("birth_date", ' type="date"')) +
-      field("city", label("city", "lbl.city", 1) + input("city", ' data-i18n-ph="ph.city"')) +
     "</div>" +
     '<div class="f-grid cols-2">' +
       field("phone", label("phone", "lbl.phone", 1) + '<div class="phone"><select name="phone_code" data-i18n-aria="lbl.phone"></select>' +

@@ -5,7 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
-- **Pages par école** (en préparation, ENSPY d'abord) : `/maquettes/ecoles/`, 5 maquettes de l'en-tête de droite (logos, date limite, audition, lieu) ; l'affiche de gauche et le formulaire restent ceux du site
+- **Pages par école** : `/enspy` (les autres écoles suivront : `/fmsb`, `/enset`, `/polytech-douala`, `/udm`). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`).
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
@@ -26,7 +26,7 @@ Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, p
 
 | Section | Champ | Obligatoire |
 |---|---|---|
-| Informations personnelles | Genre (Homme / Femme), Nom, Prénom, Nationalité, Date de naissance, Ville / Village, Numéro de téléphone | oui |
+| Informations personnelles | Genre (Homme / Femme), Nom, Prénom, Nationalité, Date de naissance, Numéro de téléphone | oui |
 | | Adresse électronique | non |
 | Informations académiques | Catégorie d'établissement (9 catégories officielles) | oui |
 | | École durant l'année 2025/2026 : liste officielle filtrée par catégorie, ou « Mon établissement n'est pas dans la liste » | oui |
@@ -37,6 +37,8 @@ Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, p
 | | Diplômes et relevés d'examens officiels | non |
 | | Tout document utile complémentaire | non |
 | | Motivation (2 000 caractères) | non |
+
+Le champ « Ville / Village » a été retiré (novembre 2026) : les dossiers reçus avant gardent leur ville, visible dans l'administration, l'export CSV et la fiche PDF.
 
 Les listes officielles sont dans [`maquettes/shared/ztf-lists.js`](maquettes/shared/ztf-lists.js), utilisé à la fois par le navigateur et par le serveur.
 
@@ -105,7 +107,9 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 ```
 site/
   index.html                  formulaire réel (maquette « Affiche et formulaire » + envoi au serveur)
-  css/affiche.css, js/affiche.js, img/   identité des affiches, compte à rebours, affiche
+  css/affiche.css, js/affiche.js, img/   identité des affiches, textes de l'événement, affiche
+  enspy/index.html            page de l'ENSPY (générée par scripts/pages-ecoles.mjs, ne pas modifier à la main)
+  css/ecole.css, js/ecole.js, img/ecoles/   en-tête des pages par école
   js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
   admin/index.html            connexion, dossiers, comptes, journal
 api/                          fonctions Vercel (routage par fichiers)
@@ -125,7 +129,8 @@ maquettes/
   shared/form-markup.js       champs du formulaire
   shared/form-engine.js       langue, champs dépendants, validation, pièces jointes, fiche PDF
   ecoles/                     pages par école : galerie, enspy/1-…5-….html, ecoles.css, ecoles.js, img/ (+ SOURCES.md)
-scripts/build.mjs             assemble dist/ (site + shared + maquettes)
+scripts/build.mjs             régénère les pages par école puis assemble dist/ (site + shared + maquettes)
+scripts/pages-ecoles.mjs      site/<école>/index.html à partir de site/index.html (une entrée par école)
 scripts/maquettes-ecoles.mjs  régénère maquettes/ecoles/enspy/ à partir du formulaire de site/index.html
 vercel.json                   build, région, tâche planifiée
 ```

@@ -114,7 +114,7 @@
   function schoolsFor(cat) { return L.schools.filter(function (s) { return s[2] === cat; }); }
 
   function required() {
-    var r = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone"];
+    var r = ["gender", "last_name", "first_name", "nationality", "birth_date", "phone"];
     if (el("email").value.trim()) r.push("email");
     if (el("cycle")) r.push("cycle");
     r.push("institution_category", "institution_name", "level", "field_of_study", "average", "transcripts");
@@ -138,7 +138,6 @@
     fillSelect(el("nationality"), countries(), "ph.country");
     var pc = el("phone_code");
     if (pc && !pc.options.length) D.phoneCodes.forEach(function (p) { pc.appendChild(opt(p.code, p.label)); });
-    setDatalist("ztf-cities", D.cities, el("city"));
   }
   function updateCategories() {
     var cyc = el("cycle") ? radioVal("cycle") : "";
@@ -335,7 +334,7 @@
     setKey(p, key);
   }
   function clearError(name) { var c = container(name); if (!c) return; c.classList.remove("is-invalid"); var p = c.querySelector(".ztf-error"); if (p) p.remove(); }
-  var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone", "email", "cycle",
+  var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "phone", "email", "cycle",
     "institution_category", "institution_name", "level", "field_of_study", "average", "transcripts"];
 
   /** Valide les champs obligatoires contenus dans `scope` (tout le formulaire par défaut). */
@@ -379,7 +378,7 @@
   /* ---------- Valeurs envoyées et libellés ---------- */
   function payload() {
     var p = { lang: lang === "en" ? "en" : "fr" };
-    ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone_code", "phone", "email",
+    ["gender", "last_name", "first_name", "nationality", "birth_date", "phone_code", "phone", "email",
       "institution_category", "institution_name", "school_id", "level", "field_of_study", "average", "motivation"].forEach(function (n) { p[n] = fieldValue(n); });
     p.cycle = cycle() || "";
     p.average_not_provided = el("average_not_provided").checked;
@@ -395,8 +394,8 @@
     return [
       { group: tr("sec.identity"), items: [
         [tr("lbl.gender"), g ? (lang === "en" ? g[2] : g[1]) : ""], [tr("lbl.last_name"), f.last_name], [tr("lbl.first_name"), f.first_name],
-        [tr("lbl.nationality"), countryName(f.nationality) || f.nationality_name || ""], [tr("lbl.birth_date"), fmtDate(f.birth_date)], [tr("lbl.city"), f.city],
-        [tr("lbl.phone"), f.phone ? f.phone_code + " " + f.phone : ""], [tr("lbl.email"), f.email]] },
+        [tr("lbl.nationality"), countryName(f.nationality) || f.nationality_name || ""], [tr("lbl.birth_date"), fmtDate(f.birth_date)]].concat(f.city ? [[tr("lbl.city"), f.city]] : []).concat([
+        [tr("lbl.phone"), f.phone ? f.phone_code + " " + f.phone : ""], [tr("lbl.email"), f.email]]) },
       { group: tr("sec.academic"), items: [
         [tr("lbl.institution_category"), labelOf(L.categories, f.institution_category)], [tr("lbl.institution_name"), f.institution_name],
         [tr(sec ? "lbl.class" : "lbl.level"), labelOf(L.levels, f.level)], [tr(sec ? "lbl.series" : "lbl.fos"), fos],
@@ -563,18 +562,18 @@
     form.reset(); onNP();
     var pupil = kind !== "student";
     var p = pupil ? {
-      gender: "male", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", city: "Bamenda", phone: "6 75 22 11 00", email: "",
+      gender: "male", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", phone: "6 75 22 11 00", email: "",
       cycle: "secondary", cat: "GeneralHighSchool", schoolHint: "Bamenda|Mankon", level: "UpperSixth", fos: "C", avg: "17.1 / 20",
       files: [["Report_card_term1_2025-2026.pdf", "Report_card_term2_2025-2026.pdf", "Report_card_term3_2025-2026.pdf"], ["GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
       motivation: "Je veux devenir ingénieur en énergies renouvelables. Major de ma classe depuis la Form 3, lauréat des Olympiades nationales de mathématiques 2025."
     } : {
-      gender: "female", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", city: "Yaoundé", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
+      gender: "female", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
       cycle: "higher", cat: "University", schoolHint: "Yaound", level: "BAC2", fos: "Mathematics", avg: "17.4 / 20",
       files: [["Releve_L2_S1_2025-2026.pdf", "Releve_L2_S2_2025-2026.pdf"], ["Baccalaureat_C_2024.pdf"], []],
       motivation: "Major de promotion en L1, je souhaite poursuivre en recherche en mathématiques appliquées."
     };
     el("gender").value = p.gender; el("last_name").value = p.last_name; el("first_name").value = p.first_name;
-    el("nationality").value = "CM"; el("birth_date").value = p.birth; el("city").value = p.city;
+    el("nationality").value = "CM"; el("birth_date").value = p.birth;
     el("phone").value = p.phone; el("email").value = p.email;
     if (el("cycle")) el("cycle").value = p.cycle;
     updateCategories(); el("institution_category").value = p.cat; updateDependent();

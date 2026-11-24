@@ -15,10 +15,8 @@ body{background:var(--paper);color:var(--ink)}
 /* Colonne affiche */
 .poster{background:var(--night);position:relative}
 .poster-in{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:18px}
-.poster img{max-height:calc(100vh - 150px);max-width:100%;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 30px 60px rgba(0,0,0,.6)}
-.poster .countdown div{min-width:58px}
+.poster img{max-height:calc(100vh - 56px);max-width:100%;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 30px 60px rgba(0,0,0,.6)}
 @media(max-width:980px){.poster-in{position:static;height:auto;padding:22px 16px}.poster img{max-height:none;width:min(420px,100%)}}
-.poster .lbl{color:#b9bfe6;font-size:.8rem;text-align:center}
 /* Colonne formulaire */
 .main{padding:28px clamp(16px,5vw,64px) 80px;max-width:880px}
 .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
@@ -45,10 +43,6 @@ body{background:var(--paper);color:var(--ink)}
   <aside class="poster sparkle">
     <div class="poster-in">
       <img src="../../affiche/img/affiche-gala.jpg" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
-      <div data-cd-open>
-        <div class="countdown"><div><b data-cd="d">00</b><span data-i18n="a.cd.days"></span></div><div><b data-cd="h">00</b><span data-i18n="a.cd.hours"></span></div><div><b data-cd="m">00</b><span data-i18n="a.cd.min"></span></div></div>
-        <p class="lbl" data-i18n="a.cd.left"></p>
-      </div>
     </div>
   </aside>
 
