@@ -47,9 +47,7 @@ const SCHOOLS = [
       "Management", "Accounting", "Economics"],
     title: "École normale supérieure d'enseignement technique de l'Université de Douala",
     logo: { src: "enset-logo.jpg", alt: "Logo de l'Université de Douala", i18n: "e.enset.logo.alt" },
-    photo: { src: "enset-batiment.jpg", alt: "Monument à l'entrée de l'ENSET de Douala", credit: "Geugeor, Wikimedia Commons, CC BY-SA 4.0", pos: "50% 50%",
-      // Flou léger : les grandes lettres du panneau rivalisaient avec le titre.
-      extraStyle: "filter:blur(5px);transform:scale(1.06)" },
+    photo: { src: "enset-batiment.jpg", alt: "Entrée du campus de l'Université de Douala", credit: "photo fournie par la Fondation (novembre 2026)", pos: "50% 30%" },
     names: ["e.enset.name", "e.enset.univ"],
   },
   {
