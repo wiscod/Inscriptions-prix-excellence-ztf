@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "controle": "node scripts/controle-ecrans.cjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.9.0",

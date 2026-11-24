@@ -5,6 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
+- **Pages par école** : `/enspy`, `/fmsb`, `/enset`, `/polytech-douala` (ENSPD), `/udm` (Université des Montagnes). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`). Sur ces pages, la catégorie et l'école sont remplies d'office (champs masqués) et la liste des domaines d'études est limitée à ceux de l'école (`scripts/pages-ecoles.mjs`, avec la source de chaque liste).
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 
@@ -25,17 +26,19 @@ Retirés à la demande de la Fondation : pièce d'identité, rang et effectif, p
 
 | Section | Champ | Obligatoire |
 |---|---|---|
-| Informations personnelles | Genre (Homme / Femme), Nom, Prénom, Nationalité, Date de naissance, Ville / Village, Numéro de téléphone | oui |
+| Informations personnelles | Genre (Homme / Femme), Nom, Prénom, Nationalité, Date de naissance, Numéro de téléphone | oui |
 | | Adresse électronique | non |
 | Informations académiques | Catégorie d'établissement (9 catégories officielles) | oui |
 | | École durant l'année 2025/2026 : liste officielle filtrée par catégorie, ou « Mon établissement n'est pas dans la liste » | oui |
 | | Classe (6ème … Terminale, Form 1 … Upper Sixth) **ou** Niveau d'éducation (BAC +1 … > BAC +5 / PhD) | oui |
-| | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur) | oui |
+| | Série (second cycle du secondaire), « Non applicable » (6ème-3ème, Form 1-4) **ou** Domaine d'études (supérieur ; sur une page d'école, seulement les domaines de ses filières, plus « Autre » à préciser en texte libre) | oui |
 | | Moyenne générale (+ « Je n'ai pas de notes / moyenne » pour > BAC +5) | oui, sauf case cochée |
 | Pièces jointes et motivation | Relevés de notes et bulletins 2025/2026 (images ou PDF, 4 Mo par fichier ; les photos sont réduites dans le navigateur avant l'envoi) | oui |
 | | Diplômes et relevés d'examens officiels | non |
 | | Tout document utile complémentaire | non |
 | | Motivation (2 000 caractères) | non |
+
+Le champ « Ville / Village » a été retiré (novembre 2026) : les dossiers reçus avant gardent leur ville, visible dans l'administration, l'export CSV et la fiche PDF.
 
 Les listes officielles sont dans [`maquettes/shared/ztf-lists.js`](maquettes/shared/ztf-lists.js), utilisé à la fois par le navigateur et par le serveur.
 
@@ -104,7 +107,10 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 ```
 site/
   index.html                  formulaire réel (maquette « Affiche et formulaire » + envoi au serveur)
-  css/affiche.css, js/affiche.js, img/   identité des affiches, compte à rebours, affiche
+  css/affiche.css, js/affiche.js, img/   identité des affiches, textes de l'événement, affiche
+                              (affiche-gala.jpg et affiche-gala-2x.jpg : l'affiche de la Fondation agrandie ×2 avec Real-ESRGAN x4plus, puis réduite ; textes vérifiés à l'œil, aucun caractère modifié)
+  enspy/index.html            page de l'ENSPY (générée par scripts/pages-ecoles.mjs, ne pas modifier à la main)
+  css/ecole.css, js/ecole.js, img/ecoles/   en-tête des pages par école
   js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
   admin/index.html            connexion, dossiers, comptes, journal
 api/                          fonctions Vercel (routage par fichiers)
@@ -123,7 +129,11 @@ maquettes/
   shared/form-i18n.js         textes de l'interface en français et en anglais
   shared/form-markup.js       champs du formulaire
   shared/form-engine.js       langue, champs dépendants, validation, pièces jointes, fiche PDF
-scripts/build.mjs             assemble dist/ (site + shared + maquettes)
+  ecoles/                     pages par école : galerie, enspy/1-…5-….html, ecoles.css, ecoles.js, img/ (+ SOURCES.md)
+scripts/build.mjs             régénère les pages par école puis assemble dist/ (site + shared + maquettes)
+scripts/pages-ecoles.mjs      site/<école>/index.html à partir de site/index.html (une entrée par école)
+scripts/controle-ecrans.cjs   `npm run controle` : ouvre / et chaque page d'école à 5 largeurs (iPhone, iPad, 1280, 1440, 1920 px), fait les captures (.controle-ecrans/) et signale défilement horizontal, bandeau qui n'atteint pas le bord, image cassée ou déformée, champs sous 16 px et cibles tactiles sous 24 px sur écran tactile
+scripts/maquettes-ecoles.mjs  régénère maquettes/ecoles/enspy/ à partir du formulaire de site/index.html
 vercel.json                   build, région, tâche planifiée
 ```
 

@@ -230,7 +230,7 @@ dt{color:var(--muted)}dd{margin:0;font-weight:500;overflow-wrap:anywhere;white-s
     if (k === "gender") return GENDER[v] || v;
     if (k === "level") return listLabel(ZL.levels, v);
     if (k === "institution_category") return listLabel(ZL.categories, v);
-    if (k === "field_of_study") return v === "NA" ? "Non applicable" : listLabel(ZL.series.concat(ZL.fields), v);
+    if (k === "field_of_study") return v === "NA" ? "Non applicable" : v === "Other" ? "Autre : " + (f.field_of_study_other || "") : listLabel(ZL.series.concat(ZL.fields), v);
     if (k === "average" && f.average_not_provided) return "Non communiquée";
     if (v === true) return "Oui"; if (v === false) return "";
     return v == null ? "" : String(v);

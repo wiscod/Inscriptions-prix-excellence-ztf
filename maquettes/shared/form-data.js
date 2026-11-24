@@ -8,7 +8,7 @@ window.ZTF_DATA = {
   schoolYear: "2025/2026",
   deadline: ["28 novembre 2026", "28 November 2026"],   // date communiquée par la Fondation (6e édition)
   contactEmail: "contact@excellenceawardsztf.com",
-  whatsapp: "33652748082",   // assistance technique (WhatsApp)
+  whatsapp: "33652748082",   // assistance : appels et WhatsApp
   whatsappDisplay: "+33 6 52 74 80 82",
   minAge: 9,
   maxFileMB: 4,               // taille maximale par fichier (comme le formulaire officiel)
@@ -16,9 +16,6 @@ window.ZTF_DATA = {
   motivationMax: 2000,
 
   genders: [["male", "Homme", "Male"], ["female", "Femme", "Female"]],
-
-  /* Suggestions de villes (saisie libre) */
-  cities: ["Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua", "Ngaoundéré", "Bertoua", "Ebolowa", "Buea", "Limbe", "Kumba", "Kribi", "Dschang", "Nkongsamba", "Edéa", "Foumban", "Mbalmayo", "Sangmélima", "Kousséri", "Mokolo", "Bafang", "Mbouda", "Tiko", "Batouri", "Meiganga", "Guider", "Yagoua", "Bafia", "Obala", "Soa", "Mbanga", "Loum", "Wum", "Kumbo", "Ndop", "Mamfe", "Nkambe"],
 
   phoneCodes: [
     { code: "+237", label: "🇨🇲 +237" }, { code: "+33", label: "🇫🇷 +33" }, { code: "+241", label: "🇬🇦 +241" },

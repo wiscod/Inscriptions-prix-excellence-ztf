@@ -111,7 +111,7 @@ input:focus,select:focus,textarea:focus{outline:none}
 .form-dark .receipt-code{border-color:var(--gold)}.form-dark .receipt .code{color:var(--gold-l)}
 
 /* Variante claire (papier crème, texte bleu nuit, accents dorés) */
-.form-light{color:var(--ink)}
+.form-light{color:var(--ink);--ztf-danger:#b42318}
 .form-light .field>label{color:var(--navy)}.form-light .field>label i{color:var(--red)}
 .form-light .muted,.form-light .hint,.form-light .foot-note,.form-light .np{color:var(--muted)}
 .form-light input,.form-light select,.form-light textarea{background:#fff;border:1px solid #e1d6b4;color:var(--ink)}
@@ -128,6 +128,16 @@ input:focus,select:focus,textarea:focus{outline:none}
 /* Pied de page avec contacts (comme l'affiche) */
 .contacts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-weight:700;font-size:.92rem}
 .contacts a{color:inherit;text-decoration:none}
+/* Accessibilité et toucher */
+html{touch-action:manipulation}
+a,button,summary,label{-webkit-tap-highlight-color:transparent}
+.skip-link{position:absolute;left:12px;top:-60px;z-index:100;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none}
+.skip-link:focus{top:12px}
+/* Liens sur fond clair : bleu nuit souligné d'or (le doré seul n'atteint pas le contraste 4,5:1) */
+.form-light a{color:var(--navy);text-decoration-color:var(--gold-d);text-underline-offset:2px}
+/* Langue choisie : bleu nuit (blanc sur doré : contraste 1,8:1) */
+.lang-switch button[aria-pressed=true]{background:var(--navy);color:#fff}
+@media (pointer:coarse){.contacts a{display:inline-block;padding:10px 0;margin:-10px 0}}
 
 /* Langue sur fond sombre */
 .on-dark .lang-switch{border-color:rgba(232,185,60,.5);color:#fff}

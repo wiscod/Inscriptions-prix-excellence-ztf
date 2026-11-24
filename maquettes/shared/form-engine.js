@@ -29,13 +29,16 @@
   /* ---------- Traduction ---------- */
   // Logo WhatsApp (Simple Icons, CC0), affiché à côté du numéro d'assistance.
   var WA_ICON = '<svg class="ztf-wa-icon" viewBox="0 0 24 24" width="18" height="18" aria-label="WhatsApp" role="img"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+  // Combiné de téléphone (Feather Icons, MIT) : le même numéro sert aux appels et à WhatsApp.
+  var TEL_ICON = '<svg class="ztf-tel-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
   function interp(s, l, vars) {
     return s.replace(/\{(\w+)\}/g, function (m, k) {
       if (vars && vars[k] != null) return vars[k];
       if (k === "year") return D.schoolYear;
       if (k === "contact") return D.contactEmail;
       if (k === "whatsapp") return D.whatsapp;
-      if (k === "walink") return '<a class="ztf-wa" href="https://wa.me/' + D.whatsapp + '" target="_blank" rel="noopener">' + WA_ICON + D.whatsappDisplay + "</a>";
+      if (k === "tellink") return '<a class="ztf-wa" href="tel:+' + D.whatsapp + '">' + TEL_ICON + D.whatsappDisplay + "</a>";
+      if (k === "walink") return '<a class="ztf-wa" href="https://wa.me/' + D.whatsapp + '" target="_blank" rel="noopener">' + WA_ICON.replace('aria-label="WhatsApp" role="img"', 'aria-hidden="true"') + "WhatsApp</a>";
       if (k === "deadline") return l === "en" ? D.deadline[1] : D.deadline[0];
       if (k === "min") return D.minAge;
       if (k === "max") return D.maxFileMB;
@@ -63,12 +66,22 @@
     if (attr === "data-i18n-ph") node.placeholder = tr(key); else paint(node, key, attr === "data-i18n-html");
   }
   /** Éléments de liste : [clé, libellé] (listes officielles, libellé unique) ou [valeur, français, anglais]. */
-  function items(arr) { return arr.map(function (a) { return a.length === 3 ? { v: a[0], fr: a[1], en: a[2] } : { v: a[0], fr: a[1], en: a[1] }; }); }
+  // Les listes officielles écrivent « français / anglais » dans un seul libellé : on n'affiche que la langue choisie.
+  // Un libellé dont les barres obliques ne se partagent pas en deux moitiés égales reste entier.
+  function bilingual(label) {
+    var p = label.split(" / ");
+    if (p.length < 2 || p.length % 2) return [label, label];
+    return [p.slice(0, p.length / 2).join(" / "), p.slice(p.length / 2).join(" / ")];
+  }
+  function items(arr) { return arr.map(function (a) { if (a.length === 3) return { v: a[0], fr: a[1], en: a[2] }; var b = bilingual(a[1]); return { v: a[0], fr: b[0], en: b[1], both: a[1] }; }); }
   function itemText(it) {
     if (lang === "both") return it.both || (it.fr === it.en ? it.fr : it.fr + " / " + it.en);
     return lang === "en" ? it.en : it.fr;
   }
-  function labelOf(list, key) { for (var i = 0; i < list.length; i++) if (list[i][0] === key) return list[i][1]; return key || ""; }
+  function labelOf(list, key) {
+    for (var i = 0; i < list.length; i++) if (list[i][0] === key) { var b = bilingual(list[i][1]); return lang === "en" ? b[1] : lang === "fr" ? b[0] : list[i][1]; }
+    return key || "";
+  }
 
   /* ---------- Utilitaires DOM ---------- */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -114,7 +127,7 @@
   function schoolsFor(cat) { return L.schools.filter(function (s) { return s[2] === cat; }); }
 
   function required() {
-    var r = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone"];
+    var r = ["gender", "last_name", "first_name", "nationality", "birth_date", "phone"];
     if (el("email").value.trim()) r.push("email");
     if (el("cycle")) r.push("cycle");
     r.push("institution_category", "institution_name", "level", "field_of_study", "average", "transcripts");
@@ -138,7 +151,6 @@
     fillSelect(el("nationality"), countries(), "ph.country");
     var pc = el("phone_code");
     if (pc && !pc.options.length) D.phoneCodes.forEach(function (p) { pc.appendChild(opt(p.code, p.label)); });
-    setDatalist("ztf-cities", D.cities, el("city"));
   }
   function updateCategories() {
     var cyc = el("cycle") ? radioVal("cycle") : "";
@@ -157,7 +169,14 @@
   function fieldOptions(level) {
     if (!level) return null;
     if (L.noFieldLevels.indexOf(level) >= 0) return items([L.notApplicable]);
-    if (L.levelGroups.higher.indexOf(level) >= 0) return items(L.fields);
+    if (L.levelGroups.higher.indexOf(level) >= 0) {
+      // Page d'une école : seuls les domaines officiels qui correspondent à ses filières (window.ZTF_SCHOOL_FIELDS, dans cet ordre).
+      var only = window.ZTF_SCHOOL_FIELDS;
+      // plus « Autre », que le candidat précise dans le champ field_of_study_other.
+      if (only && only.length) return items(only.map(function (k) { return L.fields.filter(function (f) { return f[0] === k; })[0]; }).filter(Boolean)
+        .concat([["Other", I["fos.other"][0], I["fos.other"][1]]]));
+      return items(L.fields);
+    }
     return items(L.series);
   }
   function setLabel(name, key) { var c = container(name); if (c) setKey(c.querySelector("[data-ztf-lbl]"), key); }
@@ -177,9 +196,27 @@
 
     setLabel("level", sec ? "lbl.class" : "lbl.level");
     setLabel("field_of_study", sec ? "lbl.series" : "lbl.fos");
-    onLevel();
+    onLevel(); onFos();
+  }
+  /* « Autre » domaine d'études : zone de texte à préciser, affichée seulement quand l'option est choisie. */
+  function onFos() {
+    var o = el("field_of_study_other"); if (!o) return;
+    var on = el("field_of_study").value === "Other";
+    o.hidden = !on; if (!on) o.value = "";
   }
   function onCategory() { el("institution_name").value = ""; el("school_id").value = ""; updateDependent(); }
+  /* École fixée par la page (pages par école : /enspy, …) : window.ZTF_FIXED_SCHOOL = identifiant de la liste officielle.
+     Catégorie et école sont remplies d'office et leurs champs masqués ; le serveur reçoit les mêmes valeurs qu'avec la saisie. */
+  function fixedSchool() {
+    var id = window.ZTF_FIXED_SCHOOL;
+    return id ? L.schools.filter(function (s) { return s[0] === id; })[0] || null : null;
+  }
+  function applyFixedSchool() {
+    var s = fixedSchool(); if (!s) return;
+    el("institution_category").value = s[2]; updateDependent();
+    el("institution_name").value = s[1]; el("school_id").value = s[0];
+    var c = container("institution_category"); if (c && c.parentNode) c.parentNode.style.display = "none";
+  }
   function onSchoolInput() {
     var v = el("institution_name").value.trim().toLowerCase(), cat = el("institution_category").value;
     var hit = schoolsFor(cat).filter(function (s) { return s[1].toLowerCase() === v; })[0];
@@ -326,16 +363,24 @@
     if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "err.email";
     if (name === "phone") return phoneError(v);
     if (name === "birth_date") { var a = age(); if (a !== null && a < D.minAge) return "err.age"; }
+    if (name === "field_of_study" && v === "Other" && !fieldValue("field_of_study_other")) return "err.fosOther";
     return null;
   }
   function showError(name, key) {
     var c = container(name); if (!c) return;
     c.classList.add("is-invalid");
-    var p = c.querySelector(".ztf-error"); if (!p) { p = document.createElement("p"); p.className = "ztf-error"; c.appendChild(p); }
+    var p = c.querySelector(".ztf-error"); if (!p) { p = document.createElement("p"); p.className = "ztf-error"; p.id = "ztf-err-" + name; c.appendChild(p); }
     setKey(p, key);
+    // Le message est rattaché au champ : un lecteur d'écran le lit quand le curseur y arrive.
+    var ctl = c.querySelector("input:not([type=hidden]):not([type=checkbox]),select,textarea");
+    if (ctl) { ctl.setAttribute("aria-invalid", "true"); ctl.setAttribute("aria-describedby", p.id); }
   }
-  function clearError(name) { var c = container(name); if (!c) return; c.classList.remove("is-invalid"); var p = c.querySelector(".ztf-error"); if (p) p.remove(); }
-  var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone", "email", "cycle",
+  function clearError(name) {
+    var c = container(name); if (!c) return; c.classList.remove("is-invalid");
+    var p = c.querySelector(".ztf-error"); if (p) p.remove();
+    $$("[aria-invalid]", c).forEach(function (x) { x.removeAttribute("aria-invalid"); x.removeAttribute("aria-describedby"); });
+  }
+  var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "phone", "email", "cycle",
     "institution_category", "institution_name", "level", "field_of_study", "average", "transcripts"];
 
   /** Valide les champs obligatoires contenus dans `scope` (tout le formulaire par défaut). */
@@ -379,8 +424,8 @@
   /* ---------- Valeurs envoyées et libellés ---------- */
   function payload() {
     var p = { lang: lang === "en" ? "en" : "fr" };
-    ["gender", "last_name", "first_name", "nationality", "birth_date", "city", "phone_code", "phone", "email",
-      "institution_category", "institution_name", "school_id", "level", "field_of_study", "average", "motivation"].forEach(function (n) { p[n] = fieldValue(n); });
+    ["gender", "last_name", "first_name", "nationality", "birth_date", "phone_code", "phone", "email",
+      "institution_category", "institution_name", "school_id", "level", "field_of_study", "field_of_study_other", "average", "motivation"].forEach(function (n) { p[n] = fieldValue(n); });
     p.cycle = cycle() || "";
     p.average_not_provided = el("average_not_provided").checked;
     var names; try { names = new Intl.DisplayNames(["fr"], { type: "region" }); } catch (e) { names = null; }
@@ -391,12 +436,14 @@
   function describe(f) {
     var sec = cycleOfCategory(f.institution_category) === "secondary";
     var g = D.genders.filter(function (x) { return x[0] === f.gender; })[0];
-    var fos = f.field_of_study === "NA" ? L.notApplicable[1] : labelOf(L.series.concat(L.fields), f.field_of_study);
+    var fos = f.field_of_study === "NA" ? L.notApplicable[1]
+      : f.field_of_study === "Other" ? tr("fos.other") + " : " + (f.field_of_study_other || "")
+      : labelOf(L.series.concat(L.fields), f.field_of_study);
     return [
       { group: tr("sec.identity"), items: [
         [tr("lbl.gender"), g ? (lang === "en" ? g[2] : g[1]) : ""], [tr("lbl.last_name"), f.last_name], [tr("lbl.first_name"), f.first_name],
-        [tr("lbl.nationality"), countryName(f.nationality) || f.nationality_name || ""], [tr("lbl.birth_date"), fmtDate(f.birth_date)], [tr("lbl.city"), f.city],
-        [tr("lbl.phone"), f.phone ? f.phone_code + " " + f.phone : ""], [tr("lbl.email"), f.email]] },
+        [tr("lbl.nationality"), countryName(f.nationality) || f.nationality_name || ""], [tr("lbl.birth_date"), fmtDate(f.birth_date)]].concat(f.city ? [[tr("lbl.city"), f.city]] : []).concat([
+        [tr("lbl.phone"), f.phone ? f.phone_code + " " + f.phone : ""], [tr("lbl.email"), f.email]]) },
       { group: tr("sec.academic"), items: [
         [tr("lbl.institution_category"), labelOf(L.categories, f.institution_category)], [tr("lbl.institution_name"), f.institution_name],
         [tr(sec ? "lbl.class" : "lbl.level"), labelOf(L.levels, f.level)], [tr(sec ? "lbl.series" : "lbl.fos"), fos],
@@ -488,7 +535,7 @@
         y += 4;
       });
       doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.setFont("helvetica", "normal");
-      doc.text(pdfText(tr("brand.org") + " · " + D.contactEmail + " · WhatsApp " + D.whatsappDisplay), M, 290);
+      doc.text(pdfText(tr("brand.org") + " · " + D.contactEmail + " · " + tr("contact.phone") + " " + D.whatsappDisplay), M, 290);
       doc.save("fiche-candidature-" + rec.id + ".pdf");
     }).catch(function () { toast(tr("toast.failed"), tr("pdf.error"), true); })
       .then(function () { lang = keep; });
@@ -544,7 +591,7 @@
   }
   function reset() {
     form.reset(); Object.keys(fileStore).forEach(function (k) { fileStore[k] = []; renderFiles(k); });
-    onNP(); updateCategories(); updateDependent(); updateCounter();
+    onNP(); updateCategories(); updateDependent(); applyFixedSchool(); updateCounter();
     ALL.forEach(clearError);
     lastRecord = null;
     $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = false; });
@@ -563,18 +610,18 @@
     form.reset(); onNP();
     var pupil = kind !== "student";
     var p = pupil ? {
-      gender: "male", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", city: "Bamenda", phone: "6 75 22 11 00", email: "",
+      gender: "male", last_name: "Nfor", first_name: "Divine Kum", birth: "2009-05-02", phone: "6 75 22 11 00", email: "",
       cycle: "secondary", cat: "GeneralHighSchool", schoolHint: "Bamenda|Mankon", level: "UpperSixth", fos: "C", avg: "17.1 / 20",
       files: [["Report_card_term1_2025-2026.pdf", "Report_card_term2_2025-2026.pdf", "Report_card_term3_2025-2026.pdf"], ["GCE_O_Level_result_slip.pdf"], ["Olympiades_maths_2025.pdf"]],
       motivation: "Je veux devenir ingénieur en énergies renouvelables. Major de ma classe depuis la Form 3, lauréat des Olympiades nationales de mathématiques 2025."
     } : {
-      gender: "female", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", city: "Yaoundé", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
+      gender: "female", last_name: "Ngo Bayiha", first_name: "Esther", birth: "2006-03-14", phone: "6 77 12 34 56", email: "esther.ngobayiha@exemple.com",
       cycle: "higher", cat: "University", schoolHint: "Yaound", level: "BAC2", fos: "Mathematics", avg: "17.4 / 20",
       files: [["Releve_L2_S1_2025-2026.pdf", "Releve_L2_S2_2025-2026.pdf"], ["Baccalaureat_C_2024.pdf"], []],
       motivation: "Major de promotion en L1, je souhaite poursuivre en recherche en mathématiques appliquées."
     };
     el("gender").value = p.gender; el("last_name").value = p.last_name; el("first_name").value = p.first_name;
-    el("nationality").value = "CM"; el("birth_date").value = p.birth; el("city").value = p.city;
+    el("nationality").value = "CM"; el("birth_date").value = p.birth;
     el("phone").value = p.phone; el("email").value = p.email;
     if (el("cycle")) el("cycle").value = p.cycle;
     updateCategories(); el("institution_category").value = p.cat; updateDependent();
@@ -597,13 +644,6 @@
     setTimeout(function () { t.classList.add("is-out"); setTimeout(function () { t.remove(); }, 300); }, 4200);
   }
 
-  /* ---------- Captcha (emplacement Cloudflare Turnstile) ---------- */
-  function renderCaptcha() {
-    $$("[data-ztf-captcha]").forEach(function (box) {
-      box.innerHTML = '<label class="ztf-captcha"><input type="checkbox" checked disabled> <span data-i18n="captcha"></span><small>Turnstile</small></label>';
-    });
-  }
-
   function injectBaseStyles() {
     var css = "" +
       ".ztf-error{color:var(--ztf-danger,#c0392b);font-size:.8rem;margin:.35rem 0 0}" +
@@ -614,20 +654,20 @@
       ".ztf-file-list li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       ".ztf-file-list button{background:none;border:0;color:inherit;opacity:.7;cursor:pointer;font:inherit;text-decoration:underline}" +
       ".ztf-file-count{font-size:.8rem;opacity:.8;margin:.4rem 0 0}" +
-      ".ztf-wa{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:600}.ztf-wa-icon{flex:none}" +
+      ".ztf-wa{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:600}.ztf-wa-icon,.ztf-tel-icon{flex:none}" +
       "#ztf-toasts{position:fixed;right:16px;bottom:16px;z-index:9999;display:grid;gap:8px;max-width:min(380px,calc(100vw - 32px))}" +
-      ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity .3s,transform .3s}" +
-      ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px)}.ztf-toast span{opacity:.75}" +
+      ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity 400ms ease,transform 400ms ease}" +
+      "@starting-style{.ztf-toast{opacity:0;transform:translateY(8px)}}" +
+      ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px);transition-duration:200ms}.ztf-toast span{opacity:.75}" +
       ".ztf-dialog{border:0;border-radius:16px;padding:0;max-width:440px;width:calc(100vw - 32px);box-shadow:0 20px 60px rgba(0,0,0,.3)}" +
       ".ztf-dialog::backdrop{background:rgba(3,8,66,.45)}.ztf-dialog form{padding:22px;display:grid;gap:12px;font:14px/1.5 system-ui,sans-serif;color:#111827}" +
       ".ztf-dialog h3{margin:0;font-size:1.1rem}.ztf-dialog p{margin:0;color:#6b7280}.ztf-dialog label{display:grid;gap:6px;font-weight:600}" +
       ".ztf-dialog input{font:inherit;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;font-weight:400}" +
       ".ztf-dialog-actions{display:flex;justify-content:flex-end;gap:8px}.ztf-btn-ghost,.ztf-btn-primary{font:inherit;font-weight:600;padding:9px 16px;border-radius:10px;cursor:pointer}" +
       ".ztf-btn-ghost{background:#fff;border:1px solid #d1d5db}.ztf-btn-primary{background:#33a15a;color:#fff;border:0}" +
-      ".ztf-captcha{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid rgba(127,127,127,.35);border-radius:6px;font-size:.85rem;background:rgba(127,127,127,.06)}" +
-      ".ztf-captcha small{opacity:.55;margin-left:18px}.ztf-captcha input{width:auto!important;min-height:0!important}" +
-      ".drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 14px;border:1.5px dashed rgba(127,127,127,.45);border-radius:12px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}" +
-      ".drop:hover,.drop:focus-within{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}" +
+      ".drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 14px;border:1.5px dashed rgba(127,127,127,.45);border-radius:12px;text-align:center;cursor:pointer;transition:border-color 150ms ease,background 150ms ease}" +
+      ".drop:focus-within{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}" +
+      "@media (hover:hover) and (pointer:fine){.drop:hover{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}}" +
       ".drop input[type=file]{position:absolute!important;inset:0;width:100%!important;height:100%!important;opacity:0;cursor:pointer;padding:0!important;border:0!important}" +
       ".drop-ic{font-size:1.1rem;opacity:.6}.drop-t{font-weight:600;font-size:.9rem}.drop-s{font-size:.78rem;opacity:.6}" +
       ".is-invalid .drop{border-color:var(--ztf-danger,#c0392b)}" +
@@ -652,6 +692,16 @@
       ".lang-switch{display:inline-flex;border:1px solid rgba(127,127,127,.35);border-radius:999px;padding:3px;gap:2px}" +
       ".lang-switch button{font:600 .78rem/1 system-ui,sans-serif;letter-spacing:.04em;padding:7px 11px;border:0;border-radius:999px;background:transparent;color:inherit;cursor:pointer;opacity:.7}" +
       ".lang-switch button[aria-pressed=true]{background:var(--ztf-accent,#33a15a);color:#fff;opacity:1}" +
+      /* Finitions : appui, focus clavier, cibles tactiles, zoom iOS, réduction des animations */
+      ".submit,.again,.lookup-row button,.receipt-pdf,.lang-switch button,.ztf-btn-ghost,.ztf-btn-primary,.ztf-demo button{transition:transform 160ms cubic-bezier(.23,1,.32,1)}" +
+      ".submit:active:not(:disabled),.again:active,.lookup-row button:active,.receipt-pdf:active,.lang-switch button:active,.ztf-btn-ghost:active,.ztf-btn-primary:active{transform:scale(.97)}" +
+      "a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--ztf-accent,#33a15a);outline-offset:3px;border-radius:6px}" +
+      "[data-ztf-counter]{font-variant-numeric:tabular-nums}" +
+      "@media (pointer:coarse){.lang-switch button{padding:12px 15px}.ztf-wa{padding:10px 0;margin:-10px 0}.lookup summary{padding-block:12px}}" +
+      "@media (max-width:720px),(pointer:coarse){[data-ztf-form] input,[data-ztf-form] select,[data-ztf-form] textarea,.lookup-row input{font-size:16px}}" +
+      "@media (prefers-reduced-motion:reduce){.ztf-toast{transition:opacity .2s}.ztf-toast.is-out{transform:none}.drop{transition:none}}" +
+      "@starting-style{[name=field_of_study_other]{opacity:0}}[name=field_of_study_other]{transition:opacity 200ms cubic-bezier(.23,1,.32,1)}" +
+      "@media (hover:hover) and (pointer:fine){.submit{transition:transform 160ms cubic-bezier(.23,1,.32,1),filter 150ms ease}.submit:hover:not(:disabled){filter:brightness(1.05)}}" +
       ".ztf-spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;margin-right:8px;vertical-align:-3px;animation:ztfspin .7s linear infinite}" +
       "@keyframes ztfspin{to{transform:rotate(360deg)}}" +
       ".ztf-demo{position:fixed;left:16px;bottom:16px;z-index:9998;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:calc(100vw - 32px);font:600 12px/1.2 system-ui,sans-serif;padding:8px 10px;border-radius:14px;border:1px dashed rgba(127,127,127,.6);background:rgba(255,255,255,.95);color:#030842;box-shadow:0 4px 14px rgba(0,0,0,.12)}" +
@@ -662,18 +712,24 @@
 
   function init() {
     form = $("[data-ztf-form]"); if (!form) return;
-    injectBaseStyles(); renderCaptcha();
+    injectBaseStyles();
     form.setAttribute("novalidate", "");
 
     var bd = el("birth_date"), max = new Date();
     max.setFullYear(max.getFullYear() - D.minAge); bd.max = max.toISOString().slice(0, 10); bd.min = "1960-01-01";
     el("motivation").setAttribute("maxlength", D.motivationMax);
+    // Remplissage automatique : ce que le navigateur sait remplir, et « off » ailleurs (pas de suggestions hors sujet).
+    var AUTO = { gender: "sex", birth_date: "bday", phone_code: "tel-country-code", nationality: "off", institution_category: "off",
+      level: "off", field_of_study: "off", field_of_study_other: "off", average: "off", motivation: "off" };
+    Object.keys(AUTO).forEach(function (n) { var e = el(n); if (e && !e.getAttribute("autocomplete")) e.setAttribute("autocomplete", AUTO[n]); });
+    if (el("email")) el("email").spellcheck = false;
 
     form.addEventListener("change", function (e) {
       var n = e.target.name; if (!n) return;
       if (n === "institution_category") onCategory();
       else if (n === "cycle") { updateCategories(); onCategory(); }
       else if (n === "level") updateDependent();
+      else if (n === "field_of_study") onFos();
       else if (n === "institution_name") onSchoolInput();
       else if (n === "average_not_provided") onNP();
       else if (fileStore[n]) onFiles(n);
@@ -683,6 +739,7 @@
       var n = e.target.name; if (!n) return;
       if (n === "institution_name") onSchoolInput();
       if (n === "motivation") updateCounter();
+      if (n === "field_of_study_other") clearError("field_of_study");
       clearError(n); refresh();
     });
     form.addEventListener("submit", onSubmit);
@@ -700,6 +757,7 @@
       document.body.appendChild(demo);
     }
     applyLang(lang);
+    applyFixedSchool();
   }
 
   window.ZTF = { validate: validate, refresh: refresh, summary: summary, renderRecap: renderRecap, fillDemo: fillDemo, toast: toast,

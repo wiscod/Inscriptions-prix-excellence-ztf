@@ -42,10 +42,9 @@
       field("last_name", label("last_name", "lbl.last_name", 1) + input("last_name", ' autocomplete="family-name" data-i18n-ph="ph.last_name"')) +
       field("first_name", label("first_name", "lbl.first_name", 1) + input("first_name", ' autocomplete="given-name" data-i18n-ph="ph.first_name"')) +
     "</div>" +
-    '<div class="f-grid cols-3">' +
+    '<div class="f-grid cols-2">' +
       field("nationality", label("nationality", "lbl.nationality", 1) + select("nationality")) +
       field("birth_date", label("birth_date", "lbl.birth_date", 1) + input("birth_date", ' type="date"')) +
-      field("city", label("city", "lbl.city", 1) + input("city", ' data-i18n-ph="ph.city"')) +
     "</div>" +
     '<div class="f-grid cols-2">' +
       field("phone", label("phone", "lbl.phone", 1) + '<div class="phone"><select name="phone_code" data-i18n-aria="lbl.phone"></select>' +
@@ -63,7 +62,8 @@
     "</div>" +
     '<div class="f-grid cols-3">' +
       field("level", label("level", "lbl.level", 1) + select("level")) +
-      field("field_of_study", label("field_of_study", "lbl.fos", 1) + select("field_of_study")) +
+      field("field_of_study", label("field_of_study", "lbl.fos", 1) + select("field_of_study") +
+        input("field_of_study_other", ' hidden maxlength="120" style="margin-top:8px" data-i18n-ph="ph.fos_other" data-i18n-aria="ph.fos_other"')) +
       field("average", '<label for="f-average"><span data-i18n="lbl.average"></span> <i data-ztf-avg-star>*</i></label>' +
         input("average", ' data-i18n-ph="ph.average"') + hint("hint.avg") +
         '<span data-ztf-average-np hidden><label class="np"><input type="checkbox" name="average_not_provided"> ' + T("np.average") + "</label></span>") +
@@ -81,10 +81,8 @@
       '<p class="hint counter" data-ztf-counter></p>');
 
   S.consent =
-    '<div class="captcha" data-ztf-captcha></div>' +
     '<button type="submit" class="submit"><span data-i18n="btn.submit"></span></button>' +
     '<p class="foot-note" data-i18n="foot.required"></p>' +
-    '<p class="foot-note" data-i18n-html="foot.support"></p>' +
     '<p class="foot-note" data-i18n="foot.secure"></p>';
 
   /* Bloc affiché après l'envoi : numéro, identifiant, fiche PDF à imprimer pour l'audition */
