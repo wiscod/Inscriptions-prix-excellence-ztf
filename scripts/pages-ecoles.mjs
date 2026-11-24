@@ -75,7 +75,7 @@ const SCHOOLS = [
       "CivilEngineering", "ElectricalEngineering", "BiomedicalEngineering", "NetworksAndTelecom", "ComputerScience"],
     title: "Université des Montagnes",
     logo: { src: "udm-logo.jpg", alt: "Logo de l'Université des Montagnes", i18n: "e.udm.logo.alt" },
-    photo: { src: "udm-batiment.jpg", alt: "Cliniques universitaires des Montagnes", credit: "Awonox, Wikimedia Commons, CC BY-SA 3.0", pos: "60% 50%" },
+    photo: { src: "udm-batiment.jpg", alt: "Bâtiment de cours de l'Université des Montagnes", credit: "photo fournie par la Fondation (novembre 2026)", pos: "50% 45%" },
     names: ["e.udm.name", "e.udm.city"],
   },
 ];

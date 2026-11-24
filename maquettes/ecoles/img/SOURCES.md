@@ -33,5 +33,5 @@ La Fondation a accepté l'usage d'images non libres (sites officiels, logos). El
 | `enset-logo.jpg` | Logo de l'Université de Douala (site de l'ENSET injoignable), agrandi par Real-ESRGAN | https://fr.wikipedia.org/wiki/Fichier:Logo_de_l'Université_de_Douala.png | logo, non libre |
 | `polytech-douala-batiment.jpg` | Cour intérieure de l'ENSPD | https://enspd-udo.cm/images/enspd/campus/enspdimg.jpg | site officiel, non libre |
 | `polytech-douala-logo.jpg` | Logo de l'ENSPD | https://enspd-udo.cm/images/enspd/logo.png | logo, non libre |
-| `udm-batiment.jpg` | Cliniques universitaires des Montagnes | Awonox, https://commons.wikimedia.org/wiki/File:Udm2.JPG | CC BY-SA 3.0 |
+| `udm-batiment.jpg` | Bâtiment de cours de l'Université des Montagnes | photo fournie par la Fondation (novembre 2026) | à confirmer |
 | `udm-logo.jpg` | Logo de l'Université des Montagnes | https://udm.aed-cm.org/wp-content/uploads/2025/03/Logo-UDM_-4.png | logo, non libre |
