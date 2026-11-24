@@ -108,6 +108,7 @@ Une variable modifiée ne s'applique qu'au déploiement suivant.
 site/
   index.html                  formulaire réel (maquette « Affiche et formulaire » + envoi au serveur)
   css/affiche.css, js/affiche.js, img/   identité des affiches, textes de l'événement, affiche
+                              (affiche-gala.jpg et affiche-gala-2x.jpg : l'affiche de la Fondation agrandie ×2 avec Real-ESRGAN x4plus, puis réduite ; textes vérifiés à l'œil, aucun caractère modifié)
   enspy/index.html            page de l'ENSPY (générée par scripts/pages-ecoles.mjs, ne pas modifier à la main)
   css/ecole.css, js/ecole.js, img/ecoles/   en-tête des pages par école
   js/submit.js                envoi du dossier et recherche « Déjà inscrit ? »
