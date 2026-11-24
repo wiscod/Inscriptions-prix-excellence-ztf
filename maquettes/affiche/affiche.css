@@ -130,6 +130,12 @@ input:focus,select:focus,textarea:focus{outline:none}
 .contacts a{color:inherit;text-decoration:none}
 /* Accessibilité et toucher */
 html{touch-action:manipulation}
+/* Barre de défilement fine et dorée, sur fond transparent (pas de bande blanche) */
+html{scrollbar-width:thin;scrollbar-color:rgba(168,118,28,.55) transparent}
+::-webkit-scrollbar{width:8px;height:8px;background:transparent}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(168,118,28,.55);border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:rgba(168,118,28,.8)}
 a,button,summary,label{-webkit-tap-highlight-color:transparent}
 .skip-link{position:absolute;left:12px;top:-60px;z-index:100;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none}
 .skip-link:focus{top:12px}

@@ -12,7 +12,14 @@
 .hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,10,51,.45),rgba(3,10,51,.82))}
 /* Fondu depuis la colonne de l'affiche (bleu nuit) : à gauche sur ordinateur, en haut quand l'affiche passe au-dessus */
 .hero-bg:before{content:"";position:absolute;z-index:1;inset:0 auto 0 0;width:clamp(80px,14%,220px);background:linear-gradient(90deg,var(--night) 0%,rgba(3,10,51,.6) 45%,rgba(3,10,51,0) 100%);pointer-events:none}
-@media(max-width:980px){.hero-bg:before{inset:0 0 auto 0;width:auto;height:90px;background:linear-gradient(180deg,var(--night) 0%,rgba(3,10,51,.6) 45%,rgba(3,10,51,0) 100%)}}
+/* Téléphone et tablette (affiche au-dessus) : la photo elle-même s'efface vers le haut dans le bleu nuit du fond,
+   sur près de la moitié de l'en-tête et selon une courbe douce : aucun bord visible entre l'affiche et la photo. */
+@media(max-width:980px){
+  .hero{background:var(--night)}
+  .hero-bg:before{display:none}
+  .hero-bg img,.hero-bg:after{-webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 8%,rgba(0,0,0,.3) 18%,rgba(0,0,0,.62) 30%,rgba(0,0,0,.88) 40%,#000 48%);mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 8%,rgba(0,0,0,.3) 18%,rgba(0,0,0,.62) 30%,rgba(0,0,0,.88) 40%,#000 48%)}
+  .poster-in{padding-bottom:8px}
+}
 .hero-lang{position:absolute;top:14px;right:clamp(16px,3vw,28px);z-index:2}
 .hero-lang .lang-switch{background:rgba(255,255,255,.92);color:var(--navy);border-color:rgba(6,16,74,.2)}
 .hero-in{display:grid;justify-items:center;gap:14px;padding:58px clamp(16px,4vw,48px) 40px;text-align:center}
@@ -38,4 +45,3 @@ html[lang=en] .facts .l:after{content:":"}
 ::selection{background:var(--gold-l);color:var(--night)}
 input,textarea{caret-color:var(--navy)}
 input[type=checkbox]{accent-color:var(--navy)}
-html{scrollbar-color:var(--gold-d) var(--paper)}
