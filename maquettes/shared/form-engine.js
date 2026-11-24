@@ -369,10 +369,17 @@
   function showError(name, key) {
     var c = container(name); if (!c) return;
     c.classList.add("is-invalid");
-    var p = c.querySelector(".ztf-error"); if (!p) { p = document.createElement("p"); p.className = "ztf-error"; c.appendChild(p); }
+    var p = c.querySelector(".ztf-error"); if (!p) { p = document.createElement("p"); p.className = "ztf-error"; p.id = "ztf-err-" + name; c.appendChild(p); }
     setKey(p, key);
+    // Le message est rattaché au champ : un lecteur d'écran le lit quand le curseur y arrive.
+    var ctl = c.querySelector("input:not([type=hidden]):not([type=checkbox]),select,textarea");
+    if (ctl) { ctl.setAttribute("aria-invalid", "true"); ctl.setAttribute("aria-describedby", p.id); }
   }
-  function clearError(name) { var c = container(name); if (!c) return; c.classList.remove("is-invalid"); var p = c.querySelector(".ztf-error"); if (p) p.remove(); }
+  function clearError(name) {
+    var c = container(name); if (!c) return; c.classList.remove("is-invalid");
+    var p = c.querySelector(".ztf-error"); if (p) p.remove();
+    $$("[aria-invalid]", c).forEach(function (x) { x.removeAttribute("aria-invalid"); x.removeAttribute("aria-describedby"); });
+  }
   var ALL = ["gender", "last_name", "first_name", "nationality", "birth_date", "phone", "email", "cycle",
     "institution_category", "institution_name", "level", "field_of_study", "average", "transcripts"];
 
@@ -649,15 +656,16 @@
       ".ztf-file-count{font-size:.8rem;opacity:.8;margin:.4rem 0 0}" +
       ".ztf-wa{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:600}.ztf-wa-icon,.ztf-tel-icon{flex:none}" +
       "#ztf-toasts{position:fixed;right:16px;bottom:16px;z-index:9999;display:grid;gap:8px;max-width:min(380px,calc(100vw - 32px))}" +
-      ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity .3s,transform .3s}" +
-      ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px)}.ztf-toast span{opacity:.75}" +
+      ".ztf-toast{background:#fff;color:#111827;border-radius:12px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;gap:2px;font:14px/1.4 system-ui,sans-serif;border-left:4px solid #33a15a;transition:opacity 400ms ease,transform 400ms ease}" +
+      "@starting-style{.ztf-toast{opacity:0;transform:translateY(8px)}}" +
+      ".ztf-toast.is-danger{border-left-color:#c0392b}.ztf-toast.is-out{opacity:0;transform:translateY(8px);transition-duration:200ms}.ztf-toast span{opacity:.75}" +
       ".ztf-dialog{border:0;border-radius:16px;padding:0;max-width:440px;width:calc(100vw - 32px);box-shadow:0 20px 60px rgba(0,0,0,.3)}" +
       ".ztf-dialog::backdrop{background:rgba(3,8,66,.45)}.ztf-dialog form{padding:22px;display:grid;gap:12px;font:14px/1.5 system-ui,sans-serif;color:#111827}" +
       ".ztf-dialog h3{margin:0;font-size:1.1rem}.ztf-dialog p{margin:0;color:#6b7280}.ztf-dialog label{display:grid;gap:6px;font-weight:600}" +
       ".ztf-dialog input{font:inherit;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;font-weight:400}" +
       ".ztf-dialog-actions{display:flex;justify-content:flex-end;gap:8px}.ztf-btn-ghost,.ztf-btn-primary{font:inherit;font-weight:600;padding:9px 16px;border-radius:10px;cursor:pointer}" +
       ".ztf-btn-ghost{background:#fff;border:1px solid #d1d5db}.ztf-btn-primary{background:#33a15a;color:#fff;border:0}" +
-      ".drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 14px;border:1.5px dashed rgba(127,127,127,.45);border-radius:12px;text-align:center;cursor:pointer;transition:border-color .2s cubic-bezier(.23,1,.32,1),background .2s cubic-bezier(.23,1,.32,1)}" +
+      ".drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:18px 14px;border:1.5px dashed rgba(127,127,127,.45);border-radius:12px;text-align:center;cursor:pointer;transition:border-color 150ms ease,background 150ms ease}" +
       ".drop:focus-within{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}" +
       "@media (hover:hover) and (pointer:fine){.drop:hover{border-color:var(--ztf-accent,#33a15a);background:rgba(51,161,90,.05)}}" +
       ".drop input[type=file]{position:absolute!important;inset:0;width:100%!important;height:100%!important;opacity:0;cursor:pointer;padding:0!important;border:0!important}" +
@@ -692,6 +700,8 @@
       "@media (pointer:coarse){.lang-switch button{padding:12px 15px}.ztf-wa{padding:10px 0;margin:-10px 0}}" +
       "@media (max-width:720px){[data-ztf-form] input,[data-ztf-form] select,[data-ztf-form] textarea,.lookup-row input{font-size:16px}}" +
       "@media (prefers-reduced-motion:reduce){.ztf-toast{transition:opacity .2s}.ztf-toast.is-out{transform:none}.drop{transition:none}}" +
+      "@starting-style{[name=field_of_study_other]{opacity:0}}[name=field_of_study_other]{transition:opacity 200ms cubic-bezier(.23,1,.32,1)}" +
+      "@media (hover:hover) and (pointer:fine){.submit{transition:transform 160ms cubic-bezier(.23,1,.32,1),filter 150ms ease}.submit:hover:not(:disabled){filter:brightness(1.05)}}" +
       ".ztf-spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;margin-right:8px;vertical-align:-3px;animation:ztfspin .7s linear infinite}" +
       "@keyframes ztfspin{to{transform:rotate(360deg)}}" +
       ".ztf-demo{position:fixed;left:16px;bottom:16px;z-index:9998;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:calc(100vw - 32px);font:600 12px/1.2 system-ui,sans-serif;padding:8px 10px;border-radius:14px;border:1px dashed rgba(127,127,127,.6);background:rgba(255,255,255,.95);color:#030842;box-shadow:0 4px 14px rgba(0,0,0,.12)}" +
@@ -708,6 +718,11 @@
     var bd = el("birth_date"), max = new Date();
     max.setFullYear(max.getFullYear() - D.minAge); bd.max = max.toISOString().slice(0, 10); bd.min = "1960-01-01";
     el("motivation").setAttribute("maxlength", D.motivationMax);
+    // Remplissage automatique : ce que le navigateur sait remplir, et « off » ailleurs (pas de suggestions hors sujet).
+    var AUTO = { gender: "sex", birth_date: "bday", phone_code: "tel-country-code", nationality: "off", institution_category: "off",
+      level: "off", field_of_study: "off", field_of_study_other: "off", average: "off", motivation: "off" };
+    Object.keys(AUTO).forEach(function (n) { var e = el(n); if (e && !e.getAttribute("autocomplete")) e.setAttribute("autocomplete", AUTO[n]); });
+    if (el("email")) el("email").spellcheck = false;
 
     form.addEventListener("change", function (e) {
       var n = e.target.name; if (!n) return;

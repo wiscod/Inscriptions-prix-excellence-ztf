@@ -20,6 +20,7 @@ body{background:var(--paper);color:var(--ink)}
 /* Colonne formulaire */
 .main{padding:28px clamp(16px,5vw,64px) 80px;max-width:880px}
 .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+.head .brand{margin:0;font-weight:400}.head .brand>span{display:block}
 .head .script{font-size:clamp(2.4rem,4.5vw,3.4rem);color:var(--navy)}
 .head .sub{font-family:Cinzel,serif;font-weight:900;font-size:1.05rem;letter-spacing:.06em;margin-top:2px}
 .head .ed{display:block;font-family:Montserrat,sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-top:6px}
@@ -29,7 +30,8 @@ body{background:var(--paper);color:var(--ink)}
 .sec{margin-bottom:38px}
 .sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--gold),transparent) 1}
 .sec-h .n{font-family:Cinzel,serif;font-weight:900;font-size:1.6rem;color:var(--gold-d)}
-.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy);text-transform:uppercase;letter-spacing:.05em}
+.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;text-wrap:balance}
+.sec{scroll-margin-top:16px}
 .success{text-align:center;padding:30px 0}
 .success h2{font-family:Cinzel,serif;color:var(--navy)}
 .success .again{margin-top:14px;font:inherit;font-weight:700;padding:11px 20px;border-radius:999px;border:1px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
@@ -42,7 +44,7 @@ body{background:var(--paper);color:var(--ink)}
 <div class="layout">
   <aside class="poster sparkle">
     <div class="poster-in">
-      <img src="../../affiche/img/affiche-gala.jpg" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
+      <img src="../../affiche/img/affiche-gala.jpg" width="904" height="1280" fetchpriority="high" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
     </div>
   </aside>
 

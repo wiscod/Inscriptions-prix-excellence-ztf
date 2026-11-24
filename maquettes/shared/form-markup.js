@@ -63,7 +63,7 @@
     '<div class="f-grid cols-3">' +
       field("level", label("level", "lbl.level", 1) + select("level")) +
       field("field_of_study", label("field_of_study", "lbl.fos", 1) + select("field_of_study") +
-        input("field_of_study_other", ' hidden maxlength="120" style="margin-top:8px" data-i18n-ph="ph.fos_other"')) +
+        input("field_of_study_other", ' hidden maxlength="120" style="margin-top:8px" data-i18n-ph="ph.fos_other" data-i18n-aria="ph.fos_other"')) +
       field("average", '<label for="f-average"><span data-i18n="lbl.average"></span> <i data-ztf-avg-star>*</i></label>' +
         input("average", ' data-i18n-ph="ph.average"') + hint("hint.avg") +
         '<span data-ztf-average-np hidden><label class="np"><input type="checkbox" name="average_not_provided"> ' + T("np.average") + "</label></span>") +

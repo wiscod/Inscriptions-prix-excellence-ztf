@@ -38,14 +38,14 @@ for (const s of SCHOOLS) {
   const unknown = s.fields.filter((k) => !globalThis.ZTF_LISTS.fields.some((f) => f[0] === k));
   if (unknown.length) throw new Error(`${s.slug} : domaines absents de la liste officielle : ${unknown.join(", ")}`);
   const hero = `    <header class="hero">
-      <div class="hero-bg"><!-- Photo : ${s.photo.author}, Wikimedia Commons (File:${s.photo.file}), CC BY-SA 4.0 --><img src="/img/ecoles/${s.photo.src}" alt="${s.photo.alt}"></div>
+      <div class="hero-bg"><!-- Photo : ${s.photo.author}, Wikimedia Commons (File:${s.photo.file}), CC BY-SA 4.0 --><img src="/img/ecoles/${s.photo.src}" width="1600" height="1200" alt="${s.photo.alt}"></div>
       <div class="hero-lang" data-ztf-slot="lang"></div>
       <div class="hero-in">
         <div class="medals">
-          <figure class="medal school-logo"><img src="/img/ecoles/${s.logo.src}" alt="${s.logo.alt}" data-i18n-aria="${s.logo.i18n}"></figure>
-          <figure class="medal prize"><img src="/img/ecoles/prix-provisoire.jpg" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
+          <figure class="medal school-logo"><img src="/img/ecoles/${s.logo.src}" width="480" height="480" alt="${s.logo.alt}" data-i18n-aria="${s.logo.i18n}"></figure>
+          <figure class="medal prize"><img src="/img/ecoles/prix-provisoire.jpg" width="440" height="440" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
         </div>
-        <h1 class="title"><span class="k" data-i18n="e.apply"></span> <span class="s">${s.short}</span></h1>
+        <h1 class="title"><span class="k" data-i18n="e.apply"></span> <span class="s" translate="no">${s.short}</span></h1>
         <p class="school-name">${s.names.map((k) => `<span data-i18n="${k}"></span>`).join(" · ")}</p>
         <div class="card"><ul class="facts">
           <li><span class="l" data-i18n="e.deadline"></span> <b class="v" data-i18n="e.deadline.v"></b></li>

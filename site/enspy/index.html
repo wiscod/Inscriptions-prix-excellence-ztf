@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#030a33">
 <title>Candidature ENSPY · Prix d'Excellence ZTF</title>
 <meta name="description" content="Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de l'École nationale supérieure polytechnique de Yaoundé (ENSPY).">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +23,7 @@ body{background:var(--paper);color:var(--ink)}
 /* Colonne formulaire */
 .main{padding:28px clamp(16px,5vw,64px) 80px;max-width:880px}
 .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+.head .brand{margin:0;font-weight:400}.head .brand>span{display:block}
 .head .script{font-size:clamp(2.4rem,4.5vw,3.4rem);color:var(--navy)}
 .head .sub{font-family:Cinzel,serif;font-weight:900;font-size:1.05rem;letter-spacing:.06em;margin-top:2px}
 .head .ed{display:block;font-family:Montserrat,sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-top:6px}
@@ -31,7 +33,8 @@ body{background:var(--paper);color:var(--ink)}
 .sec{margin-bottom:38px}
 .sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--gold),transparent) 1}
 .sec-h .n{font-family:Cinzel,serif;font-weight:900;font-size:1.6rem;color:var(--gold-d)}
-.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy);text-transform:uppercase;letter-spacing:.05em}
+.sec-h h2{margin:0;font-size:1.1rem;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;text-wrap:balance}
+.sec{scroll-margin-top:16px}
 .success{text-align:center;padding:30px 0}
 .success h2{font-family:Cinzel,serif;color:var(--navy)}
 .success .again{margin-top:14px;font:inherit;font-weight:700;padding:11px 20px;border-radius:999px;border:1px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
@@ -40,23 +43,24 @@ body{background:var(--paper);color:var(--ink)}
 </head>
 <body>
 <!-- Page ENSPY : générée par scripts/pages-ecoles.mjs depuis site/index.html, ne pas modifier à la main. -->
+<a class="skip-link" href="#s1" data-i18n="a11y.skip"></a>
 <div class="layout">
   <aside class="poster sparkle">
     <div class="poster-in">
-      <img src="/img/affiche-gala.jpg" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
+      <img src="/img/affiche-gala.jpg" width="904" height="1280" fetchpriority="high" alt="Affiche du Prix d'Excellence Zacharias Tanee Fomum, 6e édition, 12 décembre 2026 à 08h00 au Palais des Sports de Yaoundé">
     </div>
   </aside>
 
   <main class="main">
     <header class="hero">
-      <div class="hero-bg"><!-- Photo : Marcell NEMG, Wikimedia Commons (File:Batiment-polytech-cmr.jpg), CC BY-SA 4.0 --><img src="/img/ecoles/enspy-batiment.jpg" alt="Bâtiment des salles de cours de l'ENSPY"></div>
+      <div class="hero-bg"><!-- Photo : Marcell NEMG, Wikimedia Commons (File:Batiment-polytech-cmr.jpg), CC BY-SA 4.0 --><img src="/img/ecoles/enspy-batiment.jpg" width="1600" height="1200" alt="Bâtiment des salles de cours de l'ENSPY"></div>
       <div class="hero-lang" data-ztf-slot="lang"></div>
       <div class="hero-in">
         <div class="medals">
-          <figure class="medal school-logo"><img src="/img/ecoles/enspy-logo.jpg" alt="Logo de l'ENSPY" data-i18n-aria="e.enspy.logo.alt"></figure>
-          <figure class="medal prize"><img src="/img/ecoles/prix-provisoire.jpg" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
+          <figure class="medal school-logo"><img src="/img/ecoles/enspy-logo.jpg" width="480" height="480" alt="Logo de l'ENSPY" data-i18n-aria="e.enspy.logo.alt"></figure>
+          <figure class="medal prize"><img src="/img/ecoles/prix-provisoire.jpg" width="440" height="440" alt="Logo du prix (provisoire)" data-i18n-aria="e.prize.alt"></figure>
         </div>
-        <h1 class="title"><span class="k" data-i18n="e.apply"></span> <span class="s">ENSPY</span></h1>
+        <h1 class="title"><span class="k" data-i18n="e.apply"></span> <span class="s" translate="no">ENSPY</span></h1>
         <p class="school-name"><span data-i18n="e.enspy.name"></span> · <span data-i18n="e.enspy.univ"></span></p>
         <div class="card"><ul class="facts">
           <li><span class="l" data-i18n="e.deadline"></span> <b class="v" data-i18n="e.deadline.v"></b></li>
