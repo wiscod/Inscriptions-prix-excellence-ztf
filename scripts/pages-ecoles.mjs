@@ -7,10 +7,13 @@
 // Pour ajouter une école : une entrée dans SCHOOLS, ses images dans site/img/ecoles/
 // (sources et licences dans maquettes/ecoles/img/SOURCES.md), ses noms dans site/js/ecole.js.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import "../maquettes/shared/ztf-lists.js";
 
 const SCHOOLS = [
   {
     slug: "enspy", short: "ENSPY",
+    // Identifiant dans la liste officielle (maquettes/shared/ztf-lists.js) : catégorie et école remplies d'office.
+    schoolId: "ecole-nationale-superieure-polytechnique-de-yaounde-polytechnique",
     title: "École nationale supérieure polytechnique de Yaoundé",
     logo: { src: "enspy-logo.jpg", alt: "Logo de l'ENSPY", i18n: "e.enspy.logo.alt" },
     photo: { src: "enspy-batiment.jpg", alt: "Bâtiment des salles de cours de l'ENSPY", author: "Marcell NEMG", file: "Batiment-polytech-cmr.jpg" },
@@ -24,8 +27,9 @@ const pick = (re, what) => { const m = site.match(re); if (!m) throw new Error(w
 const header = pick(/    <div class="head">[\s\S]*?<\/div>\n    <\/div>\n    <p class="dl"[^\n]*<\/p>\n/, "l'en-tête de droite");
 
 for (const s of SCHOOLS) {
+  if (!globalThis.ZTF_LISTS.schools.some((x) => x[0] === s.schoolId)) throw new Error(`${s.slug} : école ${s.schoolId} absente de la liste officielle`);
   const hero = `    <header class="hero">
-      <div class="hero-bg"><img src="/img/ecoles/${s.photo.src}" alt="${s.photo.alt}"></div>
+      <div class="hero-bg"><!-- Photo : ${s.photo.author}, Wikimedia Commons (File:${s.photo.file}), CC BY-SA 4.0 --><img src="/img/ecoles/${s.photo.src}" alt="${s.photo.alt}"></div>
       <div class="hero-lang" data-ztf-slot="lang"></div>
       <div class="hero-in">
         <div class="medals">
@@ -42,18 +46,14 @@ for (const s of SCHOOLS) {
       </div>
     </header>
 `;
-  // Crédit exigé par la licence CC BY-SA de la photo : une ligne en bas de page, pas sur la photo.
-  const credit = `<p class="photo-credit"><span data-i18n="e.photo"></span> : ${s.photo.author}, <a href="https://commons.wikimedia.org/wiki/File:${s.photo.file}" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>`;
-  const footOrg = '<p data-i18n="brand.org"></p></div>';
-  if (!site.includes(footOrg)) throw new Error("pied de page introuvable dans site/index.html");
   let html = site
     .replace(header, hero)
-    .replace(footOrg, `<p data-i18n="brand.org"></p>${credit}</div>`)
     .replace(/<title>[^<]*<\/title>/, `<title>Candidature ${s.short} · Prix d'Excellence ZTF</title>`)
     .replace(/(<meta name="description" content=")[^"]*/, `$1Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de l'${s.title} (${s.short}).`)
     .replace(/(href|src)="(css|js|img|shared)\//g, '$1="/$2/')
     .replace('<link rel="stylesheet" href="/css/affiche.css">', '<link rel="stylesheet" href="/css/affiche.css">\n<link rel="stylesheet" href="/css/ecole.css">')
     .replace('<script src="/js/affiche.js"></script>', '<script src="/js/affiche.js"></script>\n<script src="/js/ecole.js"></script>')
+    .replace('<script src="/shared/form-data.js"></script>', `<script>window.ZTF_FIXED_SCHOOL = "${s.schoolId}";</script>\n<script src="/shared/form-data.js"></script>`)
     .replace("<body>", `<body>\n<!-- Page ${s.short} : générée par scripts/pages-ecoles.mjs depuis site/index.html, ne pas modifier à la main. -->`);
   if (html.includes('class="head"') || !html.includes("/js/ecole.js") || !html.includes("/js/submit.js")) throw new Error("remplacement incomplet pour " + s.slug);
   mkdirSync(new URL(`site/${s.slug}/`, root), { recursive: true });

@@ -179,6 +179,18 @@
     onLevel();
   }
   function onCategory() { el("institution_name").value = ""; el("school_id").value = ""; updateDependent(); }
+  /* École fixée par la page (pages par école : /enspy, …) : window.ZTF_FIXED_SCHOOL = identifiant de la liste officielle.
+     Catégorie et école sont remplies d'office et leurs champs masqués ; le serveur reçoit les mêmes valeurs qu'avec la saisie. */
+  function fixedSchool() {
+    var id = window.ZTF_FIXED_SCHOOL;
+    return id ? L.schools.filter(function (s) { return s[0] === id; })[0] || null : null;
+  }
+  function applyFixedSchool() {
+    var s = fixedSchool(); if (!s) return;
+    el("institution_category").value = s[2]; updateDependent();
+    el("institution_name").value = s[1]; el("school_id").value = s[0];
+    var c = container("institution_category"); if (c && c.parentNode) c.parentNode.style.display = "none";
+  }
   function onSchoolInput() {
     var v = el("institution_name").value.trim().toLowerCase(), cat = el("institution_category").value;
     var hit = schoolsFor(cat).filter(function (s) { return s[1].toLowerCase() === v; })[0];
@@ -543,7 +555,7 @@
   }
   function reset() {
     form.reset(); Object.keys(fileStore).forEach(function (k) { fileStore[k] = []; renderFiles(k); });
-    onNP(); updateCategories(); updateDependent(); updateCounter();
+    onNP(); updateCategories(); updateDependent(); applyFixedSchool(); updateCounter();
     ALL.forEach(clearError);
     lastRecord = null;
     $$("[data-ztf-hide-on-success]").forEach(function (n) { n.hidden = false; });
@@ -690,6 +702,7 @@
       document.body.appendChild(demo);
     }
     applyLang(lang);
+    applyFixedSchool();
   }
 
   window.ZTF = { validate: validate, refresh: refresh, summary: summary, renderRecap: renderRecap, fillDemo: fillDemo, toast: toast,

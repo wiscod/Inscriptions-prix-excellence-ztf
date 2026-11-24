@@ -13,7 +13,6 @@
     "e.audition": ["Audition", "Interview"],
     "e.venue": ["Lieu", "Venue"],
     "e.tbd": ["À préciser", "To be announced"],
-    "e.photo": ["Photo du bâtiment", "Building photo"],
     "e.prize.alt": ["Logo du prix (provisoire : trophée ZTF Excellence Awards)", "Award logo (provisional: ZTF Excellence Awards trophy)"],
     "e.enspy.name": ["École nationale supérieure polytechnique de Yaoundé", "National Advanced School of Engineering of Yaoundé"],
     "e.enspy.univ": ["Université de Yaoundé I", "The University of Yaoundé I"],
