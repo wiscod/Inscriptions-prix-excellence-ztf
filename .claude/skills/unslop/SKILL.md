@@ -9,7 +9,9 @@ Raccourci vers le plugin « unslop » (Anthropic Directory, auteur Jean-Luc Wink
 
 ## 1. Le plugin d'abord
 
-Si la liste des skills de la session contient `bd19ccd7-30c0-4f23-845b-afc778c96c98:unslop`, appelle-le avec l'outil Skill en lui passant les mêmes arguments, puis suis ses instructions. Il ne couvre que l'anglais et l'allemand : pour les textes français, applique en plus la grille ci-dessous.
+Si la liste des skills de la session contient `bd19ccd7-30c0-4f23-845b-afc778c96c98:unslop`, appelle-le avec l'outil Skill en lui passant les mêmes arguments, puis suis ses instructions. Il ne couvre que l'anglais et l'allemand.
+
+Pour les textes français, appelle le skill de projet `humaniseur-fr` (samber/cc-skills, installé dans `.claude/skills/`), puis applique en plus la grille ci-dessous, propre au formulaire.
 
 S'il n'est pas dans la liste, dis-le en une phrase (le plugin s'installe depuis le répertoire de plugins de claude.ai, puis se charge dans une nouvelle session) et applique la grille ci-dessous.
 
