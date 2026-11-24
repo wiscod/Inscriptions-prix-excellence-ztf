@@ -20,3 +20,18 @@ Toutes les photos viennent de Wikimedia Commons et sont sous licence **CC BY-SA 
 | Fichier | Contenu | Source |
 |---|---|---|
 | `prix-provisoire.jpg` | Trophée « ZTF Excellence Awards » ; sur /enspy (`site/img/ecoles/`), le trophée entier centré sur fond bleu nuit, fabriqué par `scripts/medaille-prix.py` à partir de l'affiche agrandie par Real-ESRGAN (`site/img/affiche-gala-2x.jpg`), plus nette que l'affiche anglaise pour cette zone | Découpé dans le flyer de la Fondation (`maquettes/affiche/img/trophee.jpg`). À remplacer par le logo officiel du prix dès qu'il sera fourni. |
+
+## Autres écoles (images dans `site/img/ecoles/`, novembre 2026)
+
+La Fondation a accepté l'usage d'images non libres (sites officiels, logos). Elles sont signalées ci-dessous ; une école ou un auteur peut en demander le retrait.
+
+| Fichier | Contenu | Source | Licence |
+|---|---|---|---|
+| `fmsb-batiment.jpg` | Bibliothèque de la Faculté de médecine et des sciences biomédicales (2014) | Bdx, https://commons.wikimedia.org/wiki/File:University_of_Yaoundé_I_-_Faculty_of_Medicine_and_Biomedical_Sciences_-_Library_(2014).jpg | CC BY-SA 4.0 |
+| `fmsb-logo.jpg` | Blason de l'Université de Yaoundé I (la FMSB n'a pas de logo propre trouvable en ligne) | https://fr.wikipedia.org/wiki/Fichier:Blason_univ_Yaoundé_1.png | logo, non libre |
+| `enset-batiment.jpg` | Monument à l'entrée de l'ENSET de Douala (flouté sur la page) | Geugeor, https://commons.wikimedia.org/wiki/File:Monument_Enset_(cropped).JPG | CC BY-SA 4.0 |
+| `enset-logo.jpg` | Logo de l'Université de Douala (site de l'ENSET injoignable), agrandi par Real-ESRGAN | https://fr.wikipedia.org/wiki/Fichier:Logo_de_l'Université_de_Douala.png | logo, non libre |
+| `polytech-douala-batiment.jpg` | Cour intérieure de l'ENSPD | https://enspd-udo.cm/images/enspd/campus/enspdimg.jpg | site officiel, non libre |
+| `polytech-douala-logo.jpg` | Logo de l'ENSPD | https://enspd-udo.cm/images/enspd/logo.png | logo, non libre |
+| `udm-batiment.jpg` | Cliniques universitaires des Montagnes | Awonox, https://commons.wikimedia.org/wiki/File:Udm2.JPG | CC BY-SA 3.0 |
+| `udm-logo.jpg` | Logo de l'Université des Montagnes | https://udm.aed-cm.org/wp-content/uploads/2025/03/Logo-UDM_-4.png | logo, non libre |

@@ -23,8 +23,62 @@ const SCHOOLS = [
       "Mathematics", "Physics", "Meteorology", "ArtificialIntelligence", "Entrepreneurship"],
     title: "École nationale supérieure polytechnique de Yaoundé",
     logo: { src: "enspy-logo.jpg", alt: "Logo de l'ENSPY", i18n: "e.enspy.logo.alt" },
-    photo: { src: "enspy-batiment.jpg", alt: "Bâtiment des salles de cours de l'ENSPY", author: "Marcell NEMG", file: "Batiment-polytech-cmr.jpg" },
+    photo: { src: "enspy-batiment.jpg", alt: "Bâtiment des salles de cours de l'ENSPY", credit: "Marcell NEMG, Wikimedia Commons, CC BY-SA 4.0" },
     names: ["e.enspy.name", "e.enspy.univ"],
+  },
+  {
+    slug: "fmsb", short: "FMSB",
+    schoolId: "faculte-de-medecine-et-des-sciences-biomedicales-de-luniversite-de-yaounde-i",
+    // Filières : médecine générale, pharmacie, chirurgie dentaire (site officiel injoignable le 24/11/2026 ; sources
+    // secondaires : infospratiques.cm, Cameroon Tribune). Pharmacie → « Pharmacologie », seul intitulé proche de la liste.
+    fields: ["Medicine", "Pharmacology", "Dentistry", "BiomedicalSciences"],
+    title: "Faculté de médecine et des sciences biomédicales de l'Université de Yaoundé I",
+    logo: { src: "fmsb-logo.jpg", alt: "Blason de l'Université de Yaoundé I", i18n: "e.fmsb.logo.alt" },
+    photo: { src: "fmsb-batiment.jpg", alt: "Bibliothèque de la Faculté de médecine et des sciences biomédicales", credit: "Bdx, Wikimedia Commons, CC BY-SA 4.0", pos: "50% 55%" },
+    names: ["e.fmsb.name", "e.fmsb.univ"],
+  },
+  {
+    slug: "enset", short: "ENSET",
+    schoolId: "enset-de-douala",
+    // Filières : informatique industrielle, génie civil, génie électrique, génie mécanique, techniques administratives,
+    // économiques et de gestion ; l'école forme des enseignants du technique (site officiel injoignable le 24/11/2026 ;
+    // source secondaire : kamerpower.com, liste non datée).
+    fields: ["PrimaryAndSecondaryEducation", "ComputerScience", "CivilEngineering", "ElectricalEngineering", "MechanicalEngineering",
+      "Management", "Accounting", "Economics"],
+    title: "École normale supérieure d'enseignement technique de l'Université de Douala",
+    logo: { src: "enset-logo.jpg", alt: "Logo de l'Université de Douala", i18n: "e.enset.logo.alt" },
+    photo: { src: "enset-batiment.jpg", alt: "Monument à l'entrée de l'ENSET de Douala", credit: "Geugeor, Wikimedia Commons, CC BY-SA 4.0", pos: "50% 50%",
+      // Flou léger : les grandes lettres du panneau rivalisaient avec le titre.
+      extraStyle: "filter:blur(5px);transform:scale(1.06)" },
+    names: ["e.enset.name", "e.enset.univ"],
+  },
+  {
+    slug: "polytech-douala", short: "ENSPD",
+    schoolId: "ecole-nationale-superieure-polytechnique-de-douala",
+    // Départements (site officiel https://enspd-udo.cm/, consulté le 24/11/2026) : génie civil, physique, mécanique,
+    // énergétique, des procédés, maritime et portuaire (→ logistique et transport), automobile et mécatronique
+    // (→ électromécanique), QHSE industriel (→ science de l'environnement), électrique et systèmes intelligents
+    // (→ génie électrique, contrôle et instrumentation), informatique et télécommunications.
+    fields: ["CivilEngineering", "Physics", "MechanicalEngineering", "EnergyEngineering", "ProcessEngineering", "LogisticsAndTransport",
+      "ElectromechanicalEngineering", "EnvironmentalScience", "ElectricalEngineering", "ControlAndInstrumentationEngineering",
+      "ComputerScience", "NetworksAndTelecom"],
+    title: "École nationale supérieure polytechnique de Douala",
+    logo: { src: "polytech-douala-logo.jpg", alt: "Logo de l'ENSPD", i18n: "e.enspd.logo.alt" },
+    photo: { src: "polytech-douala-batiment.jpg", alt: "Cour intérieure de l'ENSPD", credit: "site de l'ENSPD (enspd-udo.cm)", pos: "50% 45%" },
+    names: ["e.enspd.name", "e.enspd.univ"],
+  },
+  {
+    slug: "udm", short: "UdM",
+    schoolId: "universite-des-montagnes-udm-bangante",
+    // Facultés et filières (site officiel https://udm.aed-cm.org/, consulté le 24/11/2026) : médecine humaine, pharmacie,
+    // médecine vétérinaire (absente de la liste → « Autre »), sciences médico-sanitaires et biomédicales, génie mécanique,
+    // civil, électrique, biomédical, informatique-réseaux-télécommunications, génie logiciel.
+    fields: ["Medicine", "Pharmacology", "BiomedicalSciences", "LaboratoryTechnician", "Nursing", "MechanicalEngineering",
+      "CivilEngineering", "ElectricalEngineering", "BiomedicalEngineering", "NetworksAndTelecom", "ComputerScience"],
+    title: "Université des Montagnes",
+    logo: { src: "udm-logo.jpg", alt: "Logo de l'Université des Montagnes", i18n: "e.udm.logo.alt" },
+    photo: { src: "udm-batiment.jpg", alt: "Cliniques universitaires des Montagnes", credit: "Awonox, Wikimedia Commons, CC BY-SA 3.0", pos: "60% 50%" },
+    names: ["e.udm.name", "e.udm.city"],
   },
 ];
 
@@ -38,7 +92,7 @@ for (const s of SCHOOLS) {
   const unknown = s.fields.filter((k) => !globalThis.ZTF_LISTS.fields.some((f) => f[0] === k));
   if (unknown.length) throw new Error(`${s.slug} : domaines absents de la liste officielle : ${unknown.join(", ")}`);
   const hero = `    <header class="hero">
-      <div class="hero-bg"><!-- Photo : ${s.photo.author}, Wikimedia Commons (File:${s.photo.file}), CC BY-SA 4.0 --><img src="/img/ecoles/${s.photo.src}" width="1600" height="1200" alt="${s.photo.alt}"></div>
+      <div class="hero-bg"><!-- Photo : ${s.photo.credit} --><img src="/img/ecoles/${s.photo.src}" width="1600" height="1200"${s.photo.pos || s.photo.extraStyle ? ` style="${[s.photo.pos && `object-position:${s.photo.pos}`, s.photo.extraStyle].filter(Boolean).join(";")}"` : ""} alt="${s.photo.alt}"></div>
       <div class="hero-lang" data-ztf-slot="lang"></div>
       <div class="hero-in">
         <div class="medals">
@@ -61,7 +115,7 @@ for (const s of SCHOOLS) {
     .replace('  <main class="main">', '  <div class="right">\n' + hero + '  <main class="main">')
     .replace('  </main>\n', '  </main>\n  </div>\n')
     .replace(/<title>[^<]*<\/title>/, `<title>Candidature ${s.short} · Prix d'Excellence ZTF</title>`)
-    .replace(/(<meta name="description" content=")[^"]*/, `$1Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de l'${s.title} (${s.short}).`)
+    .replace(/(<meta name="description" content=")[^"]*/, `$1Candidature au Prix d'Excellence académique Zacharias Tanee Fomum, 6e édition : page des candidats de ${/^[AEIOUÉÈ]/i.test(s.title) ? "l'" : "la "}${s.title} (${s.short}).`)
     .replace(/(href|src)="(css|js|img|shared)\//g, '$1="/$2/')
     .replace('<link rel="stylesheet" href="/css/affiche.css">', '<link rel="stylesheet" href="/css/affiche.css">\n<link rel="stylesheet" href="/css/ecole.css">')
     .replace('<script src="/js/affiche.js"></script>', '<script src="/js/affiche.js"></script>\n<script src="/js/ecole.js"></script>')

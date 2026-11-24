@@ -98,7 +98,6 @@ window.ZTF_I18N = {
   "btn.submit": ["Envoyer ma candidature", "Send my application"],
   "btn.sending": ["Envoi en cours…", "Sending…"],
   "foot.required": ["* Champs obligatoires.", "* Required fields."],
-  "foot.support": ["Besoin d'assistance technique ? Appelez le {tellink} ou écrivez-nous sur {walink}.", "Need technical help? Call {tellink} or message us on {walink}."],
   "contact.phone": ["Appel et WhatsApp", "Call and WhatsApp"],
   "foot.secure": ["Vos documents ne sont visibles que par l'équipe de la Fondation.", "Your documents can only be seen by the Foundation's team."],
 

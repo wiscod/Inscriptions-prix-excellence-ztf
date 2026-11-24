@@ -5,7 +5,7 @@ Site de candidature au **Prix d'Excellence Zacharias Tanee Fomum (Prix ZTF)**, r
 - **Formulaire** : `/` (maquette « Affiche et formulaire » : l'affiche de la 6e édition à gauche, le formulaire sur fond clair à droite)
 - **Administration** : `/admin/` (un compte par personne, voir « Administration » plus bas)
 - **Maquettes** : `/maquettes/`
-- **Pages par école** : `/enspy` (les autres écoles suivront : `/fmsb`, `/enset`, `/polytech-douala`, `/udm`). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`). Sur ces pages, la catégorie et l'école sont remplies d'office (champs masqués) et la liste des domaines d'études est limitée à ceux de l'école (`scripts/pages-ecoles.mjs`, avec la source de chaque liste).
+- **Pages par école** : `/enspy`, `/fmsb`, `/enset`, `/polytech-douala` (ENSPD), `/udm` (Université des Montagnes). Même page que `/`, mais l'en-tête de droite montre le logo de l'école et celui du prix, « Candidature ENSPY », la date limite, l'audition et le lieu, sur une photo de l'école (maquette 2 « Bandeau photo », choisie parmi les 5 de `/maquettes/ecoles/`). Audition et lieu : « À préciser » tant que la Fondation ne les a pas fixés (textes dans `site/js/ecole.js`). Sur ces pages, la catégorie et l'école sont remplies d'office (champs masqués) et la liste des domaines d'études est limitée à ceux de l'école (`scripts/pages-ecoles.mjs`, avec la source de chaque liste).
 
 ## Ce qu'est le Prix ZTF (synthèse de excellenceawardsztf.com)
 

@@ -83,7 +83,6 @@
   S.consent =
     '<button type="submit" class="submit"><span data-i18n="btn.submit"></span></button>' +
     '<p class="foot-note" data-i18n="foot.required"></p>' +
-    '<p class="foot-note" data-i18n-html="foot.support"></p>' +
     '<p class="foot-note" data-i18n="foot.secure"></p>';
 
   /* Bloc affiché après l'envoi : numéro, identifiant, fiche PDF à imprimer pour l'audition */
