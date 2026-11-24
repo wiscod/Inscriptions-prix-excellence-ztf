@@ -131,6 +131,7 @@ maquettes/
   ecoles/                     pages par école : galerie, enspy/1-…5-….html, ecoles.css, ecoles.js, img/ (+ SOURCES.md)
 scripts/build.mjs             régénère les pages par école puis assemble dist/ (site + shared + maquettes)
 scripts/pages-ecoles.mjs      site/<école>/index.html à partir de site/index.html (une entrée par école)
+scripts/controle-ecrans.cjs   `npm run controle` : ouvre / et chaque page d'école à 5 largeurs (iPhone, iPad, 1280, 1440, 1920 px), fait les captures (.controle-ecrans/) et signale défilement horizontal, bandeau qui n'atteint pas le bord, image cassée ou déformée, champs sous 16 px et cibles tactiles sous 24 px sur écran tactile
 scripts/maquettes-ecoles.mjs  régénère maquettes/ecoles/enspy/ à partir du formulaire de site/index.html
 vercel.json                   build, région, tâche planifiée
 ```

@@ -17,8 +17,8 @@ body{background:var(--paper);color:var(--ink)}
 /* Colonne affiche */
 .poster{background:var(--night);position:relative}
 .poster-in{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:18px}
-.poster img{max-height:calc(100vh - 56px);max-width:100%;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 30px 60px rgba(0,0,0,.6)}
-@media(max-width:980px){.poster-in{position:static;height:auto;padding:22px 16px}.poster img{max-height:none;width:min(420px,100%)}}
+.poster img{width:auto;height:auto;max-height:calc(100vh - 56px);max-width:100%;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 30px 60px rgba(0,0,0,.6)}
+@media(max-width:980px){.poster-in{position:static;height:auto;padding:22px 16px}.poster img{max-height:none;width:min(420px,100%);height:auto}}
 /* Colonne formulaire */
 .main{padding:28px clamp(16px,5vw,64px) 80px;max-width:880px}
 .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}

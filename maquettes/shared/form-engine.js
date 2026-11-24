@@ -697,8 +697,8 @@
       ".submit:active:not(:disabled),.again:active,.lookup-row button:active,.receipt-pdf:active,.lang-switch button:active,.ztf-btn-ghost:active,.ztf-btn-primary:active{transform:scale(.97)}" +
       "a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--ztf-accent,#33a15a);outline-offset:3px;border-radius:6px}" +
       "[data-ztf-counter]{font-variant-numeric:tabular-nums}" +
-      "@media (pointer:coarse){.lang-switch button{padding:12px 15px}.ztf-wa{padding:10px 0;margin:-10px 0}}" +
-      "@media (max-width:720px){[data-ztf-form] input,[data-ztf-form] select,[data-ztf-form] textarea,.lookup-row input{font-size:16px}}" +
+      "@media (pointer:coarse){.lang-switch button{padding:12px 15px}.ztf-wa{padding:10px 0;margin:-10px 0}.lookup summary{padding-block:12px}}" +
+      "@media (max-width:720px),(pointer:coarse){[data-ztf-form] input,[data-ztf-form] select,[data-ztf-form] textarea,.lookup-row input{font-size:16px}}" +
       "@media (prefers-reduced-motion:reduce){.ztf-toast{transition:opacity .2s}.ztf-toast.is-out{transform:none}.drop{transition:none}}" +
       "@starting-style{[name=field_of_study_other]{opacity:0}}[name=field_of_study_other]{transition:opacity 200ms cubic-bezier(.23,1,.32,1)}" +
       "@media (hover:hover) and (pointer:fine){.submit{transition:transform 160ms cubic-bezier(.23,1,.32,1),filter 150ms ease}.submit:hover:not(:disabled){filter:brightness(1.05)}}" +

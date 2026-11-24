@@ -22,6 +22,13 @@
       "skillPath": "skills/humaniseur-fr/SKILL.md",
       "computedHash": "dfb3e52bbe43b0bcedaf87de4d37679dd8d8d5d4435868dd471201eaebf24958"
     },
+    "responsive-design": {
+      "source": "wshobson/agents",
+      "commit": "34e50fee32114afd9475f25d81492712f08cb71c",
+      "sourceType": "github",
+      "skillPath": "plugins/ui-design/skills/responsive-design/SKILL.md",
+      "computedHash": "3ff2c1acd7067b5fbd30dc370364054f7d470d26e288cf3d454fed457478cdc0"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
