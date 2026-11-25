@@ -16,10 +16,10 @@ const dir = __dirname;
 
 (async () => {
   const svg = await QRCode.toString(URL_FORM, { type: "svg", errorCorrectionLevel: "Q", margin: 2, color: { dark: "#06104a", light: "#ffffff" } });
-  const laureat = "data:image/jpeg;base64," + fs.readFileSync(path.join(dir, "../maquettes/affiche/img/laureat.jpg")).toString("base64");
+  const laureat = "data:image/jpeg;base64," + fs.readFileSync(path.join(dir, "img/laureat.jpg")).toString("base64");
   const html = fs.readFileSync(path.join(dir, "flyer.template.html"), "utf8")
     .replace("__QR__", svg).replace("__LAUREAT__", laureat)
-    .replace("__TROPHEE__", "data:image/jpeg;base64," + fs.readFileSync(path.join(dir, "../maquettes/affiche/img/trophee.jpg")).toString("base64"))
+    .replace("__TROPHEE__", "data:image/jpeg;base64," + fs.readFileSync(path.join(dir, "img/trophee.jpg")).toString("base64"))
     .split("__URL_TEXT__").join(URL_FORM.replace(/^https?:\/\//, ""))
     .replace(process.argv[3] ? /<div class="seal">.*?<\/div><\/div>/ : /$^/, "");
   fs.mkdirSync(path.join(dir, OUT_DIR), { recursive: true });

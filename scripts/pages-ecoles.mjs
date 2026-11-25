@@ -5,7 +5,7 @@
 // À relancer après toute modification de site/index.html :
 //   node scripts/pages-ecoles.mjs
 // Pour ajouter une école : une entrée dans SCHOOLS, ses images dans site/img/ecoles/
-// (sources et licences dans maquettes/ecoles/img/SOURCES.md), ses noms dans site/js/ecole.js.
+// (sources et licences dans docs/sources-images.md), ses noms dans site/js/ecole.js.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import "../maquettes/shared/ztf-lists.js";
 

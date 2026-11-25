@@ -3,7 +3,7 @@
 from PIL import Image, ImageDraw, ImageFilter
 import sys
 # Source la plus nette : le trophée de l'affiche agrandie par Real-ESRGAN (zone repérée par appariement SIFT,
-# même cadrage que maquettes/affiche/img/trophee.jpg, à l'échelle ×2).
+# même cadrage que flyer/img/trophee.jpg, à l'échelle ×2).
 src = Image.open("site/img/affiche-gala-2x.jpg").convert("RGB").crop((1178, 1678, 1808, 2300))
 N = 600
 bg = Image.new("RGB", (N, N), (3, 10, 51)); glow = Image.new("L", (N, N), 0)
